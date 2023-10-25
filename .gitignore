@@ -1,0 +1,34 @@
+### VisualStudioCode template
+.vscode/*
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.idea/
+.zip
+
+# dependencies
+/node_modules
+package-lock.json
+
+# production
+/build
+
+# misc
+.DS_Store
+
+.env
+.env.development
+.env.local
+.env.test.local
+.env.development.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.lock
+
+.npmrc

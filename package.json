@@ -1,0 +1,65 @@
+{
+  "name": "sd-design",
+  "version": "1.0.0",
+  "description": "A UI library with @odoo/owl and typescript",
+  "main": "./es/index.js",
+  "module": "./es/index.js",
+  "types": "./es/index.d.ts",
+  "author": "source-dynamic",
+  "license": "GPL-2.0",
+  "homepage": ".",
+  "keywords": [],
+  "files": [
+    "es/**/*.js",
+    "es/**/*.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "email": "305111632@qq.com"
+  },
+  "scripts": {
+    "serve": "npx webpack serve --config webpack.development.js",
+    "build": "npx webpack --config webpack.build.js",
+    "clean": "rimraf es",
+    "build-es": "npm run clean && tsc",
+    "eslint": "eslint ./src/.  --ext .js,.jsx,.ts,.tsx --fix",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@odoo/owl": "^2.2.6",
+    "classnames": "^2.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@types/node": "^17.0.21",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.52.0",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
+    "mini-css-extract-plugin": "^1.4.1",
+    "node-sass": "^9.0.0",
+    "raw-loader": "^4.0.2",
+    "rimraf": "^3.0.2",
+    "sass-loader": "^12.6.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.8",
+    "typescript": "^5.2.2",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
+    "webpack-merge": "^5.8.0"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,less,scss}": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
