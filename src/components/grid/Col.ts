@@ -15,6 +15,7 @@ type IColSize = {
 };
 
 type Props = {
+    className?: string;
     span?: ColSpanType;
     order?: ColSpanType;
     offset?: ColSpanType;
@@ -105,6 +106,7 @@ export default class Col extends Component<Props> {
 
         return classNames(
             prefixCls,
+            this.props.className,
             {
                 [`${prefixCls}-${span}`]: span !== undefined,
                 [`${prefixCls}-order-${order}`]: order,

@@ -1,8 +1,9 @@
-import { Row, Col } from '../src';
+import { Col, Row } from '../src';
 import { Component, mount, xml } from '@odoo/owl';
+import { ClearableLabeledWrapper } from '../src/components/input';
 
 class Root extends Component {
-    static components = { Row, Col };
+    static components = { Row, Col, ClearableLabeledInput: ClearableLabeledWrapper };
 
     static template = xml`
 <div>
@@ -17,6 +18,11 @@ class Root extends Component {
             col3
         </Col>
     </Row>
+    <ClearableLabeledInput allowClear="true">
+        <t t-set-slot="addonBefore">
+          content for footer slot here
+        </t>
+    </ClearableLabeledInput>
 </div>    
     `;
 }

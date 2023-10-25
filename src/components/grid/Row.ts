@@ -12,6 +12,7 @@ type State = {
 type Gutter = number | Partial<Record<Breakpoint, number>>;
 
 type Props = {
+    className?: string;
     gutter?: Gutter | [Gutter, Gutter];
     align?: 'top' | 'middle' | 'bottom';
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
@@ -77,7 +78,7 @@ export default class Row extends Component<Props> {
     protected getClasses(): string {
         const { justify, align } = this.props;
         const prefixCls = getPrefixCls('row');
-        return classNames(prefixCls, {
+        return classNames(this.props.className, prefixCls, {
             [`${prefixCls}-${justify}`]: justify,
             [`${prefixCls}-${align}`]: align
         });

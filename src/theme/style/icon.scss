@@ -1,0 +1,12 @@
+@import "default";
+
+.#{$ui-prefix}-icon {
+  display: inline-flex;
+  align-items: center;
+  font-style: normal;
+  line-height: 0;
+  text-align: center;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}

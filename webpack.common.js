@@ -8,6 +8,10 @@ module.exports = {
                 type: 'asset/inline'
             },
             {
+                test: /\.svg$/,
+                use: ['svg-inline-loader']
+            },
+            {
                 test: /\.css$/i,
                 use: [
                     'style-loader', // 这个loader取代style-loader。作用：提取js中的css成单独文件
