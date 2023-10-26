@@ -91,7 +91,6 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
                     <t t-set="inputWithLabelClass" t-value="renderInputWithLabelClass()"/>
                 
                     <span t-att-class="inputWithLabelClass.mergedGroupClassName">
-                    
                         <span t-att-class="inputWithLabelClass.mergedWrapperClassName">
                             <!--  addonBefore插槽  -->
                             <t t-if="props.slots.addonBefore">
@@ -137,7 +136,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     /**
      * 判断是否有前置、后置部分
      */
-    hasAddon(): boolean {
+    protected hasAddon(): boolean {
         const {slots} = this.props;
         return !!(slots?.addonBefore || slots?.addonAfter);
     }
@@ -145,7 +144,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     /**
      * 判断是否有前缀、后缀
      */
-    hasPrefixSuffix(): boolean {
+    protected hasPrefixSuffix(): boolean {
         const {slots} = this.props;
         return !!(slots?.prefix || slots?.suffix || this.props.allowClear);
     }
@@ -153,7 +152,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     /**
      * 清除图标的class
      */
-    renderClearIconClass(): string | undefined {
+    protected renderClearIconClass(): string | undefined {
         const {value, allowClear, disabled, readOnly, suffix} = this.props;
         if (!allowClear) {
             return;
@@ -174,7 +173,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     /**
      * innerTemplate主区域部分的class
      */
-    renderLabeledIconClass(): {} {
+    protected renderLabeledIconClass(): {} {
         const {
             focused,
             value,
@@ -212,7 +211,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     /**
      * 外部区域的class
      */
-    renderInputWithLabelClass(): {} {
+    protected renderInputWithLabelClass(): {} {
         const {size, className, direction} = this.props;
         const prefixCls = getPrefixCls('input');
         const wrapperClassName = `${prefixCls}-group`;
@@ -238,7 +237,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     /**
      * 文本域带有清除按钮的class
      */
-    renderTextAreaWithClearIconClass(): {} {
+    protected renderTextAreaWithClearIconClass(): {} {
         const {bordered, direction} = this.props;
         const prefixCls = getPrefixCls('input');
 

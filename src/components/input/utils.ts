@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 export function getInputClassName(
     prefixCls: string,
-    bordered: boolean,
+    bordered?: boolean,
     size?: SizeType,
     disabled?: boolean
 ) {

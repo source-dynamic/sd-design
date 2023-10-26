@@ -1,2 +1,7 @@
-@import "affix";
-@import "allowCear";
+@import "src/theme/style/reset";
+
+$input-prefix-cls: #{$ui-prefix}-input;
+$text-prefix-cls: #{$ui-prefix}-input-textarea;
+
+.#{$input-prefix-cls} {
+}

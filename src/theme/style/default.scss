@@ -1,39 +1,6 @@
 @import "systemDefault";
 
-@function tint($color, $percentage) {
-  @return mix(#FFF, $color, $percentage);
-}
-
-@function shade($color, $percentage) {
-  @return mix(#000, $color, $percentage);
-}
-
 $ui-prefix: 'sd';
 
 $white: #fff;
 $black: #000;
-
-// Outline
-$outline-blur-size: 0;
-$outline-width: 2px;
-$outline-color: $primary-color-base;
-$outline-fade: 20%;
-$background-color-light: hsl(0, 0, 0.98); // background of header and selected item
-$background-color-base: hsl(0, 0, 0.96); // Default grey background color
-
-// Disabled states
-$disabled-color: rgba($black, 0.25);
-$disabled-bg: $background-color-base;
-$disabled-active-bg: tint($black, 0.9);
-$disabled-color-dark: rgba($white, 0.35);
-
-$text-color: rgba($black, 0.85);
-$text-color-secondary: rgba($black, 0.45);
-$font-variant-base: tabular-nums;
-$line-height-base: 1.5715;
-$font-feature-settings-base: 'tnum';
-
-// 主字号
-$font-size-base: 14px;
-$font-size-lg: $font-size-base + 2px;
-$font-size-sm: 12px;
