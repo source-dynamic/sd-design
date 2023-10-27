@@ -16,6 +16,7 @@ type Props = {
     gutter?: Gutter | [Gutter, Gutter];
     align?: 'top' | 'middle' | 'bottom';
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
+    wrap?: boolean;
 }
 
 export default class Row extends Component<Props> {
@@ -63,8 +64,7 @@ export default class Row extends Component<Props> {
         return {
             ...(gutter[0] > 0
                 ? {
-                    'margin-left': `${gutter[0] / -2}px`,
-                    'margin-right': `${gutter[0] / -2}px`
+                    'column-gap ': `${gutter[0]}px`
                 }
                 : {}),
             ...(gutter[1] > 0
@@ -76,11 +76,12 @@ export default class Row extends Component<Props> {
     }
 
     protected getClasses(): string {
-        const { justify, align } = this.props;
+        const { justify, align, wrap } = this.props;
         const prefixCls = getPrefixCls('row');
         return classNames(this.props.className, prefixCls, {
             [`${prefixCls}-${justify}`]: justify,
-            [`${prefixCls}-${align}`]: align
+            [`${prefixCls}-${align}`]: align,
+            [`${prefixCls}-nowrap`]: wrap === false
         });
     }
 
@@ -103,6 +104,6 @@ export default class Row extends Component<Props> {
             return () => {
                 responsiveObserve.unsubscribe(token);
             };
-        }, () => []);
+        }, () => [this.props]);
     }
 }

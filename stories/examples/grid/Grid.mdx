@@ -1,0 +1,49 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks';
+
+import * as GridStories from './Grid.stories';
+
+<Meta of={GridStories}/>
+
+# Grid栅格
+24 栅格系统
+
+## 概述
+布局的栅格化系统，我们是基于行（row）和列（col）来定义信息区块的外部框架，以保证页面的每个区域能够稳健地排布起来。下面简单介绍一下它的工作原理：
+
+* 通过 row 在水平方向建立一组 column（简写 col）。
+* 你的内容应当放置于 col 内，并且，只有 col 可以作为 row 的直接元素。
+* 栅格系统中的列是指 1 到 24 的值来表示其跨越的范围。例如，三个等宽的列可以使用 `<Col span={8} />` 来创建。
+* 如果一个 row 中的 col 总和超过 24，那么多余的 col 会作为一个整体另起一行排列。
+* 此栅格化系统基于 Flex 布局，允许子元素在父节点内的水平对齐方式 - 居左、居中、居右、等宽排列、分散排列。子元素与子元素之间，支持顶部对齐、垂直居中对齐、底部对齐的方式。同时，支持使用 order 来定义元素的排列顺序。
+
+## 区块间隔
+栅格常常需要和间隔进行配合，你可以使用`Row`的`gutter`属性。
+* 如果需要垂直间距，可以写成数组形式 `[水平间距, 垂直间距]` `[16, { xs: 8, sm: 16, md: 24, lg: 32 }]`。
+* 如果要支持响应式，可以写成 `{ xs: 8, sm: 16, md: 24, lg: 32 }`。
+
+## 列偏移
+使用 offset 可以将列向右侧偏。例如，`offset={4}` 将元素向右侧偏移了 4 个列（column）的宽度。
+
+## 栅格排序
+通过使用 `push` 和 `pull` 类就可以很容易的改变列（column）的顺序，列会偏移但不会造成其他列的挤压
+* `push`：列向右偏移
+* `pull`：列向左偏移
+
+## 布局基础。
+* 子元素根据`justify`不同的值 `start`、`center`、`end`、`space-between`、`space-around` 和 `space-evenly`，分别定义其在父节点里面的横向排版方式
+* 子元素根据`align`不同的值 `top`, `middle`, `bottom`，分别定义其在父节点里面的竖向排版方式
+
+## 排序
+通过 `order` 来改变元素的排序。从左到右按0开始，值越大则排序越靠后。所有列的order都默认为0。
+
+## Flex填充
+`Col` 提供 `flex` 属性以支持填充
+
+## 响应式布局
+参照 Bootstrap 的 响应式设计，预设六个响应尺寸：`xs` `sm` `md` `lg` `xl` `xxl`
+
+* `col`的`span`属性可以改变为响应式布局，例如`<Col xs="2" sm="4" md="6" lg="8" xl="10">`。
+* `span` `pull` `push` `offset` `order`属性可以通过内嵌到 `xs` `sm` `md` `lg` `xl` `xxl` 属性中来使用，例如`<Col xs="{ span: 5, offset: 1 }" lg="{ span: 6, offset: 2 }">`
+
+<Canvas of={GridStories.Grid}/>
+<Controls of={GridStories.Grid}/>

@@ -14,7 +14,8 @@ const config: StorybookConfig = {
         options: {}
     },
     docs: {
-        autodocs: 'tag'
+        autodocs: 'tag',
+        defaultName: '说明'
     },
     async webpackFinal(config, { configType }) {
         if (!config.module) {

@@ -49,7 +49,7 @@ const parseFlex = (flex: number | 'none' | 'auto' | string): string => {
     return flex;
 };
 
-export default class Col extends Component<Props> {
+export default class Col extends Component<Props, Env> {
     static template = xml`
     <div t-att-class="state.className" t-att-style="state.style">
         <t t-slot="default"/>
@@ -61,18 +61,7 @@ export default class Col extends Component<Props> {
     });
 
     protected getStyle(): Record<string, string> {
-        const { gutter } = this.env.row.state;
         let colStyle: { [key: string]: any } = {};
-        if (gutter) {
-            colStyle = {
-                ...(gutter[0] > 0
-                    ? {
-                        'padding-left': `${gutter[0] / 2}px`,
-                        'padding-right': `${gutter[0] / 2}px`
-                    }
-                    : {})
-            };
-        }
         if (this.props.flex) {
             colStyle.flex = parseFlex(this.props.flex);
         }
@@ -122,6 +111,6 @@ export default class Col extends Component<Props> {
         useEffect(() => {
             this.state.style = stylesToString(this.getStyle()) || undefined;
             this.state.className = this.getClasses() || undefined;
-        }, () => []);
+        }, () => [this.props]);
     }
 }

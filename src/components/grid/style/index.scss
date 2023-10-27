@@ -7,6 +7,10 @@
 
 .#{$ui-prefix}-row {
   flex-flow: row wrap;
+
+  &-nowrap {
+    flex-wrap: nowrap;
+  }
 }
 
 .#{$ui-prefix}-col {
