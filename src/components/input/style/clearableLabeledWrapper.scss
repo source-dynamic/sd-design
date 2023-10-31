@@ -1,0 +1,124 @@
+@import "variables";
+@import "input";
+
+// 将start或end的border-radius设置为0
+@mixin borderRadius0($direction: "start") {
+  @if ($direction == "start") {
+    border-end-start-radius: 0;
+    border-start-start-radius: 0;
+  } @else {
+    border-end-end-radius: 0;
+    border-start-end-radius: 0;
+  }
+}
+
+// 当有addons时的样式
+.#{$input-prefix-cls}-group-wrapper {
+  width: 100%;
+
+  .#{$input-prefix-cls}-group {
+    display: flex;
+
+    .#{$input-prefix-cls}-affix-wrapper {
+      &:not(:first-child) {
+        @include borderRadius0("start");
+      }
+
+      &:not(:last-child) {
+        @include borderRadius0("end");
+      }
+    }
+
+    > .#{$input-prefix-cls} {
+      &:not(:first-child) {
+        @include borderRadius0("start");
+      }
+
+      &:not(:last-child) {
+        @include borderRadius0("end");
+      }
+    }
+
+    .#{$input-prefix-cls}-group-addon {
+      position: relative;
+      padding: 0 11px;
+      color: rgba(0, 0, 0, 0.88);
+      font-weight: normal;
+      font-size: 14px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.02);
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      transition: all 0.3s;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+
+      &:first-child {
+        border-inline-end: 0;
+        @include borderRadius0("end");
+      }
+
+      &:last-child {
+        border-inline-start: 0;
+        @include borderRadius0("start");
+      }
+    }
+  }
+}
+
+// 当有prefix或者suffix时的样式
+.#{$input-prefix-cls}-affix-wrapper {
+  @include input();
+  display: inline-flex;
+
+  .#{$input-prefix-cls} {
+    padding: 0;
+    font-size: inherit;
+    border: none;
+    border-radius: 0;
+    outline: none;
+
+    &:focus-within {
+      border: none;
+      box-shadow: none;
+    }
+  }
+
+  &:focus {
+    z-index: 1;
+  }
+
+  @include focus();
+
+  .#{$input-prefix-cls}-prefix {
+    margin-inline-end: 4px;
+  }
+
+  .#{$input-prefix-cls}-suffix {
+    margin-inline-start: 4px;
+  }
+
+  .#{$input-prefix-cls}-suffix, #{$input-prefix-cls}-prefix {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+
+  .#{$input-prefix-cls}-clear-icon {
+    color: $gray;
+    font-size: $small-font-size;
+    cursor: pointer;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: rgba(0, 0, 0, 0.45);;
+    }
+
+    &-hidden {
+      visibility: hidden;
+    }
+  }
+}

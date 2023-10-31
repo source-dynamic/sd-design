@@ -1,6 +1,8 @@
-import { Row, Col } from '@/components/grid'
+import { Col, Row } from '@/components/grid';
+import { Input } from '@/components/input';
 
 export {
     Row,
-    Col
+    Col,
+    Input
 }

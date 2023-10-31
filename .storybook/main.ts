@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-webpack5';
 import custom from '../webpack.common.js';
+import path from 'path';
 
 const config: StorybookConfig = {
     stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -27,6 +28,9 @@ const config: StorybookConfig = {
             config.module.rules = [];
         }
 
+        const fileLoaderRule: any = config.module.rules.find((rule: any) => rule.test.test('.svg'));
+        fileLoaderRule.exclude = path.resolve(__dirname, '../src/assets'); // 使assets中的svg文件不走file-loader而走自定义的loader
+
         config.module.rules = config.module.rules.concat([
             {
                 test: /\.scss$/i,
@@ -36,7 +40,12 @@ const config: StorybookConfig = {
                     'sass-loader'
                 ]
             },
+            {
+                test: /\.svg$/,
+                use: ['svg-inline-loader']
+            }
         ]);
+        console.log(config.module.rules);
         return { ...config, resolve: { ...config.resolve, ...custom.resolve } };
     }
 };

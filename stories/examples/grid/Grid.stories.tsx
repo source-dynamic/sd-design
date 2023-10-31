@@ -3,7 +3,6 @@ import { renderStoryComp } from '../../_utils/StoryComp';
 // @ts-ignore
 import GridCompRaw from '!!raw-loader!./Grid';
 import GridComp from './Grid';
-import './grid.scss';
 
 const meta: Meta = {
     title: 'Examples/Grid',

@@ -1,9 +1,15 @@
 import { Component, useState, xml } from '@odoo/owl';
 import { SizeType } from '@/components/_util/type';
-import { getPrefixCls } from '@/components/_util/utils';
+import { getPrefixCls, getSDSVG } from '@/components/_util/utils';
 import classNames from 'classnames';
 import { getInputClassName } from '@/components/input/utils';
-import closeFillSVG from '@/assets/close_fill.svg';
+import _closeFillSVG from '@/assets/close_fill.svg';
+import './style/clearableLabeledWrapper.scss';
+
+const closeFillSVG = getSDSVG(_closeFillSVG, {
+    width: '1em',
+    height: '1em'
+});
 
 /** This basic props required for input and textarea. */
 type IBasicProps = {
@@ -27,8 +33,7 @@ type IClearableWrapperProps = {
     prefix?: any;
 } & IBasicProps;
 
-type State = {
-}
+type State = {}
 
 export default class ClearableLabeledWrapper extends Component<IClearableWrapperProps> {
     /**
@@ -129,15 +134,15 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
 
     static defaultProps = {
         inputType: 'input'
-    }
+    };
 
-    state  = useState<State>({})
+    state = useState<State>({});
 
     /**
      * 判断是否有前置、后置部分
      */
     protected hasAddon(): boolean {
-        const {slots} = this.props;
+        const { slots } = this.props;
         return !!(slots?.addonBefore || slots?.addonAfter);
     }
 
@@ -145,7 +150,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      * 判断是否有前缀、后缀
      */
     protected hasPrefixSuffix(): boolean {
-        const {slots} = this.props;
+        const { slots } = this.props;
         return !!(slots?.prefix || slots?.suffix || this.props.allowClear);
     }
 
@@ -153,7 +158,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      * 清除图标的class
      */
     protected renderClearIconClass(): string | undefined {
-        const {value, allowClear, disabled, readOnly, suffix} = this.props;
+        const { value, allowClear, disabled, readOnly, suffix } = this.props;
         if (!allowClear) {
             return;
         }
@@ -163,11 +168,10 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
         return classNames(
             {
                 [`${className}-hidden`]: !needClear,
-                [`${className}-has-suffix`]: !!suffix,
+                [`${className}-has-suffix`]: !!suffix
             },
-            className,
-            getPrefixCls('icon')
-        )
+            className
+        );
     }
 
     /**
@@ -183,7 +187,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             allowClear,
             direction,
             readOnly,
-            bordered,
+            bordered
         } = this.props;
 
         const prefixCls = getPrefixCls('input');
@@ -200,25 +204,25 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: suffix && allowClear && value,
             [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
             [`${prefixCls}-affix-wrapper-readonly`]: readOnly,
-            [`${prefixCls}-affix-wrapper-borderless`]: !bordered,
+            [`${prefixCls}-affix-wrapper-borderless`]: !bordered
         });
 
         const classes = getInputClassName(prefixCls, bordered, size, disabled);
 
-        return {affixWrapperCls, prefixClass, suffixClass, classes}
+        return { affixWrapperCls, prefixClass, suffixClass, classes };
     }
 
     /**
      * 外部区域的class
      */
     protected renderInputWithLabelClass(): {} {
-        const {size, className, direction} = this.props;
+        const { size, className, direction } = this.props;
         const prefixCls = getPrefixCls('input');
         const wrapperClassName = `${prefixCls}-group`;
         const addonClassName = `${wrapperClassName}-addon`;
 
         const mergedWrapperClassName = classNames(`${prefixCls}-wrapper`, wrapperClassName, {
-            [`${wrapperClassName}-rtl`]: direction === 'rtl',
+            [`${wrapperClassName}-rtl`]: direction === 'rtl'
         });
 
         const mergedGroupClassName = classNames(
@@ -226,19 +230,19 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             {
                 [`${prefixCls}-group-wrapper-sm`]: size === 'small',
                 [`${prefixCls}-group-wrapper-lg`]: size === 'large',
-                [`${prefixCls}-group-wrapper-rtl`]: direction === 'rtl',
+                [`${prefixCls}-group-wrapper-rtl`]: direction === 'rtl'
             },
-            className,
+            className
         );
 
-        return {addonClassName, mergedWrapperClassName, mergedGroupClassName};
+        return { addonClassName, mergedWrapperClassName, mergedGroupClassName };
     }
 
     /**
      * 文本域带有清除按钮的class
      */
     protected renderTextAreaWithClearIconClass(): {} {
-        const {bordered, direction} = this.props;
+        const { bordered, direction } = this.props;
         const prefixCls = getPrefixCls('input');
 
         const affixWrapperCls = classNames(
@@ -246,10 +250,10 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             `${prefixCls}-affix-wrapper-textarea-with-clear-btn`,
             {
                 [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
-                [`${prefixCls}-affix-wrapper-borderless`]: !bordered,
-            },
+                [`${prefixCls}-affix-wrapper-borderless`]: !bordered
+            }
         );
 
-        return {affixWrapperCls}
+        return { affixWrapperCls };
     }
 }

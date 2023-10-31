@@ -1,5 +1,6 @@
 import { Component, useState, xml } from '@odoo/owl';
 import { Col, Row } from '../../../src';
+import './grid.scss';
 
 export default class GridRoot extends Component {
     static components = { Row, Col };

@@ -4,6 +4,7 @@ import { getPrefixCls } from '@/components/_util/utils';
 import classNames from 'classnames';
 import { getInputClassName } from '@/components/input/utils';
 import { SizeType } from '@/components/_util/type';
+import './style/input.scss';
 
 export interface IInputFocusOptions extends FocusOptions {
     cursor?: 'start' | 'end' | 'all';
@@ -69,14 +70,8 @@ export default class Input extends Component<InputProps> {
     static template = xml`
 <ClearableLabeledWrapper type="props.type" inputType="'input'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="state.value"
-    handleReset.alike="(e) => this.handleReset(e)"
+    handleReset.alike="(e) => this.handleReset(e)" slots="props.slots"
 >
-    <t t-set-slot="prefix">
-        <t t-slot="prefix"/>
-    </t>
-    <t t-set-slot="addonBefore">
-        <t t-slot="addonBefore"/>
-    </t>
     <input 
         t-att-maxlength="props.maxLength"
         t-att-type="props.type"
@@ -88,12 +83,6 @@ export default class Input extends Component<InputProps> {
         t-on-keydown.stop="handleKeyDown"
         t-model="state.value"
     />
-    <t t-set-slot="suffix">
-        <t t-slot="suffix"/>
-    </t>
-    <t t-set-slot="addonAfter">
-        <t t-slot="addonAfter"/>
-    </t>
 </ClearableLabeledWrapper>
 `;
 
