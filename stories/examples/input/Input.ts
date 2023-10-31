@@ -10,16 +10,17 @@ export default class InputRoot extends Component {
         prefix: '',
         suffix: '',
         addonBefore: '',
-        addonAfter: ''
+        addonAfter: '',
+        size: undefined
     });
 
     static template = xml`
 <div class="input-container">
-    <Input allowClear="state.allowClear" placeholder="'Basic usage'"/>
+    <Input allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size"/>
 </div>
 
 <div class="input-container">
-    <Input placeholder="'Prefix And Suffix'">
+    <Input placeholder="'Prefix And Suffix'" size="state.size">
         <t t-set-slot="prefix">
             <t t-esc="state.prefix"/>
         </t>
@@ -30,7 +31,7 @@ export default class InputRoot extends Component {
 </div>
 
 <div class="input-container">
-    <Input placeholder="'AddonBefore And AddonAfter'" allowClear="state.allowClear">
+    <Input placeholder="'AddonBefore And AddonAfter'" allowClear="state.allowClear" size="state.size">
         <t t-set-slot="addonBefore">
             <t t-esc="state.addonBefore"/>
         </t>

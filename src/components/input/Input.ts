@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState, xml } from '@odoo/owl';
+import { Component, useRef, useState, xml } from '@odoo/owl';
 import ClearableLabeledWrapper from './ClearableLabeledWrapper';
 import { getPrefixCls } from '@/components/_util/utils';
 import classNames from 'classnames';
@@ -60,7 +60,6 @@ export type InputProps = {
 
 type State = {
     focused: boolean;
-    className?: string;
     value: any
 }
 
@@ -76,7 +75,7 @@ export default class Input extends Component<InputProps> {
         t-att-maxlength="props.maxLength"
         t-att-type="props.type"
         t-att-placeholder="props.placeholder"
-        t-att-class="state.className"
+        t-att-class="getClasses()"
         t-on-focus.stop="onFocus"
         t-on-blur.stop="onBlur"
         t-ref="input"
@@ -94,7 +93,6 @@ export default class Input extends Component<InputProps> {
 
     state = useState<State>({
         focused: false,
-        className: undefined,
         value: ''
     });
 
@@ -135,8 +133,5 @@ export default class Input extends Component<InputProps> {
 
     setup(): void {
         this.inputRef = useRef('input');
-        useEffect(() => {
-            this.state.className = this.getClasses() || undefined;
-        }, () => []);
     }
 }

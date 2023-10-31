@@ -1,4 +1,4 @@
-import { Component, useEffect, useState, xml } from '@odoo/owl';
+import { Component, xml } from '@odoo/owl';
 import { responsiveArray } from '@/components/_util/responsiveObserve';
 import { getPrefixCls, stylesToString } from '@/components/_util/utils';
 import classNames from 'classnames';
@@ -34,11 +34,6 @@ type Env = {
     row: Row
 }
 
-type State = {
-    className?: string;
-    style?: string;
-}
-
 const parseFlex = (flex: number | 'none' | 'auto' | string): string => {
     if (typeof flex === 'number') {
         return `${flex} ${flex} auto`;
@@ -51,21 +46,17 @@ const parseFlex = (flex: number | 'none' | 'auto' | string): string => {
 
 export default class Col extends Component<Props, Env> {
     static template = xml`
-    <div t-att-class="state.className" t-att-style="state.style">
+    <div t-att-class="getClasses()" t-att-style="getStyle()">
         <t t-slot="default"/>
     </div>
     `;
-    state = useState<State>({
-        className: undefined,
-        style: undefined
-    });
 
-    protected getStyle(): Record<string, string> {
+    protected getStyle(): string | undefined {
         let colStyle: { [key: string]: any } = {};
         if (this.props.flex) {
             colStyle.flex = parseFlex(this.props.flex);
         }
-        return colStyle;
+        return stylesToString(colStyle) || undefined
     }
 
     protected getClasses(): string {
@@ -105,12 +96,5 @@ export default class Col extends Component<Props, Env> {
             },
             sizeClassObj
         );
-    }
-
-    setup(): void {
-        useEffect(() => {
-            this.state.style = stylesToString(this.getStyle()) || undefined;
-            this.state.className = this.getClasses() || undefined;
-        }, () => [this.props]);
     }
 }

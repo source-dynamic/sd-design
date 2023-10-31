@@ -15,7 +15,14 @@ const meta: Meta = {
         prefix: '￥',
         suffix: 'RMB',
         addonBefore: 'http://',
-        addonAfter: '.com'
+        addonAfter: '.com',
+        size: 'middle'
+    },
+    argTypes: {
+        size: {
+            control: 'select',
+            options: ['small', 'middle', 'large']
+        }
     }
 };
 

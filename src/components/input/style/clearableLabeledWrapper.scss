@@ -47,8 +47,8 @@
       font-size: 14px;
       text-align: center;
       background-color: rgba(0, 0, 0, 0.02);
-      border: 1px solid #d9d9d9;
-      border-radius: 6px;
+      border: 1px solid $border-color;
+      border-radius: $base-border-radius;
       transition: all 0.3s;
       line-height: 1;
       display: flex;
@@ -71,6 +71,18 @@
 .#{$input-prefix-cls}-affix-wrapper {
   @include input();
   display: inline-flex;
+
+  &-sm {
+    padding: 0 7px;
+    border-radius: $small-border-radius;
+  }
+
+  &-lg {
+    padding: 7px 11px;
+    font-size: $large-font-size;
+    line-height: 1.5;
+    border-radius: $large-border-radius;
+  }
 
   .#{$input-prefix-cls} {
     padding: 0;
