@@ -71,18 +71,7 @@
 .#{$input-prefix-cls}-affix-wrapper {
   @include input();
   display: inline-flex;
-
-  &-sm {
-    padding: 0 7px;
-    border-radius: $small-border-radius;
-  }
-
-  &-lg {
-    padding: 7px 11px;
-    font-size: $large-font-size;
-    line-height: 1.5;
-    border-radius: $large-border-radius;
-  }
+  @include responsive();
 
   .#{$input-prefix-cls} {
     padding: 0;
@@ -90,6 +79,18 @@
     border: none;
     border-radius: 0;
     outline: none;
+
+    &-sm {
+      padding: 0;
+      border-radius: 0;
+    }
+
+    &-lg {
+      padding: 0;
+      font-size: inherit;
+      line-height: inherit;
+      border-radius: 0;
+    }
 
     &:focus-within {
       border: none;
@@ -111,7 +112,7 @@
     margin-inline-start: 4px;
   }
 
-  .#{$input-prefix-cls}-suffix, #{$input-prefix-cls}-prefix {
+  .#{$input-prefix-cls}-suffix, .#{$input-prefix-cls}-prefix {
     display: flex;
     flex: none;
     align-items: center;

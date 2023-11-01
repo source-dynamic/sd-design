@@ -6,7 +6,7 @@
   margin: 0;
   padding: 4px 11px;
   color: rgba($black, 0.88);
-  font-size: 14px;
+  font-size: $base-font-size;
   line-height: 1.5714285714285714;
   list-style: none;
   position: relative;
@@ -29,10 +29,25 @@
   }
 }
 
+@mixin responsive() {
+  &-sm {
+    padding: 0 7px;
+    border-radius: $small-border-radius;
+  }
+
+  &-lg {
+    padding: 7px 11px;
+    font-size: $large-font-size;
+    line-height: 1.5;
+    border-radius: $large-border-radius;
+  }
+}
+
 .#{$input-prefix-cls} {
   @include input();
   outline: none;
   @include focus();
+  @include responsive();
 
   &::placeholder {
     color: $gray;
