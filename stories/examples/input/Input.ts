@@ -7,16 +7,19 @@ export default class InputRoot extends Component {
 
     state = useState({
         allowClear: true,
+        showCount: false,
         prefix: '',
         suffix: '',
         addonBefore: '',
         addonAfter: '',
-        size: undefined
+        size: undefined,
+        border: undefined,
+        disabled: undefined
     });
 
     static template = xml`
 <div class="input-container">
-    <Input allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size"/>
+    <Input showCount="state.showCount" allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size" bordered="state.border" disabled="state.disabled"/>
 </div>
 
 <div class="input-container">

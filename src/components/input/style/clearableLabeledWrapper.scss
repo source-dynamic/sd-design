@@ -73,12 +73,27 @@
   display: inline-flex;
   @include responsive();
 
+  @include focus();
+
+  &-disabled {
+    @include disabled();
+  }
+
+  &-borderless {
+    @include borderless();
+  }
+
   .#{$input-prefix-cls} {
     padding: 0;
     font-size: inherit;
     border: none;
     border-radius: 0;
     outline: none;
+
+    &-disabled {
+      color: $font-color;
+      background-color: transparent;
+    }
 
     &-sm {
       padding: 0;
@@ -102,13 +117,11 @@
     z-index: 1;
   }
 
-  @include focus();
-
-  .#{$input-prefix-cls}-prefix {
+  .#{$input-prefix-cls}-prefix:not(:empty) {
     margin-inline-end: 4px;
   }
 
-  .#{$input-prefix-cls}-suffix {
+  .#{$input-prefix-cls}-suffix:not(:empty) {
     margin-inline-start: 4px;
   }
 
@@ -116,6 +129,11 @@
     display: flex;
     flex: none;
     align-items: center;
+  }
+
+  .#{$input-prefix-cls}-show-count-suffix {
+    color: $gray;
+    font-size: $base-font-size;
   }
 
   .#{$input-prefix-cls}-clear-icon {

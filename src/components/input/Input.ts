@@ -1,4 +1,4 @@
-import { Component, useRef, useState, xml } from '@odoo/owl';
+import { Component, useEffect, useRef, useState, xml } from '@odoo/owl';
 import ClearableLabeledWrapper from './ClearableLabeledWrapper';
 import { getPrefixCls } from '@/components/_util/utils';
 import classNames from 'classnames';
@@ -12,7 +12,7 @@ export interface IInputFocusOptions extends FocusOptions {
 
 export function triggerFocus(
     element?: HTMLInputElement | HTMLTextAreaElement | null,
-    option?: IInputFocusOptions,
+    option?: IInputFocusOptions
 ): void {
     if (!element) {
         return;
@@ -21,7 +21,7 @@ export function triggerFocus(
     element.focus(option);
 
     // Selection content
-    const {cursor} = option || {};
+    const { cursor } = option || {};
     if (cursor) {
         const len = element.value.length;
 
@@ -49,6 +49,7 @@ export type InputProps = {
     allowClear?: boolean;
     bordered?: boolean;
     placeholder?: string;
+    showCount?: boolean;
     defaultValue?: any;
     onFocus?: (event: any) => void;
     onBlur?: (event: any) => void;
@@ -60,18 +61,20 @@ export type InputProps = {
 
 type State = {
     focused: boolean;
-    value: any
+    value: any;
+    count?: string
 }
 
-export default class Input extends Component<InputProps> {
+export default class Input<T extends InputProps> extends Component<T> {
     static components = { ClearableLabeledWrapper };
 
     static template = xml`
-<ClearableLabeledWrapper type="props.type" inputType="'input'" bordered="props.bordered" size="props.size"
+<ClearableLabeledWrapper inputType="'input'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="state.value"
-    handleReset.alike="(e) => this.handleReset(e)" slots="props.slots"
+    handleReset.alike="(e) => this.handleReset(e)" slots="props.slots" count="state.count"
 >
     <input 
+        t-att-disabled="props.disabled"
         t-att-maxlength="props.maxLength"
         t-att-type="props.type"
         t-att-placeholder="props.placeholder"
@@ -88,12 +91,14 @@ export default class Input extends Component<InputProps> {
     inputRef: { el: HTMLInputElement | null } = { el: null };
 
     static defaultProps = {
-        type: 'text'
+        type: 'text',
+        bordered: true
     };
 
     state = useState<State>({
         focused: false,
-        value: ''
+        value: '',
+        count: undefined
     });
 
     protected getClasses(): string {
@@ -127,11 +132,19 @@ export default class Input extends Component<InputProps> {
      * @param e
      */
     protected handleReset(e: MouseEvent): void {
-        this.state.value = "";
+        this.state.value = '';
         triggerFocus(this.inputRef.el);
     };
 
     setup(): void {
         this.inputRef = useRef('input');
+
+        useEffect(() => {
+            if (this.props.showCount) {
+                this.state.count = this.props.maxLength ? `${this.state.value.length}/${this.props.maxLength}` : `${this.state.value.length}`;
+            }else {
+                this.state.count = undefined;
+            }
+        }, () => [this.props.showCount, this.state.value]);
     }
 }

@@ -1,11 +1,12 @@
 @import "src/theme/style";
 @import "variables";
 
+// input基础样式
 @mixin input() {
   box-sizing: border-box;
   margin: 0;
   padding: 4px 11px;
-  color: rgba($black, 0.88);
+  color: $font-color;
   font-size: $base-font-size;
   line-height: 1.5714285714285714;
   list-style: none;
@@ -22,6 +23,7 @@
   transition: all 0.2s;
 }
 
+// input聚焦样式
 @mixin focus() {
   &:focus-within {
     border-color: #1677ff;
@@ -29,6 +31,7 @@
   }
 }
 
+// input不同尺寸样式
 @mixin responsive() {
   &-sm {
     padding: 0 7px;
@@ -43,11 +46,41 @@
   }
 }
 
+// input无边框样式
+@mixin borderless() {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+
+  &:focus-within {
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@mixin disabled() {
+  color: $disabled-color;
+  background-color: $disabled-background-color;
+  border-color: $border-color;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+
 .#{$input-prefix-cls} {
   @include input();
   outline: none;
   @include focus();
   @include responsive();
+
+  &-disabled {
+    @include disabled();
+  }
+
+  &-borderless {
+    @include borderless();
+  }
 
   &::placeholder {
     color: $gray;

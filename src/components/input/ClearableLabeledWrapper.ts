@@ -24,6 +24,7 @@ type IBasicProps = {
     bordered: boolean;
     handleReset: (event: MouseEvent) => void;
     slots?: Record<string, any>;
+    count?: string;
 }
 
 /** This props only for input. */
@@ -34,6 +35,8 @@ type IClearableWrapperProps = {
 } & IBasicProps;
 
 type State = {}
+
+const showCountSpanClass = getPrefixCls('input-show-count-suffix');
 
 export default class ClearableLabeledWrapper extends Component<IClearableWrapperProps> {
     /**
@@ -73,10 +76,13 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
                 <t t-slot="default" />
                 
                 <!--  suffix插槽  -->
-                <t t-if="props.slots.suffix || props.allowClear">
+                <t t-if="props.slots.suffix || props.allowClear || props.count">
                     <span t-att-class="labeledIconClass.suffixClass">
                         <t t-if="props.allowClear">
                             ${ClearableLabeledWrapper.clearTemplate}
+                        </t>
+                        <t t-if="props.count">
+                            <span class="${showCountSpanClass}"><t t-esc="props.count"/></span>
                         </t>
                         <t t-slot="suffix"/>
                     </span>
@@ -133,7 +139,8 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     `;
 
     static defaultProps = {
-        inputType: 'input'
+        inputType: 'input',
+        bordered: true
     };
 
     state = useState<State>({});
@@ -151,7 +158,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      */
     protected hasPrefixSuffix(): boolean {
         const { slots } = this.props;
-        return !!(slots?.prefix || slots?.suffix || this.props.allowClear);
+        return !!(slots?.prefix || slots?.suffix || this.props.allowClear || !!this.props.count);
     }
 
     /**
