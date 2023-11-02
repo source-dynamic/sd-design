@@ -51,6 +51,7 @@ export type InputProps = {
     bordered?: boolean;
     placeholder?: string;
     showCount?: boolean;
+    defaultValue?: any;
     value?: any;
     onFocus?: (event: any) => void;
     onBlur?: (event: any) => void;
@@ -106,7 +107,7 @@ export default class Input<T extends InputProps> extends Component<T> {
     });
 
     controllableState = useControllableState(this.props, {
-        value: ''
+        value: this.props.defaultValue || ''
     });
 
     protected getClasses(): string {
@@ -171,6 +172,12 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     setup(): void {
         this.inputRef = useRef('input');
+
+        useEffect(() => {
+            if (this.inputRef.el) {
+                this.inputRef.el!.value = this.controllableState.state.value;
+            }
+        }, () => [this.inputRef.el]);
 
         useEffect(() => {
             this.inputRef.el!.value = this.controllableState.state.value;

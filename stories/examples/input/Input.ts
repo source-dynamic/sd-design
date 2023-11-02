@@ -22,7 +22,7 @@ export default class InputRoot extends Component {
     })
 
     onChange(value: string) {
-        // this.innerState.value = value;
+        this.innerState.value = value;
     }
 
     static template = xml`
