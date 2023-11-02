@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { getInputClassName } from '@/components/input/utils';
 import { SizeType } from '@/components/_util/type';
 import './style/input.scss';
+import useControllableState from '@/hooks/useControllableState';
 
 export interface IInputFocusOptions extends FocusOptions {
     cursor?: 'start' | 'end' | 'all';
@@ -50,10 +51,10 @@ export type InputProps = {
     bordered?: boolean;
     placeholder?: string;
     showCount?: boolean;
-    defaultValue?: any;
+    value?: any;
     onFocus?: (event: any) => void;
     onBlur?: (event: any) => void;
-    onInput?: (event: any) => void;
+    onChange?: (event: any) => void;
     onPressEnter?: (event: any) => void;
     onKeyDown?: (event: any) => void;
     slots?: Record<string, any>;
@@ -61,7 +62,6 @@ export type InputProps = {
 
 type State = {
     focused: boolean;
-    value: any;
     count?: string
 }
 
@@ -70,7 +70,7 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     static template = xml`
 <ClearableLabeledWrapper inputType="'input'" bordered="props.bordered" size="props.size"
-    disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="state.value"
+    disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="controllableState.state.value"
     handleReset.alike="(e) => this.handleReset(e)" slots="props.slots" count="state.count"
 >
     <input 
@@ -83,7 +83,9 @@ export default class Input<T extends InputProps> extends Component<T> {
         t-on-blur.stop="onBlur"
         t-ref="input"
         t-on-keydown.stop="handleKeyDown"
-        t-model="state.value"
+        t-on-compositionstart="onCompositionstart"
+        t-on-compositionend="onCompositionend"
+        t-on-input="onInput"
     />
 </ClearableLabeledWrapper>
 `;
@@ -95,10 +97,16 @@ export default class Input<T extends InputProps> extends Component<T> {
         bordered: true
     };
 
+    // 区分当前是中文输入还是英文输入的flag
+    compositionFlag = false;
+
     state = useState<State>({
         focused: false,
-        value: '',
         count: undefined
+    });
+
+    controllableState = useControllableState(this.props, {
+        value: ''
     });
 
     protected getClasses(): string {
@@ -127,12 +135,33 @@ export default class Input<T extends InputProps> extends Component<T> {
         onKeyDown?.(e);
     };
 
+    protected onCompositionstart = (e: Event) => {
+        this.compositionFlag = true;
+    }
+
+    protected onCompositionend = (e: Event) => {
+        this.compositionFlag = false;
+        this.onInput(e);
+    }
+
+    protected onInput = (e: Event) => {
+        if (this.compositionFlag) {
+            return;
+        }
+
+        // 设置input的value
+        const value = (e.target as HTMLInputElement).value;
+        this.controllableState.setState({ value });
+        this.props.onChange?.(e);
+        this.inputRef.el!.value = this.controllableState.state.value;
+    }
+
     /**
      * 清除输入框
      * @param e
      */
     protected handleReset(e: MouseEvent): void {
-        this.state.value = '';
+        this.controllableState.setState({ value: '' });
         triggerFocus(this.inputRef.el);
     };
 
@@ -140,11 +169,13 @@ export default class Input<T extends InputProps> extends Component<T> {
         this.inputRef = useRef('input');
 
         useEffect(() => {
+            this.inputRef.el!.value = this.controllableState.state.value;
             if (this.props.showCount) {
-                this.state.count = this.props.maxLength ? `${this.state.value.length}/${this.props.maxLength}` : `${this.state.value.length}`;
+                const value = this.controllableState.state.value;
+                this.state.count = this.props.maxLength ? `${value.length}/${this.props.maxLength}` : `${value.length}`;
             }else {
                 this.state.count = undefined;
             }
-        }, () => [this.props.showCount, this.state.value]);
+        }, () => [this.props.showCount, this.controllableState.state.value]);
     }
 }

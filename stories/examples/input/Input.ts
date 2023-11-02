@@ -14,12 +14,20 @@ export default class InputRoot extends Component {
         addonAfter: '',
         size: undefined,
         border: undefined,
-        disabled: undefined
+        disabled: undefined,
     });
+
+    innerState = useState({
+        value: ''
+    })
+
+    onChange(ev: any) {
+        this.innerState.value = ev.target.value;
+    }
 
     static template = xml`
 <div class="input-container">
-    <Input showCount="state.showCount" allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size" bordered="state.border" disabled="state.disabled"/>
+    <Input value="innerState.value" onChange.bind.alike="onChange" showCount="state.showCount" allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size" bordered="state.border" disabled="state.disabled"/>
 </div>
 
 <div class="input-container">
