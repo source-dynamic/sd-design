@@ -5,12 +5,12 @@ import { onWillUpdateProps, useState } from '@odoo/owl';
  * @param props 组件的props
  * @param defaultState 默认值，必须包含所有待监控的key，未传入的key将被忽略
  */
-const useControllableState = <T extends object> (
+const useControllableState = <S extends object> (
     props: Record<string, any>,
-    defaultState: T
+    defaultState: S
 ) => {
 
-    const state = useState<T>(defaultState);
+    const state = useState<S>(defaultState);
 
     onWillUpdateProps((nextProps) => {
         // props更新时，将被监控的值更新到state中
@@ -21,7 +21,7 @@ const useControllableState = <T extends object> (
         }
     });
 
-    const setState = (values: Partial<T>) => {
+    const setState = (values: Partial<S>) => {
         for (const key in values) {
             // 如果props中未传入该值，说明是非受控组件，则交由组件内部管理
             if (!(key in props)) {

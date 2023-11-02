@@ -2,7 +2,7 @@ import { useEffect, useState, xml } from '@odoo/owl';
 import Input, { InputProps } from './Input';
 import _eyeSVG from '@/assets/eye.svg';
 import _eyeCloseSVG from '@/assets/eye-close.svg';
-import { getPrefixCls, getSDSVG } from '@/components/_util/utils';
+import { getPrefixCls, getSDSVG, omit } from '@/components/_util/utils';
 import classNames from 'classnames';
 import './style/password.scss';
 import useControllableState from '@/hooks/useControllableState';
@@ -20,13 +20,13 @@ const eyeCloseSVG = getSDSVG(_eyeCloseSVG, {
 export type PasswordProps = InputProps & {
     visible?: boolean;
     onVisibleChange?: (visible: boolean) => void;
-    iconRender?: (visible: boolean) => any;
 }
 
 type State = {
     focused: boolean;
     value: any;
     type: string;
+    restProps: {}
 }
 
 const passwordClass = getPrefixCls('input-password');
@@ -48,6 +48,7 @@ export default class Password extends Input<PasswordProps> {
     </t>
     
     <input 
+        t-att="state.restProps"
         t-att-disabled="props.disabled"
         t-att-maxlength="props.maxLength"
         t-att-type="state.type"
@@ -66,10 +67,12 @@ export default class Password extends Input<PasswordProps> {
         focused: false,
         value: '',
         type: 'password',
+        restProps: {}
     });
 
     controllableState = useControllableState(this.props, {
-        visible: false
+        visible: false,
+        value: this.props.defaultValue || ''
     });
 
     protected getClasses(): string {
@@ -77,13 +80,20 @@ export default class Password extends Input<PasswordProps> {
     }
 
     protected togglePasswordVisibility(): void {
-        this.controllableState.setState({
-            visible: !this.controllableState.state.visible
-        })
-        this.props.onVisibleChange?.(!this.controllableState.state.visible);
+        if (!this.props.disabled) {
+            this.controllableState.setState({
+                visible: !this.controllableState.state.visible
+            });
+            this.props.onVisibleChange?.(!this.controllableState.state.visible);
+        }
+    }
+
+    protected getRestProps() {
+        return omit(super.getRestProps(), ['visible', 'onVisibleChange']);
     }
 
     public setup(): void {
+        super.setup();
         useEffect(() => {
             this.state.type = this.controllableState.state.visible ? 'text' : 'password';
         }, () => [this.controllableState.state.visible]);

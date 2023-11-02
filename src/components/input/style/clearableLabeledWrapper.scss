@@ -74,6 +74,7 @@
   @include responsive();
 
   @include focus();
+  @include hover();
 
   &-disabled {
     @include disabled();
@@ -89,6 +90,8 @@
     border: none;
     border-radius: 0;
     outline: none;
+    line-height: 22px;
+    min-height: 22px;
 
     &-disabled {
       color: $font-color;
@@ -102,12 +105,13 @@
 
     &-lg {
       padding: 0;
-      font-size: inherit;
-      line-height: inherit;
+      font-size: $large-font-size;
       border-radius: 0;
+      line-height: 24px;
+      min-height: 24px;
     }
 
-    &:focus-within {
+    &:focus-within, &:hover {
       border: none;
       box-shadow: none;
     }

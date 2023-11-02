@@ -6,6 +6,9 @@ import InputComp from './Input';
 // @ts-ignore
 import PasswordRaw from '!!raw-loader!./Password';
 import PasswordComp from './Password';
+// @ts-ignore
+import TextAreaRaw from '!!raw-loader!./Textarea';
+import TextAreaComp from './Textarea';
 
 const meta: Meta = {
     title: 'Examples/Input',
@@ -92,4 +95,29 @@ export const Password: Story = {
         }
     },
     render: renderStoryComp(PasswordComp)
+};
+
+export const TextArea: Story = {
+    args: {
+        ...Input.args,
+        autoSize: false
+    },
+    argTypes: {
+        ...Input.argTypes,
+        autoSize: {
+            table: {
+                category: 'TextArea'
+            },
+            description: '自适应内容高度',
+            control: 'boolean'
+        }
+    },
+    parameters: {
+        docs: {
+            source: {
+                code: TextAreaRaw
+            }
+        }
+    },
+    render: renderStoryComp(TextAreaComp)
 };

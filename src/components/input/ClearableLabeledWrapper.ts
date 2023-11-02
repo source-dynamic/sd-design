@@ -123,7 +123,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
                 </t>
             </t>
             <t t-else="">
-                <t t-if="!props.allowClear">
+                <t t-if="!hasTextSuffix()">
                     <t t-slot="default"/>
                 </t>
                 <t t-else="">
@@ -131,7 +131,16 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
                     
                     <span t-att-class="textAreaIconClass.affixWrapperCls">
                         <t t-slot="default"/>
-                        ${ClearableLabeledWrapper.clearTemplate}
+                        
+                        <t t-set="labeledIconClass" t-value="renderLabeledIconClass()"/>
+                        <span t-att-class="labeledIconClass.suffixClass">
+                            <t t-if="props.allowClear">
+                                ${ClearableLabeledWrapper.clearTemplate}
+                            </t>
+                            <t t-if="props.count">
+                                <span class="${showCountSpanClass}"><t t-esc="props.count"/></span>
+                            </t>
+                        </span>
                     </span>
                 </t>
             </t>
@@ -144,6 +153,10 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
     };
 
     state = useState<State>({});
+
+    protected hasTextSuffix(): boolean {
+        return !!this.props.allowClear || !!this.props.count
+    }
 
     /**
      * 判断是否有前置、后置部分
@@ -249,13 +262,15 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      * 文本域带有清除按钮的class
      */
     protected renderTextAreaWithClearIconClass(): {} {
-        const { bordered, direction } = this.props;
+        const { bordered, direction, disabled } = this.props;
         const prefixCls = getPrefixCls('input');
 
         const affixWrapperCls = classNames(
             `${prefixCls}-affix-wrapper`,
+            `${prefixCls}-affix-wrapper-textarea`,
             `${prefixCls}-affix-wrapper-textarea-with-clear-btn`,
             {
+                [`${prefixCls}-affix-wrapper-disabled`]: disabled,
                 [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
                 [`${prefixCls}-affix-wrapper-borderless`]: !bordered
             }

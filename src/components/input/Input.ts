@@ -1,6 +1,6 @@
 import { Component, useEffect, useRef, useState, xml } from '@odoo/owl';
 import ClearableLabeledWrapper from './ClearableLabeledWrapper';
-import { getPrefixCls } from '@/components/_util/utils';
+import { getPrefixCls, omit } from '@/components/_util/utils';
 import classNames from 'classnames';
 import { getInputClassName } from '@/components/input/utils';
 import { SizeType } from '@/components/_util/type';
@@ -63,7 +63,8 @@ export type InputProps = {
 
 type State = {
     focused: boolean;
-    count?: string
+    count?: string;
+    restProps: Record<string, any>
 }
 
 export default class Input<T extends InputProps> extends Component<T> {
@@ -75,6 +76,7 @@ export default class Input<T extends InputProps> extends Component<T> {
     handleReset.alike="(e) => this.handleReset(e)" slots="props.slots" count="state.count"
 >
     <input 
+        t-att="state.restProps"
         t-att-disabled="props.disabled"
         t-att-maxlength="props.maxLength"
         t-att-type="props.type"
@@ -103,7 +105,8 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     state = useState<State>({
         focused: false,
-        count: undefined
+        count: undefined,
+        restProps: {}
     });
 
     controllableState = useControllableState(this.props, {
@@ -128,7 +131,7 @@ export default class Input<T extends InputProps> extends Component<T> {
         onBlur?.(event);
     }
 
-    protected handleKeyDown = (e: KeyboardEvent) => {
+    protected handleKeyDown(e: KeyboardEvent) {
         const { onPressEnter, onKeyDown } = this.props;
         if (onPressEnter && e.key.toLowerCase() === 'enter') {
             onPressEnter(e);
@@ -136,22 +139,22 @@ export default class Input<T extends InputProps> extends Component<T> {
         onKeyDown?.(e);
     };
 
-    protected onCompositionstart = (e: Event) => {
+    protected onCompositionstart(e: Event) {
         this.compositionFlag = true;
-    }
+    };
 
-    protected onCompositionend = (e: Event) => {
+    protected onCompositionend(e: Event) {
         this.compositionFlag = false;
         this.onInput(e);
-    }
+    };
 
-    protected changeValue = (value: string) => {
+    protected changeValue(value: string) {
         this.controllableState.setState({ value });
         this.inputRef.el!.value = this.controllableState.state.value;
         this.props.onChange?.(value);
-    }
+    };
 
-    protected onInput = (e: Event) => {
+    protected onInput(e: Event) {
         if (this.compositionFlag) {
             return;
         }
@@ -159,7 +162,7 @@ export default class Input<T extends InputProps> extends Component<T> {
         // 设置input的value
         const value = (e.target as HTMLInputElement).value;
         this.changeValue(value);
-    }
+    };
 
     /**
      * 清除输入框
@@ -170,8 +173,34 @@ export default class Input<T extends InputProps> extends Component<T> {
         triggerFocus(this.inputRef.el);
     };
 
+    protected getRestProps() {
+        return omit(this.props, [
+            'className',
+            'size',
+            'disabled',
+            'type',
+            'maxLength',
+            'allowClear',
+            'bordered',
+            'placeholder',
+            'showCount',
+            'defaultValue',
+            'value',
+            'onFocus',
+            'onBlur',
+            'onChange',
+            'onPressEnter',
+            'onKeyDown',
+            'slots'
+        ]);
+    }
+
     setup(): void {
         this.inputRef = useRef('input');
+
+        useEffect(() => {
+            this.state.restProps = this.getRestProps();
+        }, () => [this.props]);
 
         useEffect(() => {
             if (this.inputRef.el) {
@@ -184,7 +213,7 @@ export default class Input<T extends InputProps> extends Component<T> {
             if (this.props.showCount) {
                 const value = this.controllableState.state.value;
                 this.state.count = this.props.maxLength ? `${value.length}/${this.props.maxLength}` : `${value.length}`;
-            }else {
+            } else {
                 this.state.count = undefined;
             }
         }, () => [this.props.showCount, this.controllableState.state.value]);

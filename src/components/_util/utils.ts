@@ -41,6 +41,26 @@ export const addSvgAttributes = (svgString: string, attributes: Record<string, a
     return new XMLSerializer().serializeToString(doc);
 };
 
+/**
+ * 获取svg渲染到节点的字符串
+ * @param svgString
+ * @param attributes
+ */
 export const getSDSVG = (svgString: string, attributes: Record<string, any> = {}) => {
-    return `<span class="${getPrefixCls('icon')}">${addSvgAttributes(svgString, attributes)}</span>`
-}
+    return `<span class="${getPrefixCls('icon')}">${addSvgAttributes(svgString, attributes)}</span>`;
+};
+
+/**
+ * 从指定对象中删除指定键，并返回结果
+ * @param obj 指定的对象
+ * @param keysToOmit 要删除的键
+ */
+export const omit = (obj: Record<string, any>, keysToOmit: string[]) => {
+    const result = { ...obj };
+    for (const key of keysToOmit) {
+        if (key in result) {
+            delete result[key];
+        }
+    }
+    return result;
+};
