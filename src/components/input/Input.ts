@@ -54,7 +54,7 @@ export type InputProps = {
     value?: any;
     onFocus?: (event: any) => void;
     onBlur?: (event: any) => void;
-    onChange?: (event: any) => void;
+    onChange?: (value: string) => void;
     onPressEnter?: (event: any) => void;
     onKeyDown?: (event: any) => void;
     slots?: Record<string, any>;
@@ -144,6 +144,12 @@ export default class Input<T extends InputProps> extends Component<T> {
         this.onInput(e);
     }
 
+    protected changeValue = (value: string) => {
+        this.controllableState.setState({ value });
+        this.inputRef.el!.value = this.controllableState.state.value;
+        this.props.onChange?.(value);
+    }
+
     protected onInput = (e: Event) => {
         if (this.compositionFlag) {
             return;
@@ -151,9 +157,7 @@ export default class Input<T extends InputProps> extends Component<T> {
 
         // 设置input的value
         const value = (e.target as HTMLInputElement).value;
-        this.controllableState.setState({ value });
-        this.props.onChange?.(e);
-        this.inputRef.el!.value = this.controllableState.state.value;
+        this.changeValue(value);
     }
 
     /**
@@ -161,7 +165,7 @@ export default class Input<T extends InputProps> extends Component<T> {
      * @param e
      */
     protected handleReset(e: MouseEvent): void {
-        this.controllableState.setState({ value: '' });
+        this.changeValue('');
         triggerFocus(this.inputRef.el);
     };
 

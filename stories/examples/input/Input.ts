@@ -21,8 +21,8 @@ export default class InputRoot extends Component {
         value: ''
     })
 
-    onChange(ev: any) {
-        this.innerState.value = ev.target.value;
+    onChange(value: string) {
+        // this.innerState.value = value;
     }
 
     static template = xml`
