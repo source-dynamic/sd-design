@@ -6,16 +6,11 @@ export default class TextareaRoot extends Component {
 
     state = useState<any>({
         allowClear: true,
-        prefix: '',
-        suffix: '',
-        addonBefore: '',
-        addonAfter: '',
         size: undefined,
         border: undefined,
         disabled: undefined,
         showCount: undefined,
-        autoSize: undefined,
-        rows: 1
+        autoSize: undefined
     });
 
     innerState = useState({
@@ -28,7 +23,17 @@ export default class TextareaRoot extends Component {
 
     static template = xml`
 <div class="input-container">
-    <TextArea value="innerState.value" placeholder="'TextArea'" onChange.bind.alike="onChange"  autoSize="state.autoSize" showCount="state.showCount" allowClear="state.allowClear" size="state.size" bordered="state.border" disabled="state.disabled"/>
+    <TextArea 
+        value="innerState.value" 
+        placeholder="'TextArea'" 
+        onChange.bind.alike="onChange"  
+        autoSize="state.autoSize"
+        showCount="state.showCount" 
+        allowClear="state.allowClear" 
+        size="state.size" 
+        bordered="state.border" 
+        disabled="state.disabled"
+    />
 </div>
     `
 }

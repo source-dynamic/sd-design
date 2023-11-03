@@ -9,6 +9,7 @@ import PasswordComp from './Password';
 // @ts-ignore
 import TextAreaRaw from '!!raw-loader!./Textarea';
 import TextAreaComp from './Textarea';
+import { omit } from '../../../src/components/_util/utils';
 
 const meta: Meta = {
     title: 'Examples/Input',
@@ -16,6 +17,13 @@ const meta: Meta = {
         layout: 'centered'
     },
     tags: ['autodocs'],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Input: Story = {
     args: {
         allowClear: true,
         showCount: false,
@@ -54,14 +62,7 @@ const meta: Meta = {
         border: {
             description: '无边框模式'
         }
-    }
-};
-
-export default meta;
-
-type Story = StoryObj<typeof meta>;
-
-export const Input: Story = {
+    },
     parameters: {
         docs: {
             source: {
@@ -97,13 +98,15 @@ export const Password: Story = {
     render: renderStoryComp(PasswordComp)
 };
 
+const textareaOmit = ['prefix', 'suffix', 'addonBefore', 'addonAfter'];
+
 export const TextArea: Story = {
     args: {
-        ...Input.args,
+        ...omit(Input.args as Record<string, any>, textareaOmit),
         autoSize: false
     },
     argTypes: {
-        ...Input.argTypes,
+        ...omit(Input.argTypes as Record<string, any>, textareaOmit),
         autoSize: {
             table: {
                 category: 'TextArea'

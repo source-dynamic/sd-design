@@ -33,6 +33,10 @@ $textarea-prefix-cls: #{$input-prefix-cls}-textarea;
     border: none;
     transition: resize 0s;
     @include affixTextareaGlobal;
+    
+    &[rows] {
+      resize: none;
+    }
   }
 
   .#{$input-prefix-cls} {
