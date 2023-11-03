@@ -46,7 +46,6 @@ const config: StorybookConfig = {
                 use: ['svg-inline-loader']
             }
         ]);
-        console.log(config.module.rules);
         return { ...config, resolve: { ...config.resolve, ...custom.resolve } };
     }
 };

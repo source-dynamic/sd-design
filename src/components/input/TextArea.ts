@@ -66,8 +66,8 @@ export default class TextArea extends Input<TextAreaProps> {
             return;
         }
 
-        let maxRows = 1;
-        let minRows = 1;
+        let maxRows = 2;
+        let minRows = 2;
         const el = this.inputRef.el!;
         const style = window.getComputedStyle(el);
         const attrs = ['padding-top', 'padding-bottom'];
@@ -77,8 +77,7 @@ export default class TextArea extends Input<TextAreaProps> {
         const rows = Math.ceil(rowsHeight / lineHeight);
 
         if (this.props.autoSize === true) {
-            minRows = rows;
-            maxRows = rows;  // 随自身内容高度变化
+            maxRows = Math.max(rows, maxRows);  // 随自身内容高度变化
         } else if (typeof this.props.autoSize === 'object') {
             minRows = this.props.autoSize.minRows;
             maxRows = this.props.autoSize.maxRows;
