@@ -1,12 +1,12 @@
 import Input, { InputProps } from './Input';
-import { xml } from '@odoo/owl';
+import { useEffect, xml } from '@odoo/owl';
 import './style/textarea.scss';
 import classNames from 'classnames';
 import { getPrefixCls, omit } from '@/components/_util/utils';
 
 export type TextAreaProps = Omit<InputProps & {
     autoSize?: boolean;
-    onResize?: () => void;
+    onResize?: (size: { width: number, height: number }) => void;
 }, 'slots'>
 
 const textareaClass = getPrefixCls('input-textarea');
@@ -34,10 +34,6 @@ export default class TextArea extends Input<TextAreaProps> {
         />
 </ClearableLabeledWrapper>
 `;
-    protected onResize(e: any): void {
-        // todo 没生效
-        console.log(e);
-    }
 
     protected getClasses(): string {
         return classNames(super.getClasses(), textareaClass, {
@@ -47,5 +43,25 @@ export default class TextArea extends Input<TextAreaProps> {
 
     protected getRestProps() {
         return omit(super.getRestProps(), ['autoSize', 'onResize']);
+    }
+
+    public setup(): void {
+        super.setup();
+        useEffect(() => {
+            if (this.inputRef.el) {
+                const element = this.inputRef.el;
+                const resizeObserver = new ResizeObserver((entries) => {
+                    const contentBoxSize = entries?.[0].borderBoxSize?.[0];
+                    if (contentBoxSize) {
+                        this.props.onResize?.({ width: contentBoxSize.inlineSize, height: contentBoxSize.blockSize });
+                    }
+                });
+                resizeObserver.observe(element);
+
+                return () => {
+                    resizeObserver.unobserve(element);
+                };
+            }
+        }, () => [this.inputRef.el]);
     }
 }
