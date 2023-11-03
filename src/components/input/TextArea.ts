@@ -1,11 +1,21 @@
 import Input, { InputProps } from './Input';
-import { useEffect, xml } from '@odoo/owl';
+import { useEffect, useState, xml } from '@odoo/owl';
 import './style/textarea.scss';
 import classNames from 'classnames';
-import { getPrefixCls, omit } from '@/components/_util/utils';
+import { getPrefixCls, omit, stylesToString } from '@/components/_util/utils';
+import { calculateAutoSizeHeight } from '@/components/input/_utils/calculateNodeHeight';
+
+type State = {
+    style?: string
+}
+
+type AutoSize = boolean | {
+    minRows: number
+    maxRows: number
+}
 
 export type TextAreaProps = Omit<InputProps & {
-    autoSize?: boolean;
+    autoSize?: AutoSize;
     onResize?: (size: { width: number, height: number }) => void;
 }, 'slots'>
 
@@ -18,6 +28,7 @@ export default class TextArea extends Input<TextAreaProps> {
     handleReset.alike="(e) => this.handleReset(e)" count="state.count"
 >
     <textarea
+            t-att-style="textState.style"
             t-att="state.restProps"
             t-att-disabled="props.disabled"
             t-att-maxlength="props.maxLength"
@@ -35,6 +46,10 @@ export default class TextArea extends Input<TextAreaProps> {
 </ClearableLabeledWrapper>
 `;
 
+    textState = useState<State>({
+        style: undefined
+    });
+
     protected getClasses(): string {
         return classNames(super.getClasses(), textareaClass, {
             [`${textareaClass}-autosize`]: this.props.autoSize
@@ -45,7 +60,45 @@ export default class TextArea extends Input<TextAreaProps> {
         return omit(super.getRestProps(), ['autoSize', 'onResize']);
     }
 
-    public setup(): void {
+    protected resizeRows() {
+        if (!this.props.autoSize) {
+            this.textState.style = undefined;
+            return;
+        }
+
+        let maxRows = 1;
+        let minRows = 1;
+        const el = this.inputRef.el!;
+        const style = window.getComputedStyle(el);
+        const attrs = ['padding-top', 'padding-bottom'];
+        const [paddingTop, paddingBottom] = attrs.map(item => style.getPropertyValue(item));
+        const lineHeight = this.props.size === 'large' ? 24 : 22;
+        const rowsHeight = calculateAutoSizeHeight(el as unknown as HTMLTextAreaElement) - parseInt(paddingTop) - parseInt(paddingBottom);
+        const rows = Math.ceil(rowsHeight / lineHeight);
+
+        if (this.props.autoSize === true) {
+            minRows = rows;
+            maxRows = rows;  // 随自身内容高度变化
+        } else if (typeof this.props.autoSize === 'object') {
+            minRows = this.props.autoSize.minRows;
+            maxRows = this.props.autoSize.maxRows;
+        }
+        const realRows = Math.min(Math.max(rows, minRows), maxRows);
+        this.textState.style = stylesToString({
+            'height': `${realRows * lineHeight + parseInt(paddingTop) + parseInt(paddingBottom)}px`
+        });
+    }
+
+    protected changeValue(value: string) {
+        super.changeValue(value);
+        if (this.props.autoSize) {
+            this.resizeRows();
+        } else {
+            this.textState.style = undefined;
+        }
+    }
+
+    setup(): void {
         super.setup();
         useEffect(() => {
             if (this.inputRef.el) {
@@ -63,5 +116,11 @@ export default class TextArea extends Input<TextAreaProps> {
                 };
             }
         }, () => [this.inputRef.el]);
+
+        useEffect(() => {
+            if (this.props.autoSize && this.inputRef.el) {
+                this.resizeRows();
+            }
+        }, () => [this.props.autoSize, this.inputRef.el, this.props.size]);
     }
 }

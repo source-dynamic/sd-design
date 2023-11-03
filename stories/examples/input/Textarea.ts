@@ -18,13 +18,17 @@ export default class TextareaRoot extends Component {
         rows: 1
     });
 
+    innerState = useState({
+        value: ''
+    })
+
     protected onChange = (value: string) => {
-        console.log(value);
+        this.innerState.value = value;
     }
 
     static template = xml`
 <div class="input-container">
-    <TextArea placeholder="'TextArea'" onResize.bind.alike="onChange"  autoSize="state.autoSize" showCount="state.showCount" allowClear="state.allowClear" size="state.size" bordered="state.border" disabled="state.disabled"/>
+    <TextArea value="innerState.value" placeholder="'TextArea'" onChange.bind.alike="onChange"  autoSize="state.autoSize" showCount="state.showCount" allowClear="state.allowClear" size="state.size" bordered="state.border" disabled="state.disabled"/>
 </div>
     `
 }

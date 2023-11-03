@@ -45,6 +45,7 @@ $textarea-prefix-cls: #{$input-prefix-cls}-textarea;
       padding: 7px 11px;
       font-size: $large-font-size;
       line-height: 24px;
+      min-height: 38px;
       @include affixTextareaGlobal;
     }
   }
