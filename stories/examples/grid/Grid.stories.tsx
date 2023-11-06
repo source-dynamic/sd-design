@@ -5,7 +5,7 @@ import GridCompRaw from '!!raw-loader!./Grid';
 import GridComp from './Grid';
 
 const meta: Meta = {
-    title: 'Examples/Grid',
+    title: '布局/Grid 栅格',
     parameters: {
         layout: 'centered'
     }

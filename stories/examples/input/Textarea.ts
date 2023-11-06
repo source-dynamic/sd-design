@@ -14,12 +14,13 @@ export default class TextareaRoot extends Component {
     });
 
     innerState = useState({
-        value: ''
-    })
+        value: '',
+        ref: {}
+    });
 
     protected onChange = (value: string) => {
         this.innerState.value = value;
-    }
+    };
 
     static template = xml`
 <div class="input-container">
@@ -35,5 +36,5 @@ export default class TextareaRoot extends Component {
         disabled="state.disabled"
     />
 </div>
-    `
+    `;
 }

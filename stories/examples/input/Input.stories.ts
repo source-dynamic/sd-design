@@ -12,7 +12,7 @@ import TextAreaComp from './Textarea';
 import { omit } from '../../../src/components/_util/utils';
 
 const meta: Meta = {
-    title: 'Examples/Input',
+    title: '数据录入/Input 输入框',
     parameters: {
         layout: 'centered'
     }

@@ -6,6 +6,7 @@ import { getInputClassName } from '@/components/input/utils';
 import { SizeType } from '@/components/_util/type';
 import './style/input.scss';
 import useControllableState from '@/hooks/useControllableState';
+import { useImperativeHandle } from '@/hooks/useImperativeHandle';
 
 export interface IInputFocusOptions extends FocusOptions {
     cursor?: 'start' | 'end' | 'all';
@@ -119,15 +120,25 @@ export default class Input<T extends InputProps> extends Component<T> {
         return classNames(getInputClassName(prefixCls, bordered, size, disabled), className);
     }
 
+    protected focus(): void {
+        triggerFocus(this.inputRef.el);
+        this.state.focused = true;
+    }
+
     protected onFocus(event: FocusEvent): void {
         const { onFocus } = this.props;
-        this.state.focused = true;
+        this.focus();
         onFocus?.(event);
+    }
+
+    protected blur(): void {
+        this.inputRef.el!.blur();
+        this.state.focused = false;
     }
 
     protected onBlur(event: FocusEvent): void {
         const { onBlur } = this.props;
-        this.state.focused = false;
+        this.blur();
         onBlur?.(event);
     }
 
@@ -197,6 +208,11 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     setup(): void {
         this.inputRef = useRef('input');
+
+        useImperativeHandle(this.props, {
+            focus: this.focus.bind(this),
+            blur: this.blur.bind(this)
+        })
 
         useEffect(() => {
             this.state.restProps = this.getRestProps();
