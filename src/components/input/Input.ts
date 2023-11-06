@@ -127,7 +127,7 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     protected onFocus(event: FocusEvent): void {
         const { onFocus } = this.props;
-        this.focus();
+        this.state.focused = true;
         onFocus?.(event);
     }
 
@@ -138,7 +138,7 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     protected onBlur(event: FocusEvent): void {
         const { onBlur } = this.props;
-        this.blur();
+        this.state.focused = false;
         onBlur?.(event);
     }
 
