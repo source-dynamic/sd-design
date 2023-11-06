@@ -15,8 +15,7 @@ const meta: Meta = {
     title: 'Examples/Input',
     parameters: {
         layout: 'centered'
-    },
-    tags: ['autodocs'],
+    }
 };
 
 export default meta;
@@ -73,13 +72,15 @@ export const Input: Story = {
     render: renderStoryComp(InputComp)
 };
 
+const passwordOmit = ['allowClear', 'showCount', 'prefix', 'suffix', 'addonBefore', 'addonAfter'];
+
 export const Password: Story = {
     args: {
-        ...Input.args,
+        ...omit(Input.args as Record<string, any>, passwordOmit),
         visible: false
     },
     argTypes: {
-        ...Input.argTypes,
+        ...omit(Input.argTypes as Record<string, any>, passwordOmit),
         visible: {
             table: {
                 category: 'Password'

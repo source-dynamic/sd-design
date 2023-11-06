@@ -72,8 +72,8 @@ export default class TextArea extends Input<TextAreaProps> {
         const style = window.getComputedStyle(el);
         const attrs = ['padding-top', 'padding-bottom'];
         const [paddingTop, paddingBottom] = attrs.map(item => style.getPropertyValue(item));
-        const lineHeight = this.props.size === 'large' ? 24 : 22;
-        const rowsHeight = calculateAutoSizeHeight(el as unknown as HTMLTextAreaElement) - parseInt(paddingTop) - parseInt(paddingBottom);
+        const lineHeight = parseFloat(style.getPropertyValue('line-height'));
+        const rowsHeight = calculateAutoSizeHeight(el as unknown as HTMLTextAreaElement) - parseFloat(paddingTop) - parseFloat(paddingBottom);
         const rows = Math.ceil(rowsHeight / lineHeight);
 
         if (this.props.autoSize === true) {
@@ -84,7 +84,7 @@ export default class TextArea extends Input<TextAreaProps> {
         }
         const realRows = Math.min(Math.max(rows, minRows), maxRows);
         this.textState.style = stylesToString({
-            'height': `${realRows * lineHeight + parseInt(paddingTop) + parseInt(paddingBottom)}px`
+            'height': `${realRows * lineHeight + parseFloat(paddingTop) + parseFloat(paddingBottom)}px`
         });
     }
 

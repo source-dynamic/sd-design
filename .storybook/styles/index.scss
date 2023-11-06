@@ -1,0 +1,39 @@
+.api-table {
+  width: 100%;
+  $color: #c41d7f;
+
+  code {
+    white-space: normal;
+    color: $color;
+    margin: 0 1px;
+    font-size: 12px;
+    line-height: 18px;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(5, 5, 5, 0.06);
+    border-radius: 3px;
+  }
+
+
+  td:first-child {
+    width: 18%;
+    min-width: 58px;
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  td:nth-child(2) {
+    width: 160px;
+  }
+
+  td:nth-child(3) {
+    width: 22%;
+    color: $color;
+    font-size: 13px;
+  }
+
+  td:nth-child(4) {
+    width: 15%;
+    font-size: 13px;
+  }
+}
