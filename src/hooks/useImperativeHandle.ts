@@ -10,8 +10,9 @@ export const useCompRef = <T> (): CompRef<T> => {
     };
 };
 
-export const useImperativeHandle = (props: any, createHandle: Record<string, any>) => {
+export const useImperativeHandle = (comp: any, createHandle: Record<string, any>) => {
     useEffect(() => {
+        const props = comp.props;
         if (props.hasOwnProperty('ref') && !!props.ref) {
             props.ref.current = createHandle;
         }
@@ -21,5 +22,5 @@ export const useImperativeHandle = (props: any, createHandle: Record<string, any
                 props.ref.current = undefined;
             }
         };
-    });
+    }, () => [comp.props]);
 };

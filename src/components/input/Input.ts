@@ -209,7 +209,7 @@ export default class Input<T extends InputProps> extends Component<T> {
     setup(): void {
         this.inputRef = useRef('input');
 
-        useImperativeHandle(this.props, {
+        useImperativeHandle(this, {
             focus: this.focus.bind(this),
             blur: this.blur.bind(this)
         })
