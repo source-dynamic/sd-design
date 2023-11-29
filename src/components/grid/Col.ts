@@ -1,4 +1,4 @@
-import { Component, useEffect, useState, xml } from '@odoo/owl';
+import { Component, xml } from '@odoo/owl';
 import { responsiveArray } from '@/components/_util/responsiveObserve';
 import { getPrefixCls, stylesToString } from '@/components/_util/utils';
 import classNames from 'classnames';
@@ -15,6 +15,7 @@ type IColSize = {
 };
 
 type Props = {
+    className?: string;
     span?: ColSpanType;
     order?: ColSpanType;
     offset?: ColSpanType;
@@ -33,11 +34,6 @@ type Env = {
     row: Row
 }
 
-type State = {
-    className?: string;
-    style?: string;
-}
-
 const parseFlex = (flex: number | 'none' | 'auto' | string): string => {
     if (typeof flex === 'number') {
         return `${flex} ${flex} auto`;
@@ -48,34 +44,19 @@ const parseFlex = (flex: number | 'none' | 'auto' | string): string => {
     return flex;
 };
 
-export default class Col extends Component<Props> {
+export default class Col extends Component<Props, Env> {
     static template = xml`
-    <div t-att-class="state.className" t-att-style="state.style">
+    <div t-att-class="getClasses()" t-att-style="getStyle()">
         <t t-slot="default"/>
     </div>
     `;
-    state = useState<State>({
-        className: undefined,
-        style: undefined
-    });
 
-    protected getStyle(): Record<string, string> {
-        const { gutter } = this.env.row.state;
+    protected getStyle(): string | undefined {
         let colStyle: { [key: string]: any } = {};
-        if (gutter) {
-            colStyle = {
-                ...(gutter[0] > 0
-                    ? {
-                        'padding-left': `${gutter[0] / 2}px`,
-                        'padding-right': `${gutter[0] / 2}px`
-                    }
-                    : {})
-            };
-        }
         if (this.props.flex) {
             colStyle.flex = parseFlex(this.props.flex);
         }
-        return colStyle;
+        return stylesToString(colStyle) || undefined
     }
 
     protected getClasses(): string {
@@ -105,6 +86,7 @@ export default class Col extends Component<Props> {
 
         return classNames(
             prefixCls,
+            this.props.className,
             {
                 [`${prefixCls}-${span}`]: span !== undefined,
                 [`${prefixCls}-order-${order}`]: order,
@@ -114,12 +96,5 @@ export default class Col extends Component<Props> {
             },
             sizeClassObj
         );
-    }
-
-    setup(): void {
-        useEffect(() => {
-            this.state.style = stylesToString(this.getStyle()) || undefined;
-            this.state.className = this.getClasses() || undefined;
-        }, () => []);
     }
 }

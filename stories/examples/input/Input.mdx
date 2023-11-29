@@ -1,0 +1,301 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks';
+
+import * as InputStories from './Input.stories';
+
+<Meta of={InputStories}/>
+
+# Input输入框
+通过鼠标或键盘输入内容，包含文本框、密码框组件
+
+## 基本使用
+<Canvas of={InputStories.Input}/>
+<Controls of={InputStories.Input}/>
+
+## 文本框
+用于多行输入
+<Canvas of={InputStories.TextArea}/>
+<Controls of={InputStories.TextArea}/>
+
+## 密码框
+<Canvas of={InputStories.Password}/>
+<Controls of={InputStories.Password}/>
+
+## API
+
+### Input
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>addonAfter</td>
+        <td>带标签的 input，设置后置标签</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>addonBefore</td>
+        <td>带标签的 input，设置前置标签</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>prefix</td>
+        <td>带有前缀图标的 input</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>suffix</td>
+        <td>带有后缀图标的 input</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>size</td>
+        <td>控件大小</td>
+        <td>`large` | `middle` | `small`</td>
+        <td>`middle`</td>
+    </tr>
+    <tr>
+        <td>allowClear</td>
+        <td>可以点击清除图标删除内容</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>bordered</td>
+        <td>是否有边框</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>defaultValue</td>
+        <td>输入框默认内容</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>value</td>
+        <td>输入框内容，可配合useState变量使用，在回调onChange事件中接收变更值去更新</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>disabled</td>
+        <td>是否禁用状态</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>maxLength</td>
+        <td>最大长度</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>showCount</td>
+        <td>是否展示字数</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>onChange</td>
+        <td>输入框内容变化时的回调</td>
+        <td>`(event) => void`</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onPressEnter</td>
+        <td>按下回车的回调</td>
+        <td>`(event) => void`</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>
+> Input 的其他属性和浏览器自带的 input 一致。
+
+### Input.TextArea
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>autoSize</td>
+        <td>自适应内容高度，可设置为 true | false 或对象：\{minRows: 2, maxRows: 6 \}</td>
+        <td>boolean | `{minRows: number, maxRows: number}`</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>size</td>
+        <td>控件大小</td>
+        <td>`large` | `middle` | `small`</td>
+        <td>`middle`</td>
+    </tr>
+    <tr>
+        <td>allowClear</td>
+        <td>可以点击清除图标删除内容</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>bordered</td>
+        <td>是否有边框</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>defaultValue</td>
+        <td>输入框默认内容</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>value</td>
+        <td>输入框内容，可配合useState变量使用，在回调onChange事件中接收变更值去更新</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>disabled</td>
+        <td>是否禁用状态</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>maxLength</td>
+        <td>最大长度</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>showCount</td>
+        <td>是否展示字数</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>onChange</td>
+        <td>输入框内容变化时的回调</td>
+        <td>`(event: Event) => void`</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onPressEnter</td>
+        <td>按下回车的回调</td>
+        <td>`(event: Event) => void`</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>
+> TextArea 的其他属性和浏览器自带的 textArea 一致。
+
+### Input.Password
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>visible</td>
+        <td>用于控制密码显隐</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>onVisibleChange</td>
+        <td>显隐密码的回调</td>
+        <td>(visible: boolean) => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>size</td>
+        <td>控件大小</td>
+        <td>`large` | `middle` | `small`</td>
+        <td>`middle`</td>
+    </tr>
+    <tr>
+        <td>bordered</td>
+        <td>是否有边框</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>defaultValue</td>
+        <td>输入框默认内容</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>value</td>
+        <td>输入框内容，可配合useState变量使用，在回调onChange事件中接收变更值去更新</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>disabled</td>
+        <td>是否禁用状态</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>maxLength</td>
+        <td>最大长度</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onChange</td>
+        <td>输入框内容变化时的回调</td>
+        <td>`(event: Event) => void`</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onPressEnter</td>
+        <td>按下回车的回调</td>
+        <td>`(event: Event) => void`</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>
+
+### Methods
+> 以上所有组件都支持
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>说明</th>
+        <th>参数</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>blur</td>
+        <td>取消焦点</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>focus</td>
+        <td>获取焦点</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>

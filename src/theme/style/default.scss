@@ -1,15 +1,28 @@
-$ui-prefix: sd;
+@import "systemDefault";
 
+$ui-prefix: 'sd';
+
+// 常用色
 $white: #fff;
 $black: #000;
+$gray: rgba($black, 0.25);
 
-$text-color: rgba($black, 85%);
-$font-variant-base: tabular-nums;
-$line-height-base: 1.5715;
-$font-feature-settings-base: 'tnum';
+// 字体大小
+$small-font-size: 12px;
+$base-font-size: 14px;
+$large-font-size: 16px;
 
+// 字体颜色
+$font-color: rgba($black, 0.88);
 
-// 主字号
-$font-size-base: 14px;
-$font-size-lg: $font-size-base + 2px;
-$font-size-sm: 12px;
+// 边框颜色
+$border-color: #d9d9d9;
+
+// 边框圆角
+$small-border-radius: 4px;
+$base-border-radius: 6px;
+$large-border-radius: 8px;
+
+// 禁用状态颜色
+$disabled-color: rgba($black, 0.25);
+$disabled-background-color: rgba($black, 0.04);

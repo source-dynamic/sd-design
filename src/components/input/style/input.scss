@@ -1,0 +1,109 @@
+@import "src/theme/style";
+@import "variables";
+
+@mixin primary-color-border {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1); // todo: 用变量
+}
+
+// input基础样式
+@mixin input() {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 4px 11px;
+  color: $font-color;
+  font-size: $base-font-size;
+  line-height: 22px;
+  min-height: 32px;
+  list-style: none;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  background-color: $white;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $border-color;
+  border-radius: $base-border-radius;
+  transition: all 0.2s;
+}
+
+// input鼠标悬浮样式
+@mixin hover() {
+  &:hover {
+    @include primary-color-border();
+  }
+}
+
+// input聚焦样式
+@mixin focus() {
+  &:focus-within {
+    @include primary-color-border();
+  }
+}
+
+// input不同尺寸样式
+@mixin responsive() {
+  &-sm {
+    padding: 0 7px;
+    line-height: 22px;
+    min-height: 22px;
+    border-radius: $small-border-radius;
+  }
+
+  &-lg {
+    padding: 7px 11px;
+    font-size: $large-font-size;
+    line-height: 24px;
+    min-height: 40px;
+    border-radius: $large-border-radius;
+  }
+}
+
+// input无边框样式
+@mixin borderless() {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+
+  &:focus-within, &:hover {
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@mixin disabled() {
+  color: $disabled-color;
+  background-color: $disabled-background-color;
+  border-color: $border-color;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+
+  &:hover, &:focus-within {
+    border-color: $border-color;
+    box-shadow: none;
+  }
+}
+
+
+.#{$input-prefix-cls} {
+  @include input();
+  outline: none;
+  @include focus();
+  @include hover();
+  @include responsive();
+
+  &-disabled {
+    @include disabled();
+  }
+
+  &-borderless {
+    @include borderless();
+  }
+
+  &::placeholder {
+    color: $gray;
+  }
+}
