@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 /**
  * 将style键值对转换为style字符串
  * @param styleObj
@@ -45,9 +47,10 @@ export const addSvgAttributes = (svgString: string, attributes: Record<string, a
  * 获取svg渲染到节点的字符串
  * @param svgString
  * @param attributes
+ * @param className
  */
-export const getSDSVG = (svgString: string, attributes: Record<string, any> = {}) => {
-    return `<span class="${getPrefixCls('icon')}">${addSvgAttributes(svgString, attributes)}</span>`;
+export const getSDSVG = (svgString: string, attributes: Record<string, any> = {}, className?: string) => {
+    return `<span class="${classNames(getPrefixCls('icon'), className)}">${addSvgAttributes(svgString, attributes)}</span>`;
 };
 
 /**

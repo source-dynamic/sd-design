@@ -1,0 +1,76 @@
+@import "src/components/input/style/variables";
+@import "src/components/input/style/input";
+
+$input-number-class: #{$input-prefix-cls}-number;
+$input-number-handler-wrap-class: #{$input-number-class}-handler-wrap;
+$icon-class: #{$input-prefix-cls}-number-icon;
+
+$border: 1px solid $border-color;
+
+
+.#{$input-number-class} {
+  position: relative;
+  box-sizing: border-box;
+  @include input-border();
+
+  &.#{$input-number-class}-focused {
+    @include primary-color-border();
+  }
+
+  &:hover {
+    @include primary-color-border();
+
+    .#{$input-number-handler-wrap-class} {
+      opacity: 1;
+    }
+  }
+
+  .#{$input-prefix-cls} {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .#{$input-number-handler-wrap-class} {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 22px;
+    opacity: 0;
+
+    color: $gray-icon;
+    cursor: pointer;
+    transition: opacity 0.2s linear 0.2s;
+    font-size: 7px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+
+    .#{$icon-class} {
+      flex: auto;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      border-inline-start: $border;
+      height: 40%;
+      box-sizing: border-box;
+
+      &:first-child {
+        border-bottom: $border;
+      }
+
+      &:hover {
+        color: #1677ff;
+        height: 60%;
+      }
+
+      transition: all 0.2s linear;
+    }
+  }
+}
+
+
