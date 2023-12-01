@@ -1,33 +1,37 @@
 @import "src/components/input/style/variables";
 @import "src/components/input/style/input";
+@import "src/components/input/style/clearable-labeled-wrapper";
 
 $input-number-class: #{$input-prefix-cls}-number;
+$input-number-wrap: #{$input-prefix-cls}-number-wrap;
 $input-number-handler-wrap-class: #{$input-number-class}-handler-wrap;
 $icon-class: #{$input-prefix-cls}-number-icon;
 
 $border: 1px solid $border-color;
 
-
 .#{$input-number-class} {
   position: relative;
   box-sizing: border-box;
-  @include input-border();
+  user-select: none;
 
-  &.#{$input-number-class}-focused {
-    @include primary-color-border();
-  }
+  &:not(.#{$input-number-class}-borderless) {
+    @include input-border();
 
-  &:hover {
-    @include primary-color-border();
+    &:not(.#{$input-number-class}-disabled) {
+      &.#{$input-number-class}-focused {
+        @include primary-color-border();
+      }
 
-    .#{$input-number-handler-wrap-class} {
-      opacity: 1;
+      &:hover {
+        @include primary-color-border();
+      }
     }
   }
 
-  .#{$input-prefix-cls} {
-    border: 0;
-    box-shadow: none;
+  &:not(.#{$input-number-class}-disabled):hover {
+    .#{$input-number-handler-wrap-class} {
+      opacity: 1;
+    }
   }
 
   .#{$input-number-handler-wrap-class} {
@@ -37,6 +41,9 @@ $border: 1px solid $border-color;
     bottom: 0;
     width: 22px;
     opacity: 0;
+    background-color: #fff;
+    border-end-end-radius: 6px;
+    border-start-end-radius: 6px;
 
     color: $gray-icon;
     cursor: pointer;
@@ -59,6 +66,10 @@ $border: 1px solid $border-color;
       height: 40%;
       box-sizing: border-box;
 
+      &.#{$icon-class}-disabled {
+        cursor: not-allowed;
+      }
+
       &:first-child {
         border-bottom: $border;
       }
@@ -73,4 +84,19 @@ $border: 1px solid $border-color;
   }
 }
 
+.#{$input-number-wrap} {
+  display: flex;
+  width: 100%;
 
+  > :not(:first-child) {
+    @include borderRadius0("start");
+  }
+
+  > :not(:last-child) {
+    @include borderRadius0("end");
+  }
+
+  .#{$input-number-wrap}-addon {
+    @include addon();
+  }
+}

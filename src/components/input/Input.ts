@@ -111,7 +111,7 @@ export default class Input<T extends InputProps> extends Component<T> {
     });
 
     controllableState = useControllableState(this.props, {
-        value: this.props.defaultValue || ''
+        value: this.props.defaultValue ?? ''
     });
 
     protected getClasses(): string {

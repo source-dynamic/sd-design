@@ -1,4 +1,4 @@
-import { onWillUpdateProps, useState } from '@odoo/owl';
+import { onMounted, onWillUpdateProps, useState } from '@odoo/owl';
 
 /**
  * 管理受控组件的值，比如props中未传入某个值时，由组件内部管理一个state，传入了则交由外部管理
@@ -9,16 +9,19 @@ const useControllableState = <S extends object> (
     props: Record<string, any>,
     defaultState: S
 ) => {
-
     const state = useState<S>(defaultState);
+
+    const updateState = (props: Record<string, any>) => {
+        for (const key in props) {
+            if (key in defaultState) {
+                (state as Record<string, any>)[key] = props[key];
+            }
+        }
+    }
 
     onWillUpdateProps((nextProps) => {
         // props更新时，将被监控的值更新到state中
-        for (const key in nextProps) {
-            if (key in defaultState) {
-                (state as Record<string, any>)[key] = nextProps[key];
-            }
-        }
+        updateState(nextProps);
     });
 
     const setState = (values: Partial<S>) => {
@@ -29,6 +32,10 @@ const useControllableState = <S extends object> (
             }
         }
     };
+
+    onMounted(() => {
+        updateState(props);
+    })
 
     return {
         state,

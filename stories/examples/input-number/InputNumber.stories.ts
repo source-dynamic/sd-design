@@ -16,6 +16,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const InputNumber: Story = {
+    args: {
+        disabled: false,
+        size: 'middle',
+        border: true
+    },
+    argTypes: {
+        disabled: {
+            description: '禁用状态'
+        },
+        size: {
+            description: '尺寸',
+            control: 'select',
+            options: ['small', 'middle', 'large']
+        },
+        border: {
+            description: '无边框模式'
+        }
+    },
     parameters: {
         docs: {
             source: {
