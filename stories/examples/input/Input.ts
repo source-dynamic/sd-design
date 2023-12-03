@@ -31,7 +31,7 @@ export default class InputRoot extends Component {
 </div>
 
 <div class="input-container">
-    <Input placeholder="'Prefix And Suffix'" size="state.size">
+    <Input placeholder="'Prefix And Suffix'" size="state.size" bordered="state.border" disabled="state.disabled">
         <t t-set-slot="prefix">
             <t t-esc="state.prefix"/>
         </t>
@@ -42,7 +42,7 @@ export default class InputRoot extends Component {
 </div>
 
 <div class="input-container">
-    <Input placeholder="'AddonBefore And AddonAfter'" allowClear="state.allowClear" size="state.size">
+    <Input placeholder="'AddonBefore And AddonAfter'" allowClear="state.allowClear" size="state.size" bordered="state.border" disabled="state.disabled">
         <t t-set-slot="addonBefore">
             <t t-esc="state.addonBefore"/>
         </t>

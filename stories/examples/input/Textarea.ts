@@ -25,6 +25,7 @@ export default class TextareaRoot extends Component {
     static template = xml`
 <div class="input-container">
     <TextArea 
+    maxLength="10"
         value="innerState.value" 
         placeholder="'TextArea'" 
         onChange.bind.alike="onChange"  

@@ -57,6 +57,7 @@ export type InputProps = {
     onFocus?: (event: any) => void;
     onBlur?: (event: any) => void;
     onChange?: (value: string) => void;
+    onInput?: (event: any) => void;
     onPressEnter?: (event: any) => void;
     onKeyDown?: (event: any) => void;
     slots?: Record<string, any>;
@@ -90,6 +91,7 @@ export default class Input<T extends InputProps> extends Component<T> {
         t-on-compositionstart="onCompositionstart"
         t-on-compositionend="onCompositionend"
         t-on-input="onInput"
+        t-on-change="onChange"
     />
 </ClearableLabeledWrapper>
 `;
@@ -150,7 +152,7 @@ export default class Input<T extends InputProps> extends Component<T> {
         onKeyDown?.(e);
     };
 
-    protected onCompositionstart(e: Event) {
+    protected onCompositionstart() {
         this.compositionFlag = true;
     };
 
@@ -162,8 +164,14 @@ export default class Input<T extends InputProps> extends Component<T> {
     protected changeValue(value: string) {
         this.controllableState.setState({ value });
         this.inputRef.el!.value = this.controllableState.state.value;
+        this.props.onInput?.(value);
         this.props.onChange?.(value);
     };
+
+    protected onChange(e: Event) {
+        const value = (e.target as HTMLInputElement).value;
+        this.props.onChange?.(value);
+    }
 
     protected onInput(e: Event) {
         if (this.compositionFlag) {
@@ -177,9 +185,8 @@ export default class Input<T extends InputProps> extends Component<T> {
 
     /**
      * 清除输入框
-     * @param e
      */
-    protected handleReset(e: MouseEvent): void {
+    protected handleReset(): void {
         this.changeValue('');
         triggerFocus(this.inputRef.el);
     };

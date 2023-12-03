@@ -42,6 +42,7 @@ export default class TextArea extends Input<TextAreaProps> {
             t-on-compositionstart="onCompositionstart"
             t-on-compositionend="onCompositionend"
             t-on-input="onInput"
+            t-on-change="onChange"
         />
 </ClearableLabeledWrapper>
 `;

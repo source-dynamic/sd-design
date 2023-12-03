@@ -12,7 +12,7 @@ export default class InputRoot extends Component {
 
     static template = xml`
 <div class="input-container">
-    <InputNumber placeholder="'Basic usage'" disabled="state.disabled" size="state.size" bordered="state.border">
+    <InputNumber max="4" min="0" placeholder="'Basic usage'" disabled="state.disabled" size="state.size" bordered="state.border">
         <t t-set-slot="addonAfter">
             <div>.com</div>
         </t>

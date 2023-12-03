@@ -1,4 +1,4 @@
-import { Component, useState, xml } from '@odoo/owl';
+import { Component, useEffect, useState, xml } from '@odoo/owl';
 import Input from '@/components/input/Input';
 import _upSVG from '@/assets/up.svg';
 import _downSVG from '@/assets/down.svg';
@@ -35,19 +35,33 @@ type Props = {
     value?: number;
     onFocus?: (event: FocusEvent) => void;
     onBlur?: (event: FocusEvent) => void;
+    onChange?: (value: number) => void;
     max?: number;
     min?: number;
     disabled?: boolean;
     bordered?: boolean;
+    autoFocus?: boolean;
+    changeOnBlur?: boolean;
+    controls?: boolean;
     slots?: Record<string, any>;
 }
 
 class InputNumber extends Component<Props, State> {
+    static defaultProps = {
+        autoFocus: false,
+        changeOnBlur: true,
+        controls: true,
+        step: 1,
+        defaultValue: 0,
+        max: Number.MAX_SAFE_INTEGER,
+        min: Number.MIN_SAFE_INTEGER
+    };
+
     static components = { Input };
 
     static inputTemplate = `
 <div t-att-class="getClasses()">
-    <Input ref="inputRef" onFocus.bind="onFocus" onBlur.bind="onBlur" 
+    <Input className="" ref="inputRef" onFocus.bind="onFocus" onBlur.bind="onBlur" 
         value="controllableState.state.value" onChange.bind="onchangeValue"
         disabled="props.disabled"
         size="props.size"
@@ -56,17 +70,17 @@ class InputNumber extends Component<Props, State> {
     />
     <t t-if="!props.disabled">
         <t t-set="iconClass" t-value="renderIconClasses()"/>
-        <div class="${numberHandlerWrapClass}" t-ref="handlerRef" t-on-click="onClickWrap">
+        <span class="${numberHandlerWrapClass}" t-ref="handlerRef" t-on-click="onClickWrap">
             <span t-att-class="iconClass.increase" t-on-click="() => this.increaseOrDecrease(true)">
                 ${eyeSVG}
             </span>
             <span t-att-class="iconClass.decrease" t-on-click="() => this.increaseOrDecrease(false)">
                 ${eyeCloseSVG}
             </span>
-        </div>
+        </span>
     </t>    
 </div>
-`
+`;
 
     static template = xml`
 <t t-if="hasAddon()">
@@ -88,13 +102,6 @@ class InputNumber extends Component<Props, State> {
     ${InputNumber.inputTemplate}
 </t>
     `;
-
-    static defaultProps = {
-        step: 1,
-        defaultValue: 0,
-        max: Number.MAX_SAFE_INTEGER,
-        min: Number.MIN_SAFE_INTEGER
-    };
 
     state = useState<State>({
         focused: false
@@ -127,20 +134,38 @@ class InputNumber extends Component<Props, State> {
     }
 
     protected onBlur(event: FocusEvent): void {
-        const { onBlur } = this.props;
+        const { onBlur, changeOnBlur } = this.props;
         this.state.focused = false;
         onBlur?.(event);
+        if (changeOnBlur) {
+            this.onchangeValue(this.getValueNotOutOfRange(this.controllableState.state.value));
+        }
     }
 
-    protected onClickWrap(event: MouseEvent): void {
+    protected onClickWrap(): void {
         this.inputRef.current?.focus();
     }
 
     protected onchangeValue(value: string): void {
         const number = BigNumber(formatNumberCode(value));
+        const v = number.isNaN() ? '0' : number.toFixed();
         this.controllableState.setState({
-            value: number.isNaN() ? '0' : number.toFixed()
+            value: v
         });
+        this.props.onChange?.(Number(v));
+    }
+
+    protected getValueNotOutOfRange(value: string): string {
+        const { max, min } = this.props;
+        const v = BigNumber(value)
+        if (v.isNaN() || v.isGreaterThan(max!)) {
+            return max!.toString();
+        }
+        if (v.isNaN() || v.isLessThan(min!)) {
+            return min!.toString();
+        }
+        // todo: 统一小数位数
+        return v.toFixed();
     }
 
     /**
@@ -150,10 +175,10 @@ class InputNumber extends Component<Props, State> {
      */
     protected enableIncreaseOrDecrease(isIncrease: boolean): boolean {
         const { min, max } = this.props;
-        if (isIncrease && max) {
+        if (isIncrease && max !== undefined) {
             return BigNumber(this.controllableState.state.value).isLessThan(max);
         }
-        if (!isIncrease && min) {
+        if (!isIncrease && min !== undefined) {
             return BigNumber(this.controllableState.state.value).isGreaterThan(min);
         }
         return true;
@@ -173,14 +198,10 @@ class InputNumber extends Component<Props, State> {
         const { value } = this.controllableState.state;
         const bn = BigNumber(formatNumberCode(value));
         const newValue = isIncrease ? bn.plus(step as number) : bn.minus(step as number);
-        this.controllableState.setState({
-            value: newValue.toFixed()
-        });
+        this.onchangeValue(this.getValueNotOutOfRange(newValue.toFixed()));
     }
 
     protected getClasses() {
-        const { slots } = this.props;
-
         return classNames(inputNumberClass, {
             [`${inputNumberClass}-focused`]: this.state.focused,
             [`${inputNumberClass}-disabled`]: !!this.props.disabled,
@@ -197,6 +218,14 @@ class InputNumber extends Component<Props, State> {
                 [`${iconClass}-disabled`]: !this.enableIncreaseOrDecrease(false)
             })
         };
+    }
+
+    setup(): void {
+        useEffect(() => {
+            if (this.props.autoFocus) {
+                this.inputRef.current?.focus();
+            }
+        }, () => [this.inputRef.current]);
     }
 }
 
