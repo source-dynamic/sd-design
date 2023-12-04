@@ -33,6 +33,7 @@ type Props = {
     onChange?: (value: number | string) => void;
     max?: number;
     min?: number;
+    placeholder?: string;
     disabled?: boolean;
     bordered?: boolean;
     autoFocus?: boolean;
@@ -52,7 +53,6 @@ type Props = {
 
 type State = {
     focused: boolean;
-    formatValue: string;
 }
 
 class InputNumber extends Component<Props, State> {
@@ -73,9 +73,10 @@ class InputNumber extends Component<Props, State> {
 <div t-att-class="getClasses()">
     <Input className="" ref="inputRef" onFocus.bind="onFocus" onBlur.bind="onBlur" 
         onKeyDown.bind="onKeyDown"
+        placeholder="props.placeholder"
         readonly="props.readonly"
         onPressEnter="props.onPressEnter"
-        value="state.formatValue" onChange.bind="onchangeValue"
+        value="controllableState.state.value" onChange.bind="onchangeValue"
         disabled="props.disabled"
         size="props.size"
         bordered="false"
@@ -122,11 +123,10 @@ class InputNumber extends Component<Props, State> {
 
     state = useState<State>({
         focused: false,
-        formatValue: ''
     });
 
     controllableState = useControllableState(this.props, {
-        value: this.precisionValue(BigNumber(`${this.props.defaultValue}` || '0'))
+        value: this.props.defaultValue ? this.precisionValue(BigNumber(this.props.defaultValue)) : ''
     });
 
     inputRef: CompRef = { current: undefined };
@@ -242,11 +242,15 @@ class InputNumber extends Component<Props, State> {
      */
     protected onchangeValue(value: string): void {
         const { stringMode } = this.props;
-        let bn = BigNumber(this.parse(value));
-        bn = bn.isNaN() ? BigNumber('0') : bn;
-        let stringValue = this.precisionValue(bn);
+        let stringValue = value;
+        if (value !== '') {
+            let bn = BigNumber(this.parse(value));
+            bn = bn.isNaN() ? BigNumber('0') : bn;
+            stringValue = this.precisionValue(bn);
+        }
+
         this.controllableState.setState({
-            value: stringValue
+            value: this.formatValue(stringValue)
         });
         this.props.onChange?.(stringMode ? stringValue : Number(stringValue));
     }
@@ -257,6 +261,10 @@ class InputNumber extends Component<Props, State> {
      * @protected
      */
     protected getValueNotOutOfRange(value: string): string {
+        if (value === '') {
+            return '';
+        }
+
         const { max, min } = this.props;
         let bn = BigNumber(value);
         const v = bn.isNaN() ? BigNumber('0') : bn;
@@ -365,10 +373,6 @@ class InputNumber extends Component<Props, State> {
                 this.inputRef.current?.focus();
             }
         }, () => [this.inputRef.current]);
-
-        useEffect(() => {
-            this.state.formatValue = this.formatValue(this.controllableState.state.value);
-        }, () => [this.controllableState.state.value]);
     }
 }
 

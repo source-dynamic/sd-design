@@ -19,7 +19,7 @@ export const InputNumber: Story = {
     args: {
         disabled: false,
         size: 'middle',
-        border: true,
+        bordered: true,
         controls: true,
         decimalSeparator: '.',
         keyboard: true,
@@ -39,7 +39,7 @@ export const InputNumber: Story = {
             description: '每次改变的步数，可以为小数',
             control: { type: 'range', min: 0.1, max: 2, step: 0.1 }
         },
-        border: {
+        bordered: {
             description: '无边框模式'
         },
         controls: {

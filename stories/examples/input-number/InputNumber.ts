@@ -8,7 +8,7 @@ export default class InputRoot extends Component {
         disabled: false,
         size: 'middle',
         step: 1,
-        border: true,
+        bordered: true,
         controls: true,
         decimalSeparator: '.',
         keyboard: true,
@@ -22,7 +22,7 @@ export default class InputRoot extends Component {
         size="state.size" 
         step="state.step"
         controls="state.controls" 
-        bordered="state.border"
+        bordered="state.bordered"
         decimalSeparator="state.decimalSeparator"
         keyboard="state.keyboard"
         readonly="state.readonly"

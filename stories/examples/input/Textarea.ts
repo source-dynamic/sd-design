@@ -7,7 +7,7 @@ export default class TextareaRoot extends Component {
     state = useState<any>({
         allowClear: true,
         size: undefined,
-        border: undefined,
+        bordered: undefined,
         disabled: undefined,
         showCount: undefined,
         autoSize: undefined
@@ -33,7 +33,7 @@ export default class TextareaRoot extends Component {
         showCount="state.showCount" 
         allowClear="state.allowClear" 
         size="state.size" 
-        bordered="state.border" 
+        bordered="state.bordered" 
         disabled="state.disabled"
     />
 </div>
