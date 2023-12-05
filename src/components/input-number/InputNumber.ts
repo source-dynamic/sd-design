@@ -5,7 +5,7 @@ import _downSVG from '@/assets/down.svg';
 import { getPrefixCls, getSDSVG, omit } from '@/components/_util/utils';
 import './style/input-number.scss';
 import classNames from 'classnames';
-import { CompRef } from '@/hooks/useImperativeHandle';
+import { CompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
 import useControllableState from '@/hooks/useControllableState';
 import BigNumber from 'bignumber.js';
 
@@ -62,7 +62,6 @@ class InputNumber extends Component<Props, State> {
         controls: true,
         keyboard: true,
         step: 1,
-        defaultValue: 0,
         max: Number.MAX_SAFE_INTEGER,
         min: Number.MIN_SAFE_INTEGER
     };
@@ -122,7 +121,7 @@ class InputNumber extends Component<Props, State> {
     `;
 
     state = useState<State>({
-        focused: false,
+        focused: false
     });
 
     controllableState = useControllableState(this.props, {
@@ -158,15 +157,27 @@ class InputNumber extends Component<Props, State> {
         return !!this.props.controls && !this.props.disabled;
     }
 
+    protected focus(): void {
+        this.state.focused = true;
+    }
+
     /**
      * 获取焦点回调
      * @param event
      * @protected
      */
     protected onFocus(event: FocusEvent): void {
+        this.focus();
         const { onFocus } = this.props;
-        this.state.focused = true;
         onFocus?.(event);
+    }
+
+    protected blur(): void {
+        const { changeOnBlur } = this.props;
+        this.state.focused = false;
+        if (changeOnBlur) {
+            this.onchangeValue(this.getValueNotOutOfRange(this.controllableState.state.value));
+        }
     }
 
     /**
@@ -175,12 +186,9 @@ class InputNumber extends Component<Props, State> {
      * @protected
      */
     protected onBlur(event: FocusEvent): void {
+        this.blur();
         const { onBlur, changeOnBlur } = this.props;
-        this.state.focused = false;
         onBlur?.(event);
-        if (changeOnBlur) {
-            this.onchangeValue(this.getValueNotOutOfRange(this.controllableState.state.value));
-        }
     }
 
     /**
@@ -368,6 +376,11 @@ class InputNumber extends Component<Props, State> {
     }
 
     setup(): void {
+        useImperativeHandle(this, {
+            focus: this.focus.bind(this),
+            blur: this.blur.bind(this)
+        });
+
         useEffect(() => {
             if (this.props.autoFocus) {
                 this.inputRef.current?.focus();
