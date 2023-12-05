@@ -1,10 +1,10 @@
 import { useEffect } from '@odoo/owl';
 
-type CompRef<T> = {
+export type CompRef = {
     current?: Record<string, any>
 }
 
-export const useCompRef = <T> (): CompRef<T> => {
+export const useCompRef = (): CompRef => {
     return {
         current: undefined
     };

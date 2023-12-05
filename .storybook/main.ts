@@ -42,6 +42,10 @@ const config: StorybookConfig = {
                 ]
             },
             {
+                test: /web\.assets_web\.min\.css$/,
+                use: 'raw-loader'
+            },
+            {
                 test: /\.svg$/,
                 use: ['svg-inline-loader']
             }

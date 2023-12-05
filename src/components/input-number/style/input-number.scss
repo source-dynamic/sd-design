@@ -1,0 +1,106 @@
+@import "src/components/input/style/variables";
+@import "src/components/input/style/input";
+@import "src/components/input/style/clearable-labeled-wrapper";
+
+$input-number-class: #{$input-prefix-cls}-number;
+$input-number-wrap: #{$input-prefix-cls}-number-wrap;
+$input-number-handler-wrap-class: #{$input-number-class}-handler-wrap;
+$icon-class: #{$input-prefix-cls}-number-icon;
+
+$border: 1px solid $border-color;
+
+.#{$input-number-class} {
+  position: relative;
+  box-sizing: border-box;
+  user-select: none;
+
+  &.#{$input-number-class}-disabled {
+    @include disabled();
+  }
+
+  &:not(.#{$input-number-class}-borderless) {
+    @include input-border();
+
+    &:not(.#{$input-number-class}-disabled) {
+      &.#{$input-number-class}-focused {
+        @include primary-color-border();
+      }
+
+      &:hover {
+        @include primary-color-border();
+      }
+    }
+  }
+
+  &:not(.#{$input-number-class}-disabled):hover {
+    .#{$input-number-handler-wrap-class} {
+      opacity: 1;
+    }
+  }
+
+  .#{$input-number-handler-wrap-class} {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 22px;
+    opacity: 0;
+    background-color: #fff;
+    border-end-end-radius: 6px;
+    border-start-end-radius: 6px;
+
+    color: $gray-icon;
+    cursor: pointer;
+    transition: opacity 0.2s linear 0.2s;
+    font-size: 7px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+
+    .#{$icon-class} {
+      flex: auto;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      border-inline-start: $border;
+      height: 40%;
+      box-sizing: border-box;
+
+      &.#{$icon-class}-disabled {
+        cursor: not-allowed;
+      }
+
+      &:first-child {
+        border-bottom: $border;
+      }
+
+      &:hover {
+        color: $primary-color-7;
+        height: 60%;
+      }
+
+      transition: all 0.2s linear;
+    }
+  }
+}
+
+.#{$input-number-wrap} {
+  display: flex;
+  width: 100%;
+
+  > :not(:first-child) {
+    @include borderRadius0("start");
+  }
+
+  > :not(:last-child) {
+    @include borderRadius0("end");
+  }
+
+  .#{$input-number-wrap}-addon {
+    @include addon();
+  }
+}

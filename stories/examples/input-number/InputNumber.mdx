@@ -1,0 +1,205 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks';
+
+import * as InputNumberStories from './InputNumber.stories';
+
+<Meta of={InputNumberStories}/>
+
+# 数字输入框
+通过鼠标或键盘，输入范围内的数值
+
+## 基本使用
+<Canvas of={InputNumberStories.InputNumber}/>
+<Controls of={InputNumberStories.InputNumber}/>
+
+## API
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>addonAfter</td>
+        <td>带标签的 inputNumber，设置后置标签</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>addonBefore</td>
+        <td>带标签的 inputNumber，设置前置标签</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>prefix</td>
+        <td>带有前缀图标的 inputNumber</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>suffix</td>
+        <td>带有后缀图标的 inputNumber</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>upIcon</td>
+        <td>上箭头渲染插槽</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>downIcon</td>
+        <td>下箭头渲染插槽</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>autoFocus</td>
+        <td>是否自动获取焦点</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>bordered</td>
+        <td>是否有边框</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>changeOnBlur</td>
+        <td>是否在失去焦点时，触发 onChange 事件（例如值超出范围时，重新限制回范围并触发事件）</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>controls</td>
+        <td>是否显示增减按钮</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>size</td>
+        <td>控件大小</td>
+        <td>`large` | `middle` | `small`</td>
+        <td>`middle`</td>
+    </tr>
+    <tr>
+        <td>decimalSeparator</td>
+        <td>小数点如何显示</td>
+        <td>string</td>
+        <td>.</td>
+    </tr>
+    <tr>
+        <td>placeholder</td>
+        <td>占位符</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>defaultValue</td>
+        <td>初始值</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>value</td>
+        <td>当前值，可配合useState变量使用，在回调onChange事件中接收变更值去更新</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>disabled</td>
+        <td>是否禁用状态</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>formatter</td>
+        <td>指定输入框展示值的格式</td>
+        <td>function(value: string): string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>parser</td>
+        <td>指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用</td>
+        <td>function(value: string): string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>max</td>
+        <td>最大值</td>
+        <td>number</td>
+        <td>Number.MAX_SAFE_INTEGER</td>
+    </tr>
+    <tr>
+        <td>min</td>
+        <td>最小值</td>
+        <td>number</td>
+        <td>Number.MIN_SAFE_INTEGER</td>
+    </tr>
+    <tr>
+        <td>precision</td>
+        <td>精度</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>step</td>
+        <td>每次改变的值，可以为浮点数</td>
+        <td>number</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>readOnly</td>
+        <td>是否只读，只读状态无法手动输入</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>stringMode</td>
+        <td>字符值模式，开启后onChange 将返回 string 类型</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>onChange</td>
+        <td>变化回调</td>
+        <td>function(value: number | string)</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onStep</td>
+        <td>点击上下箭头的回调</td>
+        <td>`(value: number, info: { offset: number, type: 'up' | 'down' }) => void`</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>
+
+### Methods
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>说明</th>
+        <th>参数</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>blur</td>
+        <td>取消焦点</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>focus</td>
+        <td>获取焦点</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>

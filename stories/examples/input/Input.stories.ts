@@ -32,7 +32,7 @@ export const Input: Story = {
         addonBefore: 'http://',
         addonAfter: '.com',
         size: 'middle',
-        border: true
+        bordered: true
     },
     argTypes: {
         allowClear: {
@@ -58,7 +58,7 @@ export const Input: Story = {
             control: 'select',
             options: ['small', 'middle', 'large']
         },
-        border: {
+        bordered: {
             description: '无边框模式'
         }
     },

@@ -1,3 +1,5 @@
+@import "src/theme/style/systemDefault";
+
 .row-container {
   width: 700px;
   height: 100px;
@@ -15,10 +17,10 @@
     justify-content: center;
     align-items: center;
     height: 50px;
-    background: #1677ff;
+    background: $primary-color-5;
 
     &:nth-child(2n + 1) {
-      background-color: #1677ffbf;
+      background-color: $primary-color-6;
     }
   }
 }

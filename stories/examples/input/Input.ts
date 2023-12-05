@@ -13,7 +13,7 @@ export default class InputRoot extends Component {
         addonBefore: '',
         addonAfter: '',
         size: undefined,
-        border: undefined,
+        bordered: undefined,
         disabled: undefined,
     });
 
@@ -27,11 +27,11 @@ export default class InputRoot extends Component {
 
     static template = xml`
 <div class="input-container">
-    <Input value="innerState.value" onChange.bind.alike="onChange" showCount="state.showCount" allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size" bordered="state.border" disabled="state.disabled"/>
+    <Input value="innerState.value" onChange.bind.alike="onChange" showCount="state.showCount" allowClear="state.allowClear" placeholder="'Basic usage'" size="state.size" bordered="state.bordered" disabled="state.disabled"/>
 </div>
 
 <div class="input-container">
-    <Input placeholder="'Prefix And Suffix'" size="state.size">
+    <Input placeholder="'Prefix And Suffix'" size="state.size" bordered="state.bordered" disabled="state.disabled">
         <t t-set-slot="prefix">
             <t t-esc="state.prefix"/>
         </t>
@@ -42,7 +42,7 @@ export default class InputRoot extends Component {
 </div>
 
 <div class="input-container">
-    <Input placeholder="'AddonBefore And AddonAfter'" allowClear="state.allowClear" size="state.size">
+    <Input placeholder="'AddonBefore And AddonAfter'" allowClear="state.allowClear" size="state.size" bordered="state.bordered" disabled="state.disabled">
         <t t-set-slot="addonBefore">
             <t t-esc="state.addonBefore"/>
         </t>

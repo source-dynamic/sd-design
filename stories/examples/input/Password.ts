@@ -11,7 +11,7 @@ export default class PasswordRoot extends Component {
         addonBefore: '',
         addonAfter: '',
         size: undefined,
-        border: undefined,
+        bordered: undefined,
         disabled: undefined,
         visible: undefined
     });
@@ -22,7 +22,7 @@ export default class PasswordRoot extends Component {
 
     static template = xml`
 <div class="input-container">
-    <Password visible="state.visible" onVisibleChange="onVisibleChange" placeholder="'Password'" size="state.size" bordered="state.border" disabled="state.disabled"/>
+    <Password visible="state.visible" onVisibleChange="onVisibleChange" placeholder="'Password'" size="state.size" bordered="state.bordered" disabled="state.disabled"/>
 </div>
     `
 }

@@ -4,7 +4,7 @@ import { getPrefixCls, getSDSVG } from '@/components/_util/utils';
 import classNames from 'classnames';
 import { getInputClassName } from '@/components/input/utils';
 import _closeFillSVG from '@/assets/close_fill.svg';
-import './style/clearableLabeledWrapper.scss';
+import './style/clearable-labeled-wrapper.scss';
 
 const closeFillSVG = getSDSVG(_closeFillSVG, {
     width: '1em',
