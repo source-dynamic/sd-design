@@ -5,14 +5,24 @@
 
 ## 简介
 
-`sd-design` 是一个基于 OWL 框架构建的 UI 组件库，旨在满足国内用户对 Odoo UI 的审美和使用需求。本项目启发于 `ant-design`，旨在提供更加美观和易用的 UI 组件，以优化用户体验。
+`sd-design` 是一个基于 OWL2.0+ 框架构建的 UI 组件库，旨在满足国内用户对 Odoo UI 的审美和使用需求。本项目启发于 [ant-design](https://github.com/ant-design/ant-design)，旨在提供更加美观和易用的 UI 组件，以优化用户体验。
+
+## 依赖
+
+- [owl](https://github.com/odoo/owl) version: 2.0+
 
 ## 特点
 
-- **美观**: 参照 [ant-design](https://github.com/ant-design/ant-design)，`sd-design` 提供了符合国内用户审美的 UI 设计。
+- **美观**: 参照 `ant-design`，`sd-design` 提供了符合国内用户审美的 UI 设计。
 - **易用性**: 提供简洁明了的 API，使得组件易于集成和使用。
 - **灵活性**: 组件可高度自定义，满足不同场景下的需求。
 - 完全开源使用，不会有商业版等区别对待
+
+## 前言
+
+odoo 作为一个开源的 ERP 系统，其 UI 设计一直是国内用户诟病的地方。虽然 odoo 13 中的 UI 设计已经有了很大的改进，但是仍然有很多地方不够美观，也不够符合国内用户的使用习惯。因此，我们希望能够提供一个 UI 组件库，使得 odoo 的 UI 更加美观和易用。
+odoo从采用owl到如今，owl逐渐完善。到了目前2.0+版本，使用起来已经和vue、react等前端框架比较接近，因此我们基于owl2.0+进行二次开发，提供一套符合国内用户审美和使用习惯的UI组件库。
+ui库我们选择跟随owl版本而不是跟随odoo版本，是因为owl是odoo的前端框架，odoo每年都会发布新版本，但其内核使用的owl版本一般不会有大的变化，因此同一大版本的ui库理论上可以兼容多个odoo版本。版本兼容性比跟随odoo版本更好。
 
 ## 预览图
 
