@@ -21,7 +21,6 @@
     "email": "305111632@qq.com"
   },
   "scripts": {
-    "build": "npx webpack --config webpack.build.js",
     "clean": "rimraf es",
     "build-es": "npm run clean && tsc",
     "eslint": "eslint ./src/.  --ext .js,.jsx,.ts,.tsx --fix",
@@ -52,13 +51,10 @@
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "babel-loader": "^8.2.5",
-    "css-loader": "^6.7.1",
     "eslint": "^8.52.0",
     "eslint-plugin-storybook": "^0.6.15",
-    "html-webpack-plugin": "^5.5.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.7",
-    "mini-css-extract-plugin": "^1.4.1",
     "node-sass": "^9.0.0",
     "raw-loader": "^4.0.2",
     "react": "^17.0.2",
@@ -69,13 +65,10 @@
     "style-loader": "^3.3.1",
     "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.2.8",
-    "typescript": "^5.2.2",
-    "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.4",
-    "webpack-merge": "^5.8.0"
+    "typescript": "^5.2.2"
   },
   "resolutions": {
+    "strip-ansi": "^6.0.1",
     "string-width": "2.1.1"
   },
   "lint-staged": {

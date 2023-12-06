@@ -34,13 +34,15 @@ module.exports = {
                 test: /\.txt$/i,
                 use: 'raw-loader'
             },
-            { test: /\.ts$/, use: 'ts-loader' },
+            {
+                test: /\.ts$/, use: 'ts-loader'
+            },
             { test: /\.js$/, use: 'babel-loader' }
         ]
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src'),
+            '@': path.resolve(__dirname, '../src')
         },
         extensions: ['.ts', '.js', '.tsx', '.jsx']
     }

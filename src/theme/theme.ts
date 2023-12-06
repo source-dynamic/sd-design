@@ -1,6 +1,6 @@
 import { generate, presetPalettes } from '@ant-design/colors';
 
-let styleElement: HTMLStyleElement | undefined = undefined;
+let styleElement: HTMLStyleElement | undefined;
 
 const createStyleElement = () => {
     if (!styleElement) {
