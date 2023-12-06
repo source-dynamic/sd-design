@@ -1,4 +1,4 @@
-@import 'src/theme';
+@import 'src/theme/theme';
 
 .#{$ui-prefix}-row, .#{$ui-prefix}-row:after, .#{$ui-prefix}-row:before {
   display: flex;
