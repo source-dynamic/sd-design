@@ -65,6 +65,8 @@ yarn run storybook
 
 如果您有任何问题或建议，请通过以下方式联系我们：
 
-- 再仓库中提交issue
+- 在仓库中提交issue
 - 微信联系进群讨论：
-  ![sd-design](./assets/images/IMG_3775.JPG)
+  <div>
+    <img src="./assets/images/IMG_3775.JPG" alt="sd-design" style="margin-top: 10px" width="200" height="260">
+  </div>
