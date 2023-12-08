@@ -13,6 +13,7 @@
 /node_modules
 package-lock.json
 
+/dist/*
 # production
 /build
 

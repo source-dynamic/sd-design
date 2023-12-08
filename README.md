@@ -30,6 +30,14 @@ ui库我们选择跟随owl版本而不是跟随odoo版本，是因为owl是odoo�
 
 ## 快速开始
 
+### 在Odoo中使用
+
+> 需要odoo17及以上版本  
+
+参考 [sd-design-addons](https://github.com/source-dynamic/sd-design-addons)
+
+
+
 ### 本地运行
 ```bash
 yarn install
