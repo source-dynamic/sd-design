@@ -45,6 +45,23 @@ const parseFlex = (flex: number | 'none' | 'auto' | string): string => {
 };
 
 export default class Col extends Component<Props, Env> {
+    static props = {
+        className: { type: String, optional: true },
+        span: { type: [Number, String], optional: true },
+        order: { type: [Number, String], optional: true },
+        offset: { type: [Number, String], optional: true },
+        push: { type: [Number, String], optional: true },
+        pull: { type: [Number, String], optional: true },
+        xs: { type: [Number, Object], optional: true },
+        sm: { type: [Number, Object], optional: true },
+        md: { type: [Number, Object], optional: true },
+        lg: { type: [Number, Object], optional: true },
+        xl: { type: [Number, Object], optional: true },
+        xxl: { type: [Number, Object], optional: true },
+        flex: { type: [Number, String], optional: true },
+        slots: { type: Object, optional: true }
+    };
+
     static template = xml`
     <div t-att-class="getClasses()" t-att-style="getStyle()">
         <t t-slot="default"/>
@@ -56,7 +73,7 @@ export default class Col extends Component<Props, Env> {
         if (this.props.flex) {
             colStyle.flex = parseFlex(this.props.flex);
         }
-        return stylesToString(colStyle) || undefined
+        return stylesToString(colStyle) || undefined;
     }
 
     protected getClasses(): string {

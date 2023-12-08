@@ -22,6 +22,12 @@ export type TextAreaProps = Omit<InputProps & {
 const textareaClass = getPrefixCls('input-textarea');
 
 export default class TextArea extends Input<TextAreaProps> {
+    static props = {
+        ...Input.props,
+        autoSize: { type: [Boolean, Object], optional: true },
+        onResize: { type: Function, optional: true }
+    };
+
     static template = xml`
 <ClearableLabeledWrapper inputType="'text'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="controllableState.state.value"
@@ -74,7 +80,8 @@ export default class TextArea extends Input<TextAreaProps> {
         const attrs = ['padding-top', 'padding-bottom'];
         const [paddingTop, paddingBottom] = attrs.map(item => style.getPropertyValue(item));
         const lineHeight = parseFloat(style.getPropertyValue('line-height'));
-        const rowsHeight = calculateAutoSizeHeight(el as unknown as HTMLTextAreaElement) - parseFloat(paddingTop) - parseFloat(paddingBottom);
+        const rowsHeight = calculateAutoSizeHeight(el as unknown as HTMLTextAreaElement) - parseFloat(
+            paddingTop) - parseFloat(paddingBottom);
         const rows = Math.ceil(rowsHeight / lineHeight);
 
         if (this.props.autoSize === true) {

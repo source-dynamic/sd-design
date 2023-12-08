@@ -20,6 +20,15 @@ type Props = {
 }
 
 export default class Row extends Component<Props> {
+    static props = {
+        className: { type: String, optional: true },
+        gutter: { type: [Number, Array], optional: true },
+        align: { type: String, optional: true },
+        justify: { type: String, optional: true },
+        wrap: { type: Boolean, optional: true },
+        slots: { type: Object, optional: true }
+    };
+
     static template: string = xml`
         <div t-att-class="state.className" t-att-style="state.style">
             <t t-slot="default"/>

@@ -30,8 +30,6 @@ type IBasicProps = {
 /** This props only for input. */
 type IClearableWrapperProps = {
     size?: SizeType;
-    suffix?: any;
-    prefix?: any;
 } & IBasicProps;
 
 type State = {}
@@ -39,6 +37,23 @@ type State = {}
 const showCountSpanClass = getPrefixCls('input-show-count-suffix');
 
 export default class ClearableLabeledWrapper extends Component<IClearableWrapperProps> {
+
+    static props = {
+        className: { type: String, optional: true },
+        inputType: { type: String, optional: true },
+        direction: { type: String, optional: true },
+        value: { type: [String, Number], optional: true },
+        allowClear: { type: Boolean, optional: true },
+        disabled: { type: Boolean, optional: true },
+        focused: { type: Boolean, optional: true },
+        readOnly: { type: Boolean, optional: true },
+        bordered: { type: Boolean, optional: true },
+        handleReset: { type: Function, optional: true },
+        slots: { type: Object, optional: true },
+        count: { type: String, optional: true },
+        size: { type: String, optional: true }
+    }
+
     /**
      * 渲染清除按钮的模版
      */
@@ -178,7 +193,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      * 清除图标的class
      */
     protected renderClearIconClass(): string | undefined {
-        const { value, allowClear, disabled, readOnly, suffix } = this.props;
+        const { value, allowClear, disabled, readOnly, slots } = this.props;
         if (!allowClear) {
             return;
         }
@@ -188,7 +203,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
         return classNames(
             {
                 [`${className}-hidden`]: !needClear,
-                [`${className}-has-suffix`]: !!suffix
+                [`${className}-has-suffix`]: !!slots?.suffix
             },
             className
         );
@@ -202,12 +217,12 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             focused,
             value,
             size,
-            suffix,
             disabled,
             allowClear,
             direction,
             readOnly,
-            bordered
+            bordered,
+            slots
         } = this.props;
 
         const prefixCls = getPrefixCls('input');
@@ -221,7 +236,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             [`${prefixCls}-affix-wrapper-disabled`]: disabled,
             [`${prefixCls}-affix-wrapper-sm`]: size === 'small',
             [`${prefixCls}-affix-wrapper-lg`]: size === 'large',
-            [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: suffix && allowClear && value,
+            [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: !!slots?.suffix && allowClear && value,
             [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
             [`${prefixCls}-affix-wrapper-readonly`]: readOnly,
             [`${prefixCls}-affix-wrapper-borderless`]: !bordered
