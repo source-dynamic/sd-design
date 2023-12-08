@@ -3,10 +3,6 @@
 
 $textarea-prefix-cls: #{$input-prefix-cls}-textarea;
 
-@mixin affixTextareaGlobal() {
-  padding-inline-end: 24px;
-}
-
 .#{$input-prefix-cls}-disabled {
   resize: none !important;
 }
@@ -21,57 +17,64 @@ $textarea-prefix-cls: #{$input-prefix-cls}-textarea;
   }
 }
 
-.#{$input-prefix-cls}-affix-wrapper-textarea {
-  padding: 0;
+.#{$input-prefix-cls}-affix-wrapper {
+  &.#{$input-prefix-cls}-affix-wrapper-textarea {
+    padding: 0;
 
-  .#{$textarea-prefix-cls} {
-    padding: 4px 11px;
-    font-size: $base-font-size;
-    border-radius: $base-border-radius;
-    line-height: 22px;
-    min-height: 32px;
-    border: none;
-    transition: resize 0s;
-    @include affixTextareaGlobal;
-    
-    &[rows] {
-      resize: none;
-    }
-  }
-
-  .#{$input-prefix-cls} {
-    &-sm {
-      padding: 0 7px;
-      @include affixTextareaGlobal;
+    &.#{$input-prefix-cls}-affix-wrapper-textarea-with-clear-btn {
+      .#{$textarea-prefix-cls} {
+        padding-inline-end: 24px;
+      }
     }
 
-    &-lg {
-      padding: 7px 11px;
-      font-size: $large-font-size;
-      line-height: 24px;
-      min-height: 38px;
-      @include affixTextareaGlobal;
+    .#{$textarea-prefix-cls} {
+      padding: 4px 11px;
+      font-size: $base-font-size;
+      border-radius: $base-border-radius;
+      line-height: 22px;
+      min-height: 32px;
+      border: none;
+      transition: resize 0s;
+
+      &[rows] {
+        resize: none;
+      }
     }
-  }
 
-  .#{$input-prefix-cls}-suffix:not(:empty) {
-    position: relative;
-    margin-inline-start: 0;
+    .#{$input-prefix-cls} {
+      &-sm {
+        padding: 0 7px;
+      }
 
-    .#{$input-prefix-cls}-clear-icon {
+      &-lg {
+        padding: 7px 11px;
+        font-size: $large-font-size;
+        line-height: 24px;
+        min-height: 38px;
+      }
+    }
+
+    .#{$input-prefix-cls}-suffix:not(:empty) {
+      position: relative;
+      margin-inline-start: 0;
+
+      .#{$input-prefix-cls}-clear-icon {
+        position: absolute;
+        inset-inline-end: 8px;
+        inset-block-start: 8px;
+      }
+    }
+
+    .#{$input-prefix-cls}-show-count-suffix {
       position: absolute;
-      inset-inline-end: 8px;
-      inset-block-start: 8px;
+      bottom: -22px;
+      inset-inline-end: 0;
+      white-space: nowrap;
+      pointer-events: none;
+      color: $gray;
+      font-size: $base-font-size;
     }
-  }
-
-  .#{$input-prefix-cls}-show-count-suffix {
-    position: absolute;
-    bottom: -22px;
-    inset-inline-end: 0;
-    white-space: nowrap;
-    pointer-events: none;
-    color: $gray;
-    font-size: $base-font-size;
   }
 }
+
+

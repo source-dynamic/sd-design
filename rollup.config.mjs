@@ -66,7 +66,7 @@ export default {
             declarationDir: 'dist/esm/types'
         }),
         postcss({
-            extract: 'css/index.css',
+            extract: 'css/sd-design.css',
             extensions: ['.css', '.scss'],
             use: [
                 ['sass', {

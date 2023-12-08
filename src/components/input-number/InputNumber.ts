@@ -69,7 +69,7 @@ class InputNumber extends Component<Props, State> {
     static components = { Input };
 
     static inputTemplate = `
-<div t-att-class="getClasses()">
+<span t-att-class="getClasses()">
     <Input className="" ref="inputRef" onFocus.bind="onFocus" onBlur.bind="onBlur" 
         onKeyDown.bind="onKeyDown"
         placeholder="props.placeholder"
@@ -96,7 +96,7 @@ class InputNumber extends Component<Props, State> {
             </span>
         </span>
     </t>    
-</div>
+</span>
 `;
 
     static template = xml`
@@ -292,11 +292,14 @@ class InputNumber extends Component<Props, State> {
      */
     protected enableIncreaseOrDecrease(isIncrease: boolean): boolean {
         const { min, max } = this.props;
+        const { value } = this.controllableState.state;
+        const bn = BigNumber(value || '0');
+
         if (isIncrease && max !== undefined) {
-            return BigNumber(this.controllableState.state.value).isLessThan(max);
+            return bn.isLessThan(max);
         }
         if (!isIncrease && min !== undefined) {
-            return BigNumber(this.controllableState.state.value).isGreaterThan(min);
+            return bn.isGreaterThan(min);
         }
         return true;
     }
@@ -316,7 +319,7 @@ class InputNumber extends Component<Props, State> {
 
         const { step } = this.props;
         const { value } = this.controllableState.state;
-        const bn = BigNumber(value);
+        const bn = BigNumber(value || '0');
         const newValue = isIncrease ? bn.plus(step as number) : bn.minus(step as number);
         this.onchangeValue(this.getValueNotOutOfRange(newValue.toFixed()));
     }

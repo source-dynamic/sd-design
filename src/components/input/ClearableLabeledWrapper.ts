@@ -262,14 +262,14 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      * 文本域带有清除按钮的class
      */
     protected renderTextAreaWithClearIconClass(): {} {
-        const { bordered, direction, disabled } = this.props;
+        const { bordered, direction, disabled, allowClear, value } = this.props;
         const prefixCls = getPrefixCls('input');
 
         const affixWrapperCls = classNames(
             `${prefixCls}-affix-wrapper`,
             `${prefixCls}-affix-wrapper-textarea`,
-            `${prefixCls}-affix-wrapper-textarea-with-clear-btn`,
             {
+                [`${prefixCls}-affix-wrapper-textarea-with-clear-btn`]: allowClear && value,
                 [`${prefixCls}-affix-wrapper-disabled`]: disabled,
                 [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
                 [`${prefixCls}-affix-wrapper-borderless`]: !bordered
