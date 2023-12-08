@@ -25,7 +25,7 @@ const StoryCompWrapper = (props: Props) => {
 
     useEffect(() => {
         if (owlRootRef.current) {
-            mount(props.owl, owlRootRef.current).then((root) => {
+            mount(props.owl, owlRootRef.current, { dev: true, warnIfNoStaticProps: true }).then((root) => {
                 rootRef.current = root;
                 changeOwlStateByProps(root, props);
             });

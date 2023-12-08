@@ -32,6 +32,12 @@ type State = {
 const passwordClass = getPrefixCls('input-password');
 
 export default class Password extends Input<PasswordProps> {
+    static props = {
+        ...Input.props,
+        visible: { type: Boolean, optional: true },
+        onVisibleChange: { type: Function, optional: true }
+    }
+
     static template = xml`
  <ClearableLabeledWrapper inputType="'input'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="state.value"

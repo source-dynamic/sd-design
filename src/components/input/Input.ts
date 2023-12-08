@@ -70,6 +70,27 @@ type State = {
 }
 
 export default class Input<T extends InputProps> extends Component<T> {
+    static props = {
+        className: { type: String, optional: true },
+        size: { type: String, optional: true },
+        disabled: { type: Boolean, optional: true },
+        type: { type: String, optional: true },
+        maxLength: { type: Number, optional: true },
+        allowClear: { type: Boolean, optional: true },
+        bordered: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
+        showCount: { type: Boolean, optional: true },
+        defaultValue: { type: String, optional: true },
+        value: { type: String, optional: true },
+        onFocus: { type: Function, optional: true },
+        onBlur: { type: Function, optional: true },
+        onChange: { type: Function, optional: true },
+        onInput: { type: Function, optional: true },
+        onPressEnter: { type: Function, optional: true },
+        onKeyDown: { type: Function, optional: true },
+        slots: { type: Object, optional: true }
+    }
+
     static components = { ClearableLabeledWrapper };
 
     static template = xml`
