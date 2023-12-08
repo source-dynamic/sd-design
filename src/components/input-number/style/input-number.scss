@@ -13,14 +13,18 @@ $border: 1px solid $border-color;
   position: relative;
   box-sizing: border-box;
   user-select: none;
+  background-color: $white;
+  @include input-border();
 
   &.#{$input-number-class}-disabled {
     @include disabled();
   }
 
-  &:not(.#{$input-number-class}-borderless) {
-    @include input-border();
+  &.#{$input-number-class}-borderless {
+    @include borderless();
+  }
 
+  &:not(.#{$input-number-class}-borderless) {
     &:not(.#{$input-number-class}-disabled) {
       &.#{$input-number-class}-focused {
         @include primary-color-border();

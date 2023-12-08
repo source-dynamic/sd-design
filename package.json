@@ -21,9 +21,7 @@
     "email": "305111632@qq.com"
   },
   "scripts": {
-    "build": "rollup -c",
-    "clean": "rimraf es",
-    "build-es": "npm run clean && tsc",
+    "build-es": "rimraf dist && rollup -c",
     "eslint": "eslint ./src/.  --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
