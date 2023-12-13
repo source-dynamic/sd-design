@@ -7,6 +7,7 @@ import { SizeType } from '@/components/_util/type';
 import './style/input.scss';
 import useControllableState from '@/hooks/useControllableState';
 import { useImperativeHandle } from '@/hooks/useImperativeHandle';
+import { baseProps, BaseProps } from '@/common/baseProps';
 
 export interface IInputFocusOptions extends FocusOptions {
     cursor?: 'start' | 'end' | 'all';
@@ -60,8 +61,7 @@ export type InputProps = {
     onInput?: (event: any) => void;
     onPressEnter?: (event: any) => void;
     onKeyDown?: (event: any) => void;
-    slots?: Record<string, any>;
-}
+} & BaseProps;
 
 type State = {
     focused: boolean;
@@ -88,8 +88,9 @@ export default class Input<T extends InputProps> extends Component<T> {
         onInput: { type: Function, optional: true },
         onPressEnter: { type: Function, optional: true },
         onKeyDown: { type: Function, optional: true },
-        slots: { type: Object, optional: true }
-    }
+        readonly: { type: Boolean, optional: true },
+        ...baseProps
+    };
 
     static components = { ClearableLabeledWrapper };
 
@@ -237,10 +238,10 @@ export default class Input<T extends InputProps> extends Component<T> {
     setup(): void {
         this.inputRef = useRef('input');
 
-        useImperativeHandle(this, {
+        useImperativeHandle({
             focus: this.focus.bind(this),
             blur: this.blur.bind(this)
-        })
+        });
 
         useEffect(() => {
             this.state.restProps = this.getRestProps();

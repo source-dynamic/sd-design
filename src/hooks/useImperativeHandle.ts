@@ -1,4 +1,4 @@
-import { useEffect } from '@odoo/owl';
+import { useComponent, useEffect } from '@odoo/owl';
 
 export type CompRef = {
     current?: Record<string, any>
@@ -10,7 +10,9 @@ export const useCompRef = (): CompRef => {
     };
 };
 
-export const useImperativeHandle = (comp: any, createHandle: Record<string, any>) => {
+export const useImperativeHandle = (createHandle: Record<string, any>) => {
+    const comp = useComponent();
+
     useEffect(() => {
         const props = comp.props;
         if (props.hasOwnProperty('ref') && !!props.ref) {
