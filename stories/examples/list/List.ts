@@ -15,11 +15,9 @@ export default class ListRoot extends Component {
     `
 
     public setup(): void {
-        setTimeout(() => {
-            this.state.list = Array.from({ length: 1000 }, (_, i) => ({
-                title: `title${i}`,
-                content: `content${i}`
-            }));
-        }, 2000)
+        this.state.list = Array.from({ length: 10000 }, (_, i) => ({
+            title: `title${i}`,
+            content: `content${i}`
+        }));
     }
 }
