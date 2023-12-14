@@ -24,8 +24,22 @@ export const List: Story = {
         }
     },
     args: {
+        bordered: false,
+        size: 'middle',
+        virtual: false
     },
     argTypes: {
+        bordered: {
+            description: '无边框模式'
+        },
+        size: {
+            description: '尺寸',
+            control: 'select',
+            options: ['small', 'middle', 'large']
+        },
+        virtual: {
+            description: '开启虚拟滚动'
+        }
     },
     render: renderStoryComp(ListComp)
 };

@@ -24,6 +24,7 @@ const listContainerClass = getPrefixCls('list-container');
 const listFooterClass = getPrefixCls('list-footer');
 const listItemsClass = getPrefixCls('list-items');
 const listItemClass = getPrefixCls('list-item');
+const vrListItemClass = getPrefixCls('vr-list-item');
 
 class List extends Component<Props> {
     static components = { Item, VirtualList };
@@ -46,7 +47,7 @@ class List extends Component<Props> {
             <t t-if="props.virtual">
                 <VirtualList onScroll.bind="onScroll" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
                     <t t-set-slot="item" t-slot-scope="scope">
-                        <div class="${listItemClass}">
+                        <div class="${vrListItemClass} ${listItemClass}" t-att-style="scope.style">
                             <t t-slot="item" t-props="scope"/>
                         </div>
                     </t>
@@ -54,7 +55,7 @@ class List extends Component<Props> {
             </t>
             <div t-else="" class="${listItemsClass}">
                 <div class="${listItemClass}" t-foreach="props.dataSource" t-as="item" t-key="item_index">
-                    <t t-slot="item" t-props="item" data="data" index="item_index"/>
+                    <t t-slot="item" data="item" index="item_index"/>
                 </div>
             </div>
         </t>

@@ -6,6 +6,7 @@ $container-cls: #{$ui-prefix}-list-container;
 $footer-cls: #{$ui-prefix}-list-footer;
 $items-cls: #{$ui-prefix}-list-items;
 $item-cls: #{$ui-prefix}-list-item;
+$vr-item-cls: #{$ui-prefix}-vr-list-item;
 
 [class^="#{$list-cls}"] [class^="#{$list-cls}"] {
   box-sizing: border-box;
@@ -84,5 +85,10 @@ $item-cls: #{$ui-prefix}-list-item;
   .#{$container-cls} {
     flex: 1;
     overflow: hidden;
+  }
+
+  .#{$vr-item-cls} {
+    padding: 0;
+    margin: 0;
   }
 }
