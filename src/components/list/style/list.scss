@@ -1,0 +1,88 @@
+@import "src/theme/style/style";
+
+$list-cls: #{$ui-prefix}-list;
+$head-cls: #{$ui-prefix}-list-head;
+$container-cls: #{$ui-prefix}-list-container;
+$footer-cls: #{$ui-prefix}-list-footer;
+$items-cls: #{$ui-prefix}-list-items;
+$item-cls: #{$ui-prefix}-list-item;
+
+[class^="#{$list-cls}"] [class^="#{$list-cls}"] {
+  box-sizing: border-box;
+}
+
+@mixin item {
+  display: block;
+  padding: $padding-lg/2 0;
+  padding-inline: $padding-lg;
+  border-block-end: 1px solid $color-split;
+}
+
+.#{$list-cls} {
+  border: 1px solid $border-color;
+  border-radius: $base-border-radius;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: $font-color;
+  font-size: $base-font-size;
+  line-height: $base-font-size;
+  list-style: none;
+  position: relative;
+
+  &.#{$list-cls}-borderless {
+    border: none;
+    border-radius: unset;
+  }
+
+  .#{$head-cls} {
+    @include item;
+  }
+
+  .#{$items-cls} {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .#{$item-cls}, {
+    @include item;
+
+    &:last-child {
+      border-block-end: none;
+    }
+  }
+
+  .#{$footer-cls} {
+    @include item;
+    border-block-start: 1px solid $color-split;
+    border-block-end: none;
+  }
+}
+
+.#{$list-cls}-sm {
+  .#{$head-cls}, .#{$footer-cls}, .#{$item-cls} {
+    padding: $padding/2 $padding;
+  }
+}
+
+.#{$list-cls}-lg {
+  .#{$head-cls}, .#{$footer-cls}, .#{$item-cls} {
+    padding: $padding $padding-lg;
+  }
+}
+
+// 虚拟列表情况
+.#{$list-cls}-vt {
+  display: flex;
+  flex-direction: column;
+
+  .#{$head-cls}, .#{$footer-cls} {
+    flex-shrink: 0;
+  }
+
+  .#{$container-cls} {
+    flex: 1;
+    overflow: hidden;
+  }
+}

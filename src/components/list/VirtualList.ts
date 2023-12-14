@@ -4,14 +4,20 @@ import { isNumber } from '@/components/_util';
 import { stylesToString } from '@/components/_util/utils';
 import { useEventListener } from '@/hooks/useEventListener';
 import { useImperativeHandle } from '@/hooks/useImperativeHandle';
-import { BaseProps } from '@/common/baseProps';
+import { baseProps, BaseProps } from '@/common/baseProps';
+import { MouseEvent } from 'react';
 
-type ItemHeight = (index: number, data: any) => number;
+export type ItemHeight = (index: number, data: any) => number;
+
+export type Position = 'start' | 'end' | 'mid';
 
 type Props = {
+    className?: string,
     list: any[],
+    height?: number,
     itemHeight: number | ItemHeight,
-    overscan?: number
+    overscan?: number,
+    onScroll?: (event: MouseEvent, position: Position) => void
 } & BaseProps;
 
 type TargetData = {
@@ -22,21 +28,30 @@ type TargetData = {
 type State = {
     scrollTriggerByScrollToFunc: boolean,
     targetList: TargetData[],
-    wrapperStyle?: string
+    wrapperStyle?: string,
+    containerHeight: number
 }
 
 class VirtualList extends Component<Props> {
+    static props = {
+        className: { type: String, optional: true },
+        list: { type: Array },
+        height: { type: Number, optional: true },
+        itemHeight: { type: [Number, Function] },
+        overscan: { type: Number, optional: true },
+        onScroll: { type: Function, optional: true },
+        ...baseProps
+    };
+
     static defaultProps = {
         overscan: 5
     };
 
     static template = xml`
-<div t-ref="container" style="height: 300px; overflow: auto">
+<div t-att-class="props.className" t-ref="container" t-att-style="getStyle()">
     <div t-ref="wrapper" t-att-style="state.wrapperStyle">
-        <t t-foreach="state.targetList" t-as="item" t-key="item.index">
-            <t t-slot="renderItem" item="item.data" index="item.index" style="item.style">
-                <div><t t-esc="item.index"></t></div>
-            </t>
+        <t t-foreach="state.targetList" t-as="target" t-key="target.index">
+            <t t-slot="item" data="target.data" index="target.index" style="target.style"/>
         </t>
     </div>
 </div>   
@@ -49,8 +64,21 @@ class VirtualList extends Component<Props> {
     state = useState<State>({
         scrollTriggerByScrollToFunc: false,
         targetList: [],
-        wrapperStyle: undefined
+        wrapperStyle: undefined,
+        containerHeight: 0
     });
+
+    protected getStyle() {
+        const { height } = this.props;
+        const style = {
+            height: '100%',
+            overflow: 'auto'
+        };
+        if (isNumber(height)) {
+            style.height = `${height}px`;
+        }
+        return stylesToString(style);
+    }
 
     protected getTotalHeight() {
         const { itemHeight } = this.props;
@@ -154,7 +182,7 @@ class VirtualList extends Component<Props> {
             const end = Math.min(this.props.list.length, offset + visibleCount + overscan!);
             const offsetTop = this.getDistanceTop(start);
             const totalHeight = this.getTotalHeight();
-
+            this.state.containerHeight = clientHeight;
             this.state.wrapperStyle = stylesToString({
                 height: `${totalHeight - offsetTop}px`,
                 'margin-top': `${offsetTop}px`
@@ -182,7 +210,7 @@ class VirtualList extends Component<Props> {
             scrollTo: this.scrollTo.bind(this)
         });
 
-        useEventListener(this.containerRef, 'scroll', (event) => {
+        useEventListener(this.containerRef, 'scroll', (event: MouseEvent) => {
             if (this.state.scrollTriggerByScrollToFunc) {
                 // 如果是 scrollTo 方法触发的滚动，则不再触发计算
                 this.state.scrollTriggerByScrollToFunc = false;
@@ -190,6 +218,15 @@ class VirtualList extends Component<Props> {
             }
             event.preventDefault();
             this.calculateRange();
+            let position: Position = 'mid';
+            if (event.currentTarget.scrollTop === 0) {
+                position = 'start';
+            } else if (event.currentTarget.scrollHeight - event.currentTarget.scrollTop === this.state.containerHeight) {
+                // 可滚动总高度 - 滚动条距离顶部的距离 和 容器高度相等表示滚动到底部
+                position = 'end';
+            }
+
+            this.props.onScroll?.(event, position);
         });
 
         useEffect(() => {
