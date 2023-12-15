@@ -143,7 +143,6 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
                 </t>
                 <t t-else="">
                     <t t-set="textAreaIconClass" t-value="renderTextAreaWithClearIconClass()"/>
-                    
                     <span t-att-class="textAreaIconClass.affixWrapperCls">
                         <t t-slot="default"/>
                         
@@ -236,7 +235,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             [`${prefixCls}-affix-wrapper-disabled`]: disabled,
             [`${prefixCls}-affix-wrapper-sm`]: size === 'small',
             [`${prefixCls}-affix-wrapper-lg`]: size === 'large',
-            [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: !!slots?.suffix && allowClear && value,
+            [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: allowClear && value,
             [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
             [`${prefixCls}-affix-wrapper-readonly`]: readOnly,
             [`${prefixCls}-affix-wrapper-borderless`]: !bordered
