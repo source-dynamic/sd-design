@@ -7,7 +7,7 @@ import ListComp from './List';
 const meta: Meta = {
     title: '布局/List 列表',
     parameters: {
-        layout: 'auto'
+        layout: 'centered'
     }
 };
 
@@ -30,7 +30,7 @@ export const List: Story = {
     },
     argTypes: {
         bordered: {
-            description: '无边框模式'
+            description: '边框模式'
         },
         size: {
             description: '尺寸',

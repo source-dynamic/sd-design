@@ -31,6 +31,27 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
   list-style: none;
   position: relative;
 
+  // 虚拟列表情况
+  &.#{$list-cls}-vt {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important;
+
+    .#{$head-cls}, .#{$footer-cls} {
+      flex-shrink: 0;
+    }
+
+    .#{$container-cls} {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .#{$vr-item-cls} {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
   &.#{$list-cls}-borderless {
     border: none;
     border-radius: unset;
@@ -70,25 +91,5 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
 .#{$list-cls}-lg {
   .#{$head-cls}, .#{$footer-cls}, .#{$item-cls} {
     padding: $padding $padding-lg;
-  }
-}
-
-// 虚拟列表情况
-.#{$list-cls}-vt {
-  display: flex;
-  flex-direction: column;
-
-  .#{$head-cls}, .#{$footer-cls} {
-    flex-shrink: 0;
-  }
-
-  .#{$container-cls} {
-    flex: 1;
-    overflow: hidden;
-  }
-
-  .#{$vr-item-cls} {
-    padding: 0;
-    margin: 0;
   }
 }

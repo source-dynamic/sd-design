@@ -1,9 +1,10 @@
 import { Component, useState, xml } from '@odoo/owl';
-import { List } from '../../../src';
+import { InputNumber, List } from '../../../src';
 import './list.scss';
+import { Position } from '../../../src/components/list/VirtualList';
 
 export default class ListRoot extends Component {
-    static components = { List };
+    static components = { List, InputNumber };
 
     state = useState<any>({
         bordered: true,
@@ -16,11 +17,46 @@ export default class ListRoot extends Component {
             title: `title${i}`,
             content: `content${i}`
         })),
-        largeList: Array.from({ length: 10000 }, (_, i) => ({
+        largeList: Array.from({ length: 100 }, (_, i) => ({
             title: `title${i}`,
             content: `content${i}`
-        }))
-    })
+        })),
+        turnLine: 50
+    });
+
+    listRef: any = { current: null };
+
+    /**
+     * 跳转到指定行
+     */
+    handleTurn() {
+        this.listRef.current?.scrollTo(this.compState.turnLine)
+    }
+
+    /**
+     * 修改跳转行回调
+     * @param value
+     */
+    onChangeTurnLine(value) {
+        this.compState.turnLine = value;
+    }
+
+    /**
+     * 虚拟滚动列表滚动回调
+     * @param e 事件Event
+     * @param position 滚动位置, start | end | mid
+     */
+    onScroll(e: MouseEvent, position: Position) {
+        if (position === 'end') {
+            const preIndex = this.compState.largeList.length;
+            this.compState.largeList = this.compState.largeList.concat(
+                Array.from({ length: 100 }, (_, i) => ({
+                    title: `title${preIndex + i}`,
+                    content: `content${preIndex + i}`
+                }))
+            );
+        }
+    }
 
     static template = xml`
 <div class="list-container">
@@ -40,12 +76,18 @@ export default class ListRoot extends Component {
     </t>
     <t t-else="">
         <!-- 虚拟滚动列表  -->
-        <List className="'list overflow-hidden'" dataSource="compState.largeList" bordered="state.bordered" size="state.size" virtual="true" itemHeight="30">
+        <List ref="listRef" className="'list'" dataSource="compState.largeList" bordered="state.bordered" size="state.size" virtual="true" itemHeight="30" onScroll.bind="onScroll">
             <t t-set-slot="item" t-slot-scope="scope">
                 <div>item-<t t-esc="scope.data.title"/></div>
             </t>
         </List>
+        <div class="input-container">
+            <button t-on-click="handleTurn">跳转到</button>
+            <InputNumber value="compState.turnLine" onChange.bind="onChangeTurnLine">
+                <t t-set-slot="addonAfter">行</t>
+            </InputNumber>
+        </div>
     </t>
 </div>   
-    `
+    `;
 }

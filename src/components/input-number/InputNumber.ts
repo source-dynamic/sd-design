@@ -57,7 +57,7 @@ type State = {
 }
 
 class InputNumber extends Component<Props, State> {
-    static Props = {
+    static props = {
         className: { type: String, optional: true },
         step: { type: Number, optional: true },
         defaultValue: { type: Number, optional: true },
@@ -83,7 +83,7 @@ class InputNumber extends Component<Props, State> {
         onPressEnter: { type: Function, optional: true },
         onStep: { type: Function, optional: true },
         ...baseProps
-    }
+    };
 
     static defaultProps = {
         autoFocus: false,
@@ -155,7 +155,7 @@ class InputNumber extends Component<Props, State> {
 
     controllableState = useControllableState(this.props, {
         value: this.props.defaultValue ? this.precisionValue(BigNumber(this.props.defaultValue)) : ''
-    });
+    }, (val) => `${val}`);
 
     inputRef: CompRef = { current: undefined };
 

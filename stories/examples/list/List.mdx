@@ -1,0 +1,116 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks';
+
+import * as ListStories from './List.stories';
+
+<Meta of={ListStories}/>
+
+# List列表
+通用列表
+
+## 概述
+最基础的列表展示，可承载文字、列表、图片、段落，常用于后台数据展示页面。
+
+## 滚动加载无限长列表
+组件提供了虚拟列表功能，可实现滚动加载无限长列表，能够提高数据量大时候长列表的性能
+
+## 基本使用
+<Canvas of={ListStories.List}/>
+<Controls of={ListStories.List}/>
+
+## API
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>header</td>
+        <td>列表头部（开启虚拟滚动时会固定在首行，中间滑动）</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>footer</td>
+        <td>列表底部（开启虚拟滚动时会固定在底部，中间滑动）</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>item</td>
+        <td>自定义渲染列表项</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>suffix</td>
+        <td>带有后缀图标的 inputNumber</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>dataSource</td>
+        <td>数据源</td>
+        <td>any[]</td>
+        <td>[]</td>
+    </tr>
+    <tr>
+        <td>bordered</td>
+        <td>是否展示边框</td>
+        <td>boolean</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>size</td>
+        <td>控件大小</td>
+        <td>`large` | `middle` | `small`</td>
+        <td>`middle`</td>
+    </tr>
+    <tr>
+        <td>virtual</td>
+        <td>是否开启虚拟滚动</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>height</td>
+        <td>virtual为true时设置，列表的总高度，如果不设置则为组件容器去除header和footer高度的100%</td>
+        <td>number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>itemHeight</td>
+        <td>virtual为true时必需设置，每一项的高度</td>
+        <td>number | (index: number, data: any) => number</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onScroll</td>
+        <td>是否显示增减按钮</td>
+        <td>(event: MouseEvent, position: 'start' | 'end' | 'mid') => void</td>
+        <td>virtual为true时设置，滚动时触发</td>
+    </tr>
+    </tbody>
+</table>
+
+### Methods
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>说明</th>
+        <th>类型</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>scrollTo</td>
+        <td>滚动到指定行（仅限开启虚拟滚动时有用）</td>
+        <td>`(index: number) => void`</td>
+    </tr>
+    </tbody>
+</table>

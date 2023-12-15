@@ -40,7 +40,7 @@ export const InputNumber: Story = {
             control: { type: 'range', min: 0.1, max: 2, step: 0.1 }
         },
         bordered: {
-            description: '无边框模式'
+            description: '是否有边框'
         },
         controls: {
             description: '是否显示控制按钮'

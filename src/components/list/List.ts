@@ -3,9 +3,10 @@ import Item from '@/components/list/Item';
 import VirtualList, { ItemHeight, Position } from '@/components/list/VirtualList';
 import classNames from 'classnames';
 import { getPrefixCls } from '@/components/_util/utils';
-import { BaseProps } from '@/common/baseProps';
+import { baseProps, BaseProps } from '@/common/baseProps';
 import './style/list.scss';
 import { SizeType } from '@/components/_util/type';
+import { useCompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
 
 type Props = {
     size?: SizeType,
@@ -15,7 +16,7 @@ type Props = {
     virtual?: boolean, // 是否开启虚拟列表
     height?: number, // virtual为true时设置，列表的高度，如果不设置则为container高度的100%
     itemHeight?: number | ItemHeight, // virtual为true时设置，每一项的高度
-    onScroll?: (event: MouseEvent, position: Position) => void //  virtual为true时设置，滚动时触发
+    onScroll?: (event: MouseEvent, position: Position) => void // virtual为true时设置，滚动时触发
 } & BaseProps;
 
 const listClass = getPrefixCls('list');
@@ -28,6 +29,18 @@ const vrListItemClass = getPrefixCls('vr-list-item');
 
 class List extends Component<Props> {
     static components = { Item, VirtualList };
+
+    static props = {
+        className: { type: String, optional: true },
+        bordered: { type: Boolean, optional: true },
+        size: { type: String, optional: true },
+        dataSource: { type: Array, optional: true },
+        virtual: { type: Boolean, optional: true },
+        height: { type: Number, optional: true },
+        itemHeight: { type: [Number, Function], optional: true },
+        onScroll: { type: Function, optional: true },
+        ...baseProps
+    }
 
     static defaultProps = {
         dataSource: [],
@@ -45,7 +58,7 @@ class List extends Component<Props> {
     <div class="${listContainerClass}">
         <t t-if="showItems()">
             <t t-if="props.virtual">
-                <VirtualList onScroll.bind="onScroll" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
+                <VirtualList ref="virRef" onScroll.bind="onScroll" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
                     <t t-set-slot="item" t-slot-scope="scope">
                         <div class="${vrListItemClass} ${listItemClass}" t-att-style="scope.style">
                             <t t-slot="item" t-props="scope"/>
@@ -70,6 +83,7 @@ class List extends Component<Props> {
     `;
 
     state = useState({});
+    virRef = useCompRef();
 
     protected hasHeader() {
         return !!this.props.slots?.header;
@@ -100,6 +114,9 @@ class List extends Component<Props> {
     }
 
     public setup(): void {
+        useImperativeHandle({
+            scrollTo: (index: number) => this.virRef.current?.scrollTo(index)
+        })
     }
 }
 
