@@ -2,6 +2,7 @@ import { Component, useChildSubEnv, useEffect, useState, xml } from '@odoo/owl';
 import { Breakpoint, responsiveArray, responsiveObserve, ScreenMap } from '@/components/_util/responsiveObserve';
 import classNames from 'classnames';
 import { getPrefixCls, stylesToString } from '@/components/_util/utils';
+import { baseProps, BaseProps } from '@/common/baseProps';
 
 type State = {
     className?: string;
@@ -17,7 +18,7 @@ type Props = {
     align?: 'top' | 'middle' | 'bottom';
     justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between';
     wrap?: boolean;
-}
+} & BaseProps;
 
 export default class Row extends Component<Props> {
     static props = {
@@ -26,7 +27,7 @@ export default class Row extends Component<Props> {
         align: { type: String, optional: true },
         justify: { type: String, optional: true },
         wrap: { type: Boolean, optional: true },
-        slots: { type: Object, optional: true }
+        ...baseProps
     };
 
     static template: string = xml`

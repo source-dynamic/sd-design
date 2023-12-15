@@ -1,6 +1,7 @@
 import { Col, Row } from '@/components/grid';
 import Input from '@/components/input';
 import InputNumber from '@/components/input-number/InputNumber';
+import List from '@/components/list/List';
 import { setThemes } from '@/theme/theme';
 
 setThemes('#71639e');
@@ -14,6 +15,7 @@ export {
     Row,
     Col,
     Input,
+    List,
     __info__,
     InputNumber
 };

@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { CompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
 import useControllableState from '@/hooks/useControllableState';
 import BigNumber from 'bignumber.js';
+import { BaseProps, baseProps } from '@/common/baseProps';
 
 const inputNumberWrapClass = getPrefixCls('input-number-wrap');
 const inputNumberClass = getPrefixCls('input-number');
@@ -25,6 +26,7 @@ const downSVG = getSDSVG(_downSVG, {
 });
 
 type Props = {
+    className?: string;
     step?: number;
     defaultValue?: number;
     value?: number;
@@ -48,14 +50,41 @@ type Props = {
     stringMode?: boolean;
     onPressEnter?: (event: Event) => void;
     onStep?: (value: number, info: { offset: number; type: 'up' | 'down' }) => void;
-    slots?: Record<string, any>;
-}
+} & BaseProps;
 
 type State = {
     focused: boolean;
 }
 
 class InputNumber extends Component<Props, State> {
+    static props = {
+        className: { type: String, optional: true },
+        step: { type: Number, optional: true },
+        defaultValue: { type: Number, optional: true },
+        value: { type: Number, optional: true },
+        onFocus: { type: Function, optional: true },
+        onBlur: { type: Function, optional: true },
+        onChange: { type: Function, optional: true },
+        max: { type: Number, optional: true },
+        min: { type: Number, optional: true },
+        placeholder: { type: String, optional: true },
+        disabled: { type: Boolean, optional: true },
+        bordered: { type: Boolean, optional: true },
+        autoFocus: { type: Boolean, optional: true },
+        changeOnBlur: { type: Boolean, optional: true },
+        controls: { type: Boolean, optional: true },
+        decimalSeparator: { type: String, optional: true },
+        precision: { type: Number, optional: true },
+        formatter: { type: Function, optional: true },
+        parser: { type: Function, optional: true },
+        keyboard: { type: Boolean, optional: true },
+        readonly: { type: Boolean, optional: true },
+        stringMode: { type: Boolean, optional: true },
+        onPressEnter: { type: Function, optional: true },
+        onStep: { type: Function, optional: true },
+        ...baseProps
+    };
+
     static defaultProps = {
         autoFocus: false,
         changeOnBlur: true,
@@ -126,7 +155,7 @@ class InputNumber extends Component<Props, State> {
 
     controllableState = useControllableState(this.props, {
         value: this.props.defaultValue ? this.precisionValue(BigNumber(this.props.defaultValue)) : ''
-    });
+    }, (val) => `${val}`);
 
     inputRef: CompRef = { current: undefined };
 
@@ -325,7 +354,7 @@ class InputNumber extends Component<Props, State> {
     }
 
     protected getClasses() {
-        return classNames(inputNumberClass, {
+        return classNames(inputNumberClass, this.props.className, {
             [`${inputNumberClass}-focused`]: this.state.focused,
             [`${inputNumberClass}-disabled`]: !!this.props.disabled,
             [`${inputNumberClass}-borderless`]: this.props.bordered === false
@@ -379,7 +408,7 @@ class InputNumber extends Component<Props, State> {
     }
 
     setup(): void {
-        useImperativeHandle(this, {
+        useImperativeHandle({
             focus: this.focus.bind(this),
             blur: this.blur.bind(this)
         });
