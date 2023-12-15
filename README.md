@@ -30,7 +30,7 @@ ui库我们选择跟随owl版本而不是跟随odoo版本，是因为owl是odoo�
 
 ## DEMO
 
-[在线DEMO及文档](http://101.34.240.216:3000/)
+[在线DEMO及文档](https://source-dynamic.github.io/sd-design/)
 
 ## 快速开始
 
