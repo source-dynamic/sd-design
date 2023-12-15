@@ -9,6 +9,7 @@ import { CompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
 import useControllableState from '@/hooks/useControllableState';
 import BigNumber from 'bignumber.js';
 import { BaseProps, baseProps } from '@/common/baseProps';
+import { SizeType } from '@/components/_util/type';
 
 const inputNumberWrapClass = getPrefixCls('input-number-wrap');
 const inputNumberClass = getPrefixCls('input-number');
@@ -30,6 +31,7 @@ type Props = {
     step?: number;
     defaultValue?: number;
     value?: number;
+    size?: SizeType;
     onFocus?: (event: FocusEvent) => void;
     onBlur?: (event: FocusEvent) => void;
     onChange?: (value: number | string) => void;
@@ -62,6 +64,7 @@ class InputNumber extends Component<Props, State> {
         step: { type: Number, optional: true },
         defaultValue: { type: Number, optional: true },
         value: { type: Number, optional: true },
+        size: { type: String, optional: true },
         onFocus: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
         onChange: { type: Function, optional: true },
