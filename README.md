@@ -28,6 +28,10 @@ ui库我们选择跟随owl版本而不是跟随odoo版本，是因为owl是odoo�
 
 ![sd-design](./assets/images/img.png)
 
+## DEMO
+
+[在线DEMO及文档](http://101.34.240.216:3000/)
+
 ## 快速开始
 
 ### 在Odoo中使用
