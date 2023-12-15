@@ -50,7 +50,11 @@ const config: StorybookConfig = {
                 use: ['svg-inline-loader']
             }
         ]);
-        return { ...config, resolve: { ...config.resolve, ...custom.resolve } };
+
+        return {
+            ...config,
+            resolve: { ...config.resolve, ...custom.resolve }
+        };
     }
 };
 export default config;
