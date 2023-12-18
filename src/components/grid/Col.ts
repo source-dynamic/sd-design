@@ -3,6 +3,7 @@ import { responsiveArray } from '@/components/_util/responsiveObserve';
 import { getPrefixCls, stylesToString } from '@/components/_util/utils';
 import classNames from 'classnames';
 import Row from './Row';
+import { baseProps, BaseProps } from '@/common/baseProps';
 
 type ColSpanType = number | string;
 
@@ -28,7 +29,7 @@ type Props = {
     xl?: ColSpanType | IColSize;
     xxl?: ColSpanType | IColSize;
     flex?: number | 'none' | 'auto' | string;
-}
+} & BaseProps;
 
 type Env = {
     row: Row
@@ -59,7 +60,7 @@ export default class Col extends Component<Props, Env> {
         xl: { type: [Number, Object], optional: true },
         xxl: { type: [Number, Object], optional: true },
         flex: { type: [Number, String], optional: true },
-        slots: { type: Object, optional: true }
+        ...baseProps
     };
 
     static template = xml`

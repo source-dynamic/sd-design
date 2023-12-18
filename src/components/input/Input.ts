@@ -7,6 +7,7 @@ import { SizeType } from '@/components/_util/type';
 import './style/input.scss';
 import useControllableState from '@/hooks/useControllableState';
 import { useImperativeHandle } from '@/hooks/useImperativeHandle';
+import { baseProps, BaseProps } from '@/common/baseProps';
 
 export interface IInputFocusOptions extends FocusOptions {
     cursor?: 'start' | 'end' | 'all';
@@ -60,8 +61,7 @@ export type InputProps = {
     onInput?: (event: any) => void;
     onPressEnter?: (event: any) => void;
     onKeyDown?: (event: any) => void;
-    slots?: Record<string, any>;
-}
+} & BaseProps;
 
 type State = {
     focused: boolean;
@@ -88,13 +88,14 @@ export default class Input<T extends InputProps> extends Component<T> {
         onInput: { type: Function, optional: true },
         onPressEnter: { type: Function, optional: true },
         onKeyDown: { type: Function, optional: true },
-        slots: { type: Object, optional: true }
-    }
+        readonly: { type: Boolean, optional: true },
+        ...baseProps
+    };
 
     static components = { ClearableLabeledWrapper };
 
     static template = xml`
-<ClearableLabeledWrapper inputType="'input'" bordered="props.bordered" size="props.size"
+<ClearableLabeledWrapper className="props.className" inputType="'input'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="controllableState.state.value"
     handleReset.alike="(e) => this.handleReset(e)" slots="props.slots" count="state.count"
 >
@@ -138,9 +139,9 @@ export default class Input<T extends InputProps> extends Component<T> {
     });
 
     protected getClasses(): string {
-        const { size, disabled, bordered, className } = this.props;
+        const { size, disabled, bordered } = this.props;
         const prefixCls = getPrefixCls('input');
-        return classNames(getInputClassName(prefixCls, bordered, size, disabled), className);
+        return classNames(getInputClassName(prefixCls, bordered, size, disabled));
     }
 
     protected focus(): void {
@@ -237,10 +238,10 @@ export default class Input<T extends InputProps> extends Component<T> {
     setup(): void {
         this.inputRef = useRef('input');
 
-        useImperativeHandle(this, {
+        useImperativeHandle({
             focus: this.focus.bind(this),
             blur: this.blur.bind(this)
-        })
+        });
 
         useEffect(() => {
             this.state.restProps = this.getRestProps();

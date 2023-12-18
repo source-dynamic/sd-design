@@ -94,8 +94,7 @@ $border: 1px solid $border-color;
 }
 
 .#{$input-number-wrap} {
-  display: flex;
-  width: 100%;
+  display: inline-flex;
 
   > :not(:first-child) {
     @include borderRadius0("start");

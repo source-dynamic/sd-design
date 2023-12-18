@@ -28,6 +28,10 @@ ui库我们选择跟随owl版本而不是跟随odoo版本，是因为owl是odoo�
 
 ![sd-design](./assets/images/img.png)
 
+## DEMO
+
+[在线DEMO及文档](https://source-dynamic.github.io/sd-design/)
+
 ## 快速开始
 
 ### 在Odoo中使用
@@ -44,11 +48,6 @@ yarn install
 
 yarn run storybook
 ```
-
-## 说明文档
-
-- 文档采用storybook编写，可在本地运行查看。
-- 线上storybook：待补充
 
 ## 贡献
 

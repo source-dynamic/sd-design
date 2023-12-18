@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { getInputClassName } from '@/components/input/utils';
 import _closeFillSVG from '@/assets/close_fill.svg';
 import './style/clearable-labeled-wrapper.scss';
+import { baseProps, BaseProps } from '@/common/baseProps';
 
 const closeFillSVG = getSDSVG(_closeFillSVG, {
     width: '1em',
@@ -23,9 +24,8 @@ type IBasicProps = {
     readOnly?: boolean;
     bordered: boolean;
     handleReset: (event: MouseEvent) => void;
-    slots?: Record<string, any>;
     count?: string;
-}
+} & BaseProps;
 
 /** This props only for input. */
 type IClearableWrapperProps = {
@@ -49,9 +49,9 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
         readOnly: { type: Boolean, optional: true },
         bordered: { type: Boolean, optional: true },
         handleReset: { type: Function, optional: true },
-        slots: { type: Object, optional: true },
         count: { type: String, optional: true },
-        size: { type: String, optional: true }
+        size: { type: String, optional: true },
+        ...baseProps
     }
 
     /**
@@ -143,7 +143,6 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
                 </t>
                 <t t-else="">
                     <t t-set="textAreaIconClass" t-value="renderTextAreaWithClearIconClass()"/>
-                    
                     <span t-att-class="textAreaIconClass.affixWrapperCls">
                         <t t-slot="default"/>
                         
@@ -236,7 +235,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             [`${prefixCls}-affix-wrapper-disabled`]: disabled,
             [`${prefixCls}-affix-wrapper-sm`]: size === 'small',
             [`${prefixCls}-affix-wrapper-lg`]: size === 'large',
-            [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: !!slots?.suffix && allowClear && value,
+            [`${prefixCls}-affix-wrapper-input-with-clear-btn`]: allowClear && value,
             [`${prefixCls}-affix-wrapper-rtl`]: direction === 'rtl',
             [`${prefixCls}-affix-wrapper-readonly`]: readOnly,
             [`${prefixCls}-affix-wrapper-borderless`]: !bordered

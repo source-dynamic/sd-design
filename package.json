@@ -1,6 +1,6 @@
 {
   "name": "sd-design",
-  "version": "1.0.0",
+  "version": "beta-1.0.0",
   "description": "A UI library with @odoo/owl and typescript",
   "main": "./es/index.js",
   "module": "./es/index.js",
@@ -25,7 +25,7 @@
     "eslint": "eslint ./src/.  --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build -o ./docs"
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.0",

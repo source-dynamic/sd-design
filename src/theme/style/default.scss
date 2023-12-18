@@ -24,6 +24,18 @@ $small-border-radius: 4px;
 $base-border-radius: 6px;
 $large-border-radius: 8px;
 
+// 分隔线颜色
+$color-split: rgba(5, 5, 5, 0.06);
+
 // 禁用状态颜色
 $disabled-color: rgba($black, 0.25);
 $disabled-background-color: rgba($black, 0.04);
+
+// padding设置
+$padding-xxs: 4px;
+$padding-xs: 8px;
+$padding-sm: 12px;
+$padding: 16px;
+$padding-md: 20px;
+$padding-lg: 24px;
+$padding-xl: 32px;
