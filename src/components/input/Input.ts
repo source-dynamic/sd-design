@@ -95,7 +95,7 @@ export default class Input<T extends InputProps> extends Component<T> {
     static components = { ClearableLabeledWrapper };
 
     static template = xml`
-<ClearableLabeledWrapper inputType="'input'" bordered="props.bordered" size="props.size"
+<ClearableLabeledWrapper className="props.className" inputType="'input'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="controllableState.state.value"
     handleReset.alike="(e) => this.handleReset(e)" slots="props.slots" count="state.count"
 >
@@ -139,9 +139,9 @@ export default class Input<T extends InputProps> extends Component<T> {
     });
 
     protected getClasses(): string {
-        const { size, disabled, bordered, className } = this.props;
+        const { size, disabled, bordered } = this.props;
         const prefixCls = getPrefixCls('input');
-        return classNames(getInputClassName(prefixCls, bordered, size, disabled), className);
+        return classNames(getInputClassName(prefixCls, bordered, size, disabled));
     }
 
     protected focus(): void {

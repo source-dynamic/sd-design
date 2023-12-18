@@ -15,6 +15,7 @@ type AutoSize = boolean | {
 }
 
 export type TextAreaProps = Omit<InputProps & {
+    rows?: number;
     autoSize?: AutoSize;
     onResize?: (size: { width: number, height: number }) => void;
 }, 'slots'>
@@ -24,12 +25,13 @@ const textareaClass = getPrefixCls('input-textarea');
 export default class TextArea extends Input<TextAreaProps> {
     static props = {
         ...Input.props,
+        rows: { type: Number, optional: true },
         autoSize: { type: [Boolean, Object], optional: true },
         onResize: { type: Function, optional: true }
     };
 
     static template = xml`
-<ClearableLabeledWrapper inputType="'text'" bordered="props.bordered" size="props.size"
+<ClearableLabeledWrapper className="props.className" inputType="'text'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="controllableState.state.value"
     handleReset.alike="(e) => this.handleReset(e)" count="state.count"
 >

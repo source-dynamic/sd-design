@@ -10,7 +10,8 @@ export default class TextareaRoot extends Component {
         bordered: undefined,
         disabled: undefined,
         showCount: undefined,
-        autoSize: undefined
+        autoSize: undefined,
+        rows: 2
     });
 
     innerState = useState({
@@ -25,6 +26,7 @@ export default class TextareaRoot extends Component {
     static template = xml`
 <div class="input-container">
     <TextArea 
+        rows="state.rows"
         value="innerState.value" 
         placeholder="'TextArea'" 
         onChange.bind.alike="onChange"  
