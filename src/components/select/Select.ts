@@ -1,4 +1,4 @@
-import { Component, useState, xml } from '@odoo/owl';
+import { Component, useEffect, useState, xml } from '@odoo/owl';
 import { baseProps, BaseProps } from '@/common/baseProps';
 import { getPrefixCls, getSDSVG, stylesToString } from '@/components/_util/utils';
 import _downSVG from '@/assets/down.svg';
@@ -9,14 +9,17 @@ import './style/select.scss';
 import { useEventListener } from '@/hooks/useEventListener';
 import { useCompRef } from '@/hooks/useImperativeHandle';
 import useControllableState from '@/hooks/useControllableState';
+import { useColsSearch } from '@/hooks/useColsSearch';
 
 type Value<T> = T | T[];
 
 type Props = {
     getPopupContainer?: (triggerNode?: HTMLElement) => string; // 返回一个选择器字符串
     maxHeight?: number;
+    disabled?: boolean;
     multiple?: boolean;
-    value: Value<string> | Value<number>;
+    value?: Value<string> | Value<number>;
+    defaultValue?: Value<string> | Value<number>;
 } & BaseProps;
 
 const selectClass = getPrefixCls('select');
@@ -32,14 +35,17 @@ const downSVG = getSDSVG(_downSVG, {
     height: '1em'
 });
 
+export type Option = {
+    label: string;
+    value: number | string;
+};
+
 type State = {
     isOpen: boolean;
     triggerNode?: HTMLElement;
     focus: boolean;
-    options: {
-        label: string;
-        value: string;
-    }[];
+    displayValue: Value<string>,
+    options: Option[];
 };
 
 class Select extends Component<Props> {
@@ -48,7 +54,9 @@ class Select extends Component<Props> {
     static props = {
         getPopupContainer: { type: Function, optional: true },
         maxHeight: { type: Number, optional: true },
+        disabled: { type: Boolean, optional: true },
         value: { type: [String, Array, Number], optional: true },
+        defaultValue: { type: [String, Array, Number], optional: true },
         multiple: { type: Boolean, optional: true },
         ...baseProps
     };
@@ -61,15 +69,18 @@ class Select extends Component<Props> {
         isOpen: false,
         focus: false,
         triggerNode: undefined,
+        displayValue: '',
         options: Array.from({ length: 50 }, (_, index) => ({
             label: `选项${index}`,
             value: `value${index}`
         }))
     });
 
-    controllableState = useControllableState(this.props, {
-        value: []
+    controllableState = useControllableState<{ value?: Value<string> | Value<number> }>(this.props, {
+        value: this.props.defaultValue
     }, (val) => `${val}`);
+
+    colsState = useColsSearch(this.state.options);
 
     triggerRef = useCompRef();
 
@@ -77,7 +88,7 @@ class Select extends Component<Props> {
  <span t-att-class="getClass()" t-on-click="toggleOpen">
     <span class="${selectSelectorClass}">
         <t t-slot="option" data="controllableState.value">
-            <t t-esc="controllableState.state.value"/>
+            <t t-esc="state.displayValue"/>
         </t>
     </span>
     <Trigger ref="triggerRef" className="'${selectDropdownClass}'" isOpen="state.isOpen" triggerNode="state.triggerNode" 
@@ -100,10 +111,12 @@ class Select extends Component<Props> {
      * @protected
      */
     protected toggleOpen(event: MouseEvent) {
-        this.state.focus = true;
-        this.state.isOpen = !this.state.isOpen;
-        if (this.state.isOpen) {
-            this.state.triggerNode = event.currentTarget as HTMLElement;
+        if (!this.props.disabled) {
+            this.state.focus = true;
+            this.state.isOpen = !this.state.isOpen;
+            if (this.state.isOpen) {
+                this.state.triggerNode = event.currentTarget as HTMLElement;
+            }
         }
     }
 
@@ -114,6 +127,8 @@ class Select extends Component<Props> {
     protected getClass() {
         return classNames(selectClass, {
             [`${selectClass}-focus`]: this.state.focus,
+            [`${selectClass}-isOpen`]: this.state.isOpen,
+            [`${selectClass}-disabled`]: !!this.props.disabled,
             [`${selectClass}-vir`]: false
         });
     }
@@ -141,24 +156,29 @@ class Select extends Component<Props> {
      * @protected
      */
     protected onClickOutsideHandler(event: MouseEvent) {
-        if (this.state.isOpen) {
-            const target = event.target as HTMLElement;
-            // 在点击非选择框区域和非选项区域时，关闭下拉框
-            if (!this.state.triggerNode?.contains(target) && !this.triggerRef.current?.wrapperRef.el?.contains(
-                target)) {
+        const target = event.target as HTMLElement;
+        // 在点击非选择框区域和非选项区域时，关闭下拉框
+        if (!this.state.triggerNode?.contains(target) && !this.triggerRef.current?.wrapperRef.el?.contains(target)) {
+            if (this.state.isOpen) {
                 this.state.isOpen = false;
-                this.state.focus = false;
             }
+            this.state.focus = false;
         }
     }
 
-    protected onChoice(data) {
-        this.controllableState.state.value = data.label;
+    protected onChoice(data: Option) {
+        this.controllableState.state.value = data.value;
+        this.state.displayValue = data.label;
+        this.state.isOpen = false;
     }
 
     public setup(): void {
         const target = { el: window };
         useEventListener(target, 'click', this.onClickOutsideHandler);
+
+        useEffect(() => {
+            console.log(this.colsState.displayCols);
+        }, () => [this.colsState.displayCols]);
     }
 }
 

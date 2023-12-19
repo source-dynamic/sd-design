@@ -9,17 +9,21 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
   @include input();
   @include hover;
   display: inline-flex;
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.#{$select-class}-disabled {
+    @include disabled;
+  }
 
   &.#{$select-class}-focus {
     @include primary-color-border();
   }
 
-  &:hover {
-    cursor: pointer;
-  }
-
   .#{$select-selector-class} {
     width: 100%;
+    transition: all 0.2s;
   }
 
   .#{$select-icon-class} {
@@ -28,6 +32,10 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
     align-items: center;
     color: $gray-icon;
   }
+}
+
+&.#{$select-class}-isOpen .#{$select-selector-class} {
+  color: $gray;
 }
 
 .#{$select-dropdown-class} {
@@ -48,6 +56,6 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
   }
 
   .#{$select-dropdown-class}-item {
-    padding: 8px 16px;  // 尺寸
+    padding: 8px 16px; // 尺寸
   }
 }

@@ -1,13 +1,13 @@
-import { useComponent, useEffect } from '@odoo/owl';
+import { useComponent, useEffect, useState } from '@odoo/owl';
 
 export type CompRef = {
     current?: Record<string, any>
 }
 
 export const useCompRef = (): CompRef => {
-    return {
+    return useState({
         current: undefined
-    };
+    });
 };
 
 export const useImperativeHandle = (createHandle: Record<string, any>) => {
