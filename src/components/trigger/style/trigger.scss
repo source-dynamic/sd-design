@@ -1,0 +1,12 @@
+@import "src/theme/style/style";
+
+$trigger-class: #{$ui-prefix}-trigger;
+
+.#{$trigger-class} {
+  position: absolute;
+  overflow: hidden;
+}
+
+.#{$trigger-class}-hidden {
+  display: none;
+}

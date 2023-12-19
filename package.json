@@ -31,7 +31,8 @@
     "@ant-design/colors": "^7.0.0",
     "@odoo/owl": "^2.2.6",
     "bignumber.js": "^9.1.2",
-    "classnames": "^2.3.2"
+    "classnames": "^2.3.2",
+    "dom-align": "^1.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",

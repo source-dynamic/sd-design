@@ -12,6 +12,7 @@ type Props = {
     size?: SizeType,
     bordered?: boolean, // 是否有边框
     className?: string, // 类名
+    itemClassName?: string, // 每一项的类名
     dataSource: any[], // 数据源
     virtual?: boolean, // 是否开启虚拟列表
     height?: number, // virtual为true时设置，列表的高度，如果不设置则为container高度的100%
@@ -32,6 +33,7 @@ class List extends Component<Props> {
 
     static props = {
         className: { type: String, optional: true },
+        itemClassName: { type: String, optional: true },
         bordered: { type: Boolean, optional: true },
         size: { type: String, optional: true },
         dataSource: { type: Array, optional: true },
@@ -40,7 +42,7 @@ class List extends Component<Props> {
         itemHeight: { type: [Number, Function], optional: true },
         onScroll: { type: Function, optional: true },
         ...baseProps
-    }
+    };
 
     static defaultProps = {
         dataSource: [],
@@ -60,16 +62,14 @@ class List extends Component<Props> {
             <t t-if="props.virtual">
                 <VirtualList ref="virRef" onScroll.bind="onScroll" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
                     <t t-set-slot="item" t-slot-scope="scope">
-                        <div class="${vrListItemClass} ${listItemClass}" t-att-style="scope.style">
+                        <div t-att-class="getItemClasses()" t-att-style="scope.style">
                             <t t-slot="item" t-props="scope"/>
                         </div>
                     </t>
                 </VirtualList>
             </t>
-            <div t-else="" class="${listItemsClass}">
-                <div class="${listItemClass}" t-foreach="props.dataSource" t-as="item" t-key="item_index">
-                    <t t-slot="item" data="item" index="item_index"/>
-                </div>
+            <div t-else="" t-att-class="getItemClasses()" t-foreach="props.dataSource" t-as="item" t-key="item_index">
+                <t t-slot="item" data="item" index="item_index"/>
             </div>
         </t>
     </div>
@@ -105,7 +105,13 @@ class List extends Component<Props> {
             [`${listClass}-borderless`]: !bordered || !hasAnySlot,
             [`${listClass}-sm`]: size === 'small',
             [`${listClass}-lg`]: size === 'large',
-            [`${listClass}-vt`]: !!virtual,
+            [`${listClass}-vt`]: !!virtual
+        });
+    }
+
+    protected getItemClasses() {
+        return classNames(listItemClass, this.props.itemClassName, {
+            [vrListItemClass]: !!this.props.virtual
         });
     }
 
@@ -116,7 +122,7 @@ class List extends Component<Props> {
     public setup(): void {
         useImperativeHandle({
             scrollTo: (index: number) => this.virRef.current?.scrollTo(index)
-        })
+        });
     }
 }
 

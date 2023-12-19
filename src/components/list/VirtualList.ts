@@ -1,11 +1,12 @@
 import { Component, useEffect, useRef, useState, xml } from '@odoo/owl';
 import { useSize } from '@/hooks/useSize';
 import { isNumber } from '@/components/_util';
-import { stylesToString } from '@/components/_util/utils';
+import { getPrefixCls, stylesToString } from '@/components/_util/utils';
 import { useEventListener } from '@/hooks/useEventListener';
 import { useImperativeHandle } from '@/hooks/useImperativeHandle';
 import { baseProps, BaseProps } from '@/common/baseProps';
 import { MouseEvent } from 'react';
+import classNames from 'classnames';
 
 export type ItemHeight = (index: number, data: any) => number;
 
@@ -32,6 +33,9 @@ type State = {
     containerHeight: number
 }
 
+const VirtualListClass = getPrefixCls('vir-list');
+const VirtualListWrapperClass = getPrefixCls('vir-list-wrapper');
+
 class VirtualList extends Component<Props> {
     static props = {
         className: { type: String, optional: true },
@@ -48,8 +52,8 @@ class VirtualList extends Component<Props> {
     };
 
     static template = xml`
-<div t-att-class="props.className" t-ref="container" t-att-style="getStyle()">
-    <div t-ref="wrapper" t-att-style="state.wrapperStyle">
+<div t-att-class="getClass()" t-ref="container" t-att-style="getStyle()">
+    <div t-ref="wrapper" t-att-style="state.wrapperStyle" class="${VirtualListWrapperClass}">
         <t t-foreach="state.targetList" t-as="target" t-key="target.index">
             <t t-slot="item" data="target.data" index="target.index" style="target.style"/>
         </t>
@@ -68,14 +72,22 @@ class VirtualList extends Component<Props> {
         containerHeight: 0
     });
 
+    protected getClass() {
+        return classNames(VirtualListClass, this.props.className);
+    }
+
     protected getStyle() {
         const { height } = this.props;
         const style = {
-            height: '100%',
-            overflow: 'auto'
+            overflow: 'auto',
+            'overflow-anchor': 'none'
         };
+        // 如果有指定高度，则设置max-height，否则height设为100%
+        // max-height可以达到在不需要滚动时，高度自适应的效果
         if (isNumber(height)) {
-            style.height = `${height}px`;
+            style['max-height'] = `${height}px`;
+        } else {
+            style['height'] = '100%';
         }
         return stylesToString(style);
     }
@@ -230,7 +242,6 @@ class VirtualList extends Component<Props> {
         });
 
         useEffect(() => {
-            if (!this.size.width || !this.size.height) return;
             this.calculateRange();
         }, () => [this.size.width, this.size.height, this.props.list]);
     }

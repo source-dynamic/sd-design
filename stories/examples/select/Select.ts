@@ -1,5 +1,6 @@
 import { Component, useState, xml } from '@odoo/owl';
 import { Select } from '../../../src';
+import './select.scss';
 
 export default class SelectRoot extends Component {
     static components = { Select };
@@ -8,7 +9,7 @@ export default class SelectRoot extends Component {
     });
 
     static template = xml`
-<div class="container">
+<div class="select-container">
     <Select/>
 </div>
     `

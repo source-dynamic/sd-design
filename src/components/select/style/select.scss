@@ -1,0 +1,53 @@
+@import "src/components/input/style/input";
+
+$select-class: #{$ui-prefix}-select;
+$select-icon-class: #{$ui-prefix}-select-icon;
+$select-selector-class: #{$ui-prefix}-select-selector;
+$select-dropdown-class: #{$ui-prefix}-select-dropdown;
+
+.#{$select-class} {
+  @include input();
+  @include hover;
+  display: inline-flex;
+
+  &.#{$select-class}-focus {
+    @include primary-color-border();
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .#{$select-selector-class} {
+    width: 100%;
+  }
+
+  .#{$select-icon-class} {
+    flex: none;
+    display: flex;
+    align-items: center;
+    color: $gray-icon;
+  }
+}
+
+.#{$select-dropdown-class} {
+  border-radius: $base-border-radius;
+  background-color: $white;
+  box-shadow: $box-shadow;
+  overflow: auto;
+  padding: 4px;
+
+  .#{$select-dropdown-class}-item-wrapper {
+    padding: 0;
+    border-radius: $base-border-radius;
+    border-block-end: none;
+
+    &:hover {
+      background-color: rgba($black, 0.04);
+    }
+  }
+
+  .#{$select-dropdown-class}-item {
+    padding: 8px 16px;  // 尺寸
+  }
+}

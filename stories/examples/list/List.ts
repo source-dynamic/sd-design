@@ -17,7 +17,7 @@ export default class ListRoot extends Component {
             title: `title${i}`,
             content: `content${i}`
         })),
-        largeList: Array.from({ length: 100 }, (_, i) => ({
+        largeList: Array.from({ length: 50 }, (_, i) => ({
             title: `title${i}`,
             content: `content${i}`
         })),

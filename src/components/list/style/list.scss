@@ -30,6 +30,7 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
   line-height: $base-font-size;
   list-style: none;
   position: relative;
+  overflow: auto;
 
   // 虚拟列表情况
   &.#{$list-cls}-vt {
