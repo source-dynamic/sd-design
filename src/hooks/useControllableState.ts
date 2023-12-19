@@ -15,7 +15,7 @@ const useControllableState = <S extends object>(
 
     const updateState = (props: Record<string, any>) => {
         for (const key in props) {
-            if (key in defaultState) {
+            if (key in defaultState && props[key] !== undefined) {
                 (state as Record<string, any>)[key] = format ? format(props[key]) : props[key];
             }
         }
@@ -29,7 +29,7 @@ const useControllableState = <S extends object>(
     const setState = (values: Partial<S>) => {
         for (const key in values) {
             // 如果props中未传入该值，说明是非受控组件，则交由组件内部管理
-            if (!(key in props)) {
+            if (!(key in props) && values[key] !== undefined) {
                 (state as Record<string, any>)[key] = format ? format(values[key]) : values[key];
             }
         }
