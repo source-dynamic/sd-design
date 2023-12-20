@@ -16,6 +16,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Select: Story = {
+    args: {
+        disabled: false,
+        size: 'middle',
+        bordered: true
+    },
+    argTypes: {
+        disabled: {
+            description: '是否禁用'
+        },
+        bordered: {
+            description: '是否有边框'
+        },
+        size: {
+            description: '尺寸',
+            control: 'select',
+            options: ['small', 'middle', 'large']
+        },
+    },
     parameters: {
         docs: {
             source: {

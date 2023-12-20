@@ -10,19 +10,20 @@ $trigger-class: #{$ui-prefix}-trigger;
 .#{$trigger-class} {
   position: absolute;
   overflow: hidden;
-}
+  z-index: $triggerZIndex;
 
-.#{$trigger-class}-hidden {
-  display: none;
-}
+  &-hidden {
+    display: none;
+  }
 
-.#{$trigger-class}-fadein {
-  @include animation(fadein)
-}
+  &-fadein {
+    @include animation(fadein)
+  }
 
-.#{$trigger-class}-fadeout {
-  opacity: 0;
-  @include animation(fadeout)
+  &-fadeout {
+    opacity: 0;
+    @include animation(fadeout)
+  }
 }
 
 @keyframes fadein {

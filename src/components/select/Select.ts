@@ -1,4 +1,4 @@
-import { Component, useEffect, useState, xml } from '@odoo/owl';
+import { Component, useComponent, useEffect, useState, xml } from '@odoo/owl';
 import { baseProps, BaseProps } from '@/common/baseProps';
 import { getPrefixCls, getSDSVG, stylesToString } from '@/components/_util/utils';
 import _downSVG from '@/assets/down.svg';
@@ -10,6 +10,7 @@ import { useEventListener } from '@/hooks/useEventListener';
 import { useCompRef } from '@/hooks/useImperativeHandle';
 import useControllableState from '@/hooks/useControllableState';
 import { useColsSearch } from '@/hooks/useColsSearch';
+import { SizeType } from '@/components/_util/type';
 
 type Value<T> = T | T[];
 
@@ -20,6 +21,10 @@ type Props = {
     multiple?: boolean;
     value?: Value<string> | Value<number>;
     defaultValue?: Value<string> | Value<number>;
+    size: SizeType,
+    bordered?: boolean;
+    defaultOpen?: boolean;
+    autoFocus?: boolean;
 } & BaseProps;
 
 const selectClass = getPrefixCls('select');
@@ -58,6 +63,10 @@ class Select extends Component<Props> {
         value: { type: [String, Array, Number], optional: true },
         defaultValue: { type: [String, Array, Number], optional: true },
         multiple: { type: Boolean, optional: true },
+        size: { type: String, optional: true },
+        bordered: { type: Boolean, optional: true },
+        defaultOpen: { type: Boolean, optional: true },
+        autoFocus: { type: Boolean, optional: true },
         ...baseProps
     };
 
@@ -68,7 +77,7 @@ class Select extends Component<Props> {
 
     state = useState<State>({
         isOpen: false,
-        focus: false,
+        focus: this.props.autoFocus || false,
         triggerNode: undefined,
         displayValue: '',
         options: Array.from({ length: 50 }, (_, index) => ({
@@ -126,14 +135,18 @@ class Select extends Component<Props> {
      * @protected
      */
     protected getClass() {
+        const { size, disabled, bordered } = this.props;
+
         return classNames(selectClass, {
+            [`${selectClass}-borderless`]: !bordered,
             [`${selectClass}-focus`]: this.state.focus,
             [`${selectClass}-isOpen`]: this.state.isOpen,
-            [`${selectClass}-disabled`]: !!this.props.disabled,
+            [`${selectClass}-disabled`]: !!disabled,
+            [`${selectClass}-sm`]: size === 'small',
+            [`${selectClass}-lg`]: size === 'large',
             [`${selectClass}-vir`]: false
         });
     }
-
 
     protected getItemClass(item: Option, index: number) {
         return classNames(selectDropdownItemWrapperClass, {
@@ -180,6 +193,7 @@ class Select extends Component<Props> {
     }
 
     public setup(): void {
+        const component = useComponent();
         const target = { el: window };
         useEventListener(target, 'mousedown', this.onClickOutsideHandler);
 
@@ -187,6 +201,13 @@ class Select extends Component<Props> {
             this.state.displayValue = this.colsState.displayCols.find(
                 (c) => c.value === this.controllableState.state.value)?.label || '';
         }, () => [this.controllableState.state.value, this.colsState.displayCols]);
+
+        useEffect(() => {
+            if (this.props.defaultOpen && !this.props.disabled) {
+                this.state.triggerNode = component.__owl__.bdom?.el as HTMLElement;
+                this.state.isOpen = true;
+            }
+        }, () => [])
 
         useEffect(() => {
             console.log(this.colsState.displayCols);

@@ -35,7 +35,7 @@ class Trigger extends Component<Props> {
     };
 
     static defaultProps = {
-        destroyOnHide: true
+        destroyOnHide: false
     };
 
     static contentTemplate = `
@@ -79,14 +79,13 @@ class Trigger extends Component<Props> {
                 'display': 'none'
             });
         }
-
         return this.props.getStyle?.(this.props.triggerNode) || undefined;
     }
 
     public setup(): void {
-        useImperativeHandle({
+        useImperativeHandle(() => ({
             wrapperRef: this.wrapperRef
-        });
+        }), () => [this.props]);
 
         useEventListener(this.wrapperRef, 'animationend', (event) => {
             // 动画完成后添加hiddenclass，使不占据dom空间
@@ -108,9 +107,11 @@ class Trigger extends Component<Props> {
 
         useEffect(() => {
             const { isOpen, triggerNode } = this.props;
-            if (this.wrapperRef.el && isOpen && triggerNode) {
+            if (isOpen) {
                 // 打开时先移除hidden的class，否则display: none不能触发动画
                 this.wrapperRef.el?.classList.remove(triggerHiddenClass);
+            }
+            if (this.wrapperRef.el && triggerNode) {
                 const alignConfig = {
                     points: ['tl', 'bl'],  // 用第二个参数的位置去对齐第一个参数的位置
                     offset: [0, 4], // 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量

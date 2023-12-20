@@ -32,7 +32,7 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
   overflow: auto;
 
   // 虚拟列表情况
-  &.#{$list-cls}-vt {
+  &-vt {
     display: flex;
     flex-direction: column;
     overflow: hidden !important;
@@ -52,7 +52,7 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
     }
   }
 
-  &.#{$list-cls}-borderless {
+  &-borderless {
     border: none;
     border-radius: unset;
   }

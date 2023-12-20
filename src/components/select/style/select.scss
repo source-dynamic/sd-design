@@ -8,17 +8,24 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
 .#{$select-class} {
   @include input();
   @include hover;
+  @include responsive;
+
   display: inline-flex;
+
   &:hover {
     cursor: pointer;
   }
 
-  &.#{$select-class}-disabled {
+  &-disabled {
     @include disabled;
   }
 
-  &.#{$select-class}-focus {
+  &-focus {
     @include primary-color-border();
+  }
+
+  &-borderless {
+    @include borderless;
   }
 
   .#{$select-selector-class} {
@@ -61,7 +68,7 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
     }
   }
 
-  .#{$select-dropdown-class}-item {
+  &-item {
     padding: 8px 16px; // 尺寸
   }
 }

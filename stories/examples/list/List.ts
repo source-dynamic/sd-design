@@ -58,6 +58,13 @@ export default class ListRoot extends Component {
         }
     }
 
+    /**
+     * 虚拟滚动列表渲染完成回调
+     */
+    onRendered() {
+        console.log(this.compState.largeList.length);
+    }
+
     static template = xml`
 <div class="list-container">
     <!-- 普通列表  -->
@@ -76,7 +83,8 @@ export default class ListRoot extends Component {
     </t>
     <t t-else="">
         <!-- 虚拟滚动列表  -->
-        <List ref="listRef" className="'list'" dataSource="compState.largeList" bordered="state.bordered" size="state.size" virtual="true" itemHeight="30" onScroll.bind="onScroll">
+        <List ref="listRef" className="'list'" dataSource="compState.largeList" bordered="state.bordered" size="state.size" virtual="true" itemHeight="30" 
+            onScroll.bind="onScroll" onRendered.bind="onRendered">
             <t t-set-slot="item" t-slot-scope="scope">
                 <div>item-<t t-esc="scope.data.title"/></div>
             </t>

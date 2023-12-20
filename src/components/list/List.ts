@@ -1,6 +1,6 @@
 import { Component, useState, xml } from '@odoo/owl';
 import Item from '@/components/list/Item';
-import VirtualList, { ItemHeight, Position } from '@/components/list/VirtualList';
+import VirtualList, { ItemHeight, OnRender, Position } from '@/components/list/VirtualList';
 import classNames from 'classnames';
 import { getPrefixCls } from '@/components/_util/utils';
 import { baseProps, BaseProps } from '@/common/baseProps';
@@ -18,6 +18,7 @@ type Props = {
     height?: number, // virtual为true时设置，列表的高度，如果不设置则为container高度的100%
     itemHeight?: number | ItemHeight, // virtual为true时设置，每一项的高度
     onScroll?: (event: MouseEvent, position: Position) => void // virtual为true时设置，滚动时触发
+    onRendered?: OnRender // virtual为true时设置，渲染完成时触发
 } & BaseProps;
 
 const listClass = getPrefixCls('list');
@@ -40,6 +41,7 @@ class List extends Component<Props> {
         height: { type: Number, optional: true },
         itemHeight: { type: [Number, Function], optional: true },
         onScroll: { type: Function, optional: true },
+        onRendered: { type: Function, optional: true },
         ...baseProps
     };
 
@@ -59,7 +61,7 @@ class List extends Component<Props> {
     <div class="${listContainerClass}">
         <t t-if="showItems()">
             <t t-if="props.virtual">
-                <VirtualList ref="virRef" onScroll.bind="onScroll" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
+                <VirtualList ref="virRef" onScroll="props.onScroll" onRendered="props.onRendered" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
                     <t t-set-slot="item" t-slot-scope="scope">
                         <div t-att-class="getItemClasses()" t-att-style="scope.style">
                             <t t-slot="item" t-props="scope"/>
@@ -114,14 +116,10 @@ class List extends Component<Props> {
         });
     }
 
-    protected onScroll(event: MouseEvent, position: Position) {
-        this.props.onScroll?.(event, position);
-    }
-
     public setup(): void {
-        useImperativeHandle({
+        useImperativeHandle(() => ({
             scrollTo: (index: number) => this.virRef.current?.scrollTo(index)
-        });
+        }), () => [this.props]);
     }
 }
 

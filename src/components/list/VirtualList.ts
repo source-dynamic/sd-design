@@ -12,13 +12,16 @@ export type ItemHeight = (index: number, data: any) => number;
 
 export type Position = 'start' | 'end' | 'mid';
 
+export type OnRender = () => void;
+
 type Props = {
     className?: string,
     list: any[],
     height?: number,
     itemHeight: number | ItemHeight,
     overscan?: number,
-    onScroll?: (event: MouseEvent, position: Position) => void
+    onScroll?: (event: MouseEvent, position: Position) => void,
+    onRendered?: OnRender
 } & BaseProps;
 
 type TargetData = {
@@ -27,6 +30,7 @@ type TargetData = {
 }
 
 type State = {
+    renderTriggerByEffect: boolean,
     scrollTriggerByScrollToFunc: boolean,
     targetList: TargetData[],
     wrapperStyle?: string,
@@ -44,6 +48,7 @@ class VirtualList extends Component<Props> {
         itemHeight: { type: [Number, Function] },
         overscan: { type: Number, optional: true },
         onScroll: { type: Function, optional: true },
+        onRendered: { type: Function, optional: true },
         ...baseProps
     };
 
@@ -66,6 +71,7 @@ class VirtualList extends Component<Props> {
     size = useSize('container');
 
     state = useState<State>({
+        renderTriggerByEffect: false,
         scrollTriggerByScrollToFunc: false,
         targetList: [],
         wrapperStyle: undefined,
@@ -218,9 +224,9 @@ class VirtualList extends Component<Props> {
     };
 
     public setup(): void {
-        useImperativeHandle({
+        useImperativeHandle(() => ({
             scrollTo: this.scrollTo.bind(this)
-        });
+        }), () => [this.props]);
 
         useEventListener(this.containerRef, 'scroll', (event: MouseEvent) => {
             if (this.state.scrollTriggerByScrollToFunc) {
@@ -242,6 +248,16 @@ class VirtualList extends Component<Props> {
         });
 
         useEffect(() => {
+            if (this.state.renderTriggerByEffect) {
+                // 仅在受effect触发时才触发onRendered
+                this.props.onRendered?.();
+            }
+            this.state.renderTriggerByEffect = false;
+
+        }, () => [this.state.targetList]);
+
+        useEffect(() => {
+            this.state.renderTriggerByEffect = true;
             this.calculateRange();
         }, () => [this.size.width, this.size.height, this.props.list]);
     }
