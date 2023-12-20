@@ -34,10 +34,12 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
   }
 }
 
+// 展开时的样式
 &.#{$select-class}-isOpen .#{$select-selector-class} {
   color: $gray;
 }
 
+// 下拉菜单样式
 .#{$select-dropdown-class} {
   border-radius: $base-border-radius;
   background-color: $white;

@@ -1,10 +1,11 @@
-import { Component, useEffect, useRef, xml } from '@odoo/owl';
-import { getPrefixCls } from '@/components/_util/utils';
+import { Component, useEffect, useRef, useState, xml } from '@odoo/owl';
+import { getPrefixCls, stylesToString } from '@/components/_util/utils';
 import { baseProps, BaseProps } from '@/common/baseProps';
 import classNames from 'classnames';
 import domAlign from 'dom-align';
 import './style/trigger.scss';
 import { useImperativeHandle } from '@/hooks/useImperativeHandle';
+import { useEventListener } from '@/hooks/useEventListener';
 
 export type Placement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 
@@ -19,6 +20,7 @@ type Props = {
 } & BaseProps;
 
 const triggerClass = getPrefixCls('trigger');
+const triggerHiddenClass = getPrefixCls('trigger-hidden');
 
 class Trigger extends Component<Props> {
     static props = {
@@ -48,7 +50,7 @@ class Trigger extends Component<Props> {
         ${Trigger.contentTemplate}
     </t>
     <t t-else="">
-        <t t-if="props.isOpen">
+        <t t-if="state.isShow">
             ${Trigger.contentTemplate}
         </t>
     </t>
@@ -57,11 +59,13 @@ class Trigger extends Component<Props> {
 
     wrapperRef = useRef('wrapperRef');
 
+    state = useState({
+        isShow: false // 用于控制隐藏时销毁
+    });
+
     protected getClass() {
-        const { className, isOpen } = this.props;
-        return classNames(triggerClass, className, {
-            [`${triggerClass}-hidden`]: !isOpen
-        });
+        const { className, isOpen, triggerNode } = this.props;
+        return classNames(triggerClass, className, `${triggerClass}-${isOpen ? 'fadein' : 'fadeout'}`);
     }
 
     protected getPopupContainer(): string {
@@ -69,8 +73,11 @@ class Trigger extends Component<Props> {
     }
 
     protected getStyle() {
-        if (!this.props.isOpen) {
-            return;
+        // 初始状态强制设置为隐藏
+        if (!this.props.triggerNode) {
+            return stylesToString({
+                'display': 'none'
+            });
         }
 
         return this.props.getStyle?.(this.props.triggerNode) || undefined;
@@ -79,11 +86,31 @@ class Trigger extends Component<Props> {
     public setup(): void {
         useImperativeHandle({
             wrapperRef: this.wrapperRef
-        })
+        });
+
+        useEventListener(this.wrapperRef, 'animationend', (event) => {
+            // 动画完成后添加hiddenclass，使不占据dom空间
+            if (event.animationName === 'fadeout') {
+                this.wrapperRef.el?.classList.add(triggerHiddenClass);
+                // 如果设置了隐藏时销毁，在动画完成后移除dom
+                if (this.props.destroyOnHide) {
+                    this.state.isShow = false;
+                }
+            }
+        });
+
+        useEffect(() => {
+            const { isOpen } = this.props;
+            if (isOpen) {
+                this.state.isShow = true;
+            }
+        }, () => [this.props.isOpen]);
 
         useEffect(() => {
             const { isOpen, triggerNode } = this.props;
-            if (isOpen && triggerNode) {
+            if (this.wrapperRef.el && isOpen && triggerNode) {
+                // 打开时先移除hidden的class，否则display: none不能触发动画
+                this.wrapperRef.el?.classList.remove(triggerHiddenClass);
                 const alignConfig = {
                     points: ['tl', 'bl'],  // 用第二个参数的位置去对齐第一个参数的位置
                     offset: [0, 4], // 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量
@@ -92,7 +119,7 @@ class Trigger extends Component<Props> {
                 };
                 domAlign(this.wrapperRef.el, triggerNode, alignConfig);
             }
-        }, () => [this.props.isOpen, this.wrapperRef.el]);
+        }, () => [this.wrapperRef.el, this.props.isOpen]);
     }
 }
 

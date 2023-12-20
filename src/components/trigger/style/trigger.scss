@@ -2,6 +2,11 @@
 
 $trigger-class: #{$ui-prefix}-trigger;
 
+@mixin animation($name) {
+  animation: 0.3s;
+  animation-name: $name;
+}
+
 .#{$trigger-class} {
   position: absolute;
   overflow: hidden;
@@ -9,4 +14,33 @@ $trigger-class: #{$ui-prefix}-trigger;
 
 .#{$trigger-class}-hidden {
   display: none;
+}
+
+.#{$trigger-class}-fadein {
+  @include animation(fadein)
+}
+
+.#{$trigger-class}-fadeout {
+  opacity: 0;
+  @include animation(fadeout)
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0; // 完全透明
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }

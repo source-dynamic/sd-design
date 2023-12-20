@@ -174,7 +174,7 @@ class Select extends Component<Props> {
 
     public setup(): void {
         const target = { el: window };
-        useEventListener(target, 'click', this.onClickOutsideHandler);
+        useEventListener(target, 'mousedown', this.onClickOutsideHandler);
 
         useEffect(() => {
             console.log(this.colsState.displayCols);
