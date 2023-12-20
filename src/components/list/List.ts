@@ -12,7 +12,7 @@ type Props = {
     size?: SizeType,
     bordered?: boolean, // 是否有边框
     className?: string, // 类名
-    itemClassName?: string, // 每一项的类名
+    itemClassName?: (item: any, index: number) => string, // 每一项的类名
     dataSource: any[], // 数据源
     virtual?: boolean, // 是否开启虚拟列表
     height?: number, // virtual为true时设置，列表的高度，如果不设置则为container高度的100%
@@ -24,7 +24,6 @@ const listClass = getPrefixCls('list');
 const listHeadClass = getPrefixCls('list-head');
 const listContainerClass = getPrefixCls('list-container');
 const listFooterClass = getPrefixCls('list-footer');
-const listItemsClass = getPrefixCls('list-items');
 const listItemClass = getPrefixCls('list-item');
 const vrListItemClass = getPrefixCls('vr-list-item');
 
@@ -33,7 +32,7 @@ class List extends Component<Props> {
 
     static props = {
         className: { type: String, optional: true },
-        itemClassName: { type: String, optional: true },
+        itemClassName: { type: Function, optional: true },
         bordered: { type: Boolean, optional: true },
         size: { type: String, optional: true },
         dataSource: { type: Array, optional: true },
@@ -68,7 +67,7 @@ class List extends Component<Props> {
                     </t>
                 </VirtualList>
             </t>
-            <div t-else="" t-att-class="getItemClasses()" t-foreach="props.dataSource" t-as="item" t-key="item_index">
+            <div t-else="" t-att-class="getItemClasses(item, item_index)" t-foreach="props.dataSource" t-as="item" t-key="item_index">
                 <t t-slot="item" data="item" index="item_index"/>
             </div>
         </t>
@@ -109,8 +108,8 @@ class List extends Component<Props> {
         });
     }
 
-    protected getItemClasses() {
-        return classNames(listItemClass, this.props.itemClassName, {
+    protected getItemClasses(item: any, index: number) {
+        return classNames(listItemClass, this.props.itemClassName?.(item, index), {
             [vrListItemClass]: !!this.props.virtual
         });
     }

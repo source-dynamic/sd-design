@@ -55,6 +55,10 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
     &:hover {
       background-color: rgba($black, 0.04);
     }
+
+    &.#{$select-dropdown-class}-item-selected {
+      background-color: $primary-color-1;
+    }
   }
 
   .#{$select-dropdown-class}-item {

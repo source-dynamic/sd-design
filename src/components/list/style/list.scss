@@ -4,7 +4,6 @@ $list-cls: #{$ui-prefix}-list;
 $head-cls: #{$ui-prefix}-list-head;
 $container-cls: #{$ui-prefix}-list-container;
 $footer-cls: #{$ui-prefix}-list-footer;
-$items-cls: #{$ui-prefix}-list-items;
 $item-cls: #{$ui-prefix}-list-item;
 $vr-item-cls: #{$ui-prefix}-vr-list-item;
 
@@ -60,12 +59,6 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
 
   .#{$head-cls} {
     @include item;
-  }
-
-  .#{$items-cls} {
-    margin: 0;
-    padding: 0;
-    list-style: none;
   }
 
   .#{$item-cls}, {

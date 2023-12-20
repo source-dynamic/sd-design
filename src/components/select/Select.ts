@@ -62,7 +62,8 @@ class Select extends Component<Props> {
     };
 
     static defaultProps = {
-        maxHeight: 256
+        maxHeight: 256,
+        defaultValue: 'value1'
     };
 
     state = useState<State>({
@@ -93,7 +94,7 @@ class Select extends Component<Props> {
     </span>
     <Trigger ref="triggerRef" className="'${selectDropdownClass}'" isOpen="state.isOpen" triggerNode="state.triggerNode" 
         getPopupContainer="props.getPopupContainer" getStyle.bind="getDropdownStyle">
-        <List dataSource="state.options" itemClassName="'${selectDropdownItemWrapperClass}'">
+        <List dataSource="state.options" itemClassName.bind="getItemClass">
             <t t-set-slot="item" t-slot-scope="scope">
                 <div class="${selectDropdownItemClass}" t-on-click.synthetic="() => this.onChoice(scope.data)">
                     <t t-esc="scope.data.label"/>
@@ -133,6 +134,13 @@ class Select extends Component<Props> {
         });
     }
 
+
+    protected getItemClass(item: Option, index: number) {
+        return classNames(selectDropdownItemWrapperClass, {
+            [`${selectDropdownItemClass}-selected`]: item.value === this.controllableState.state.value
+        });
+    }
+
     /**
      * 下拉框的样式
      * @param triggerNode
@@ -168,13 +176,17 @@ class Select extends Component<Props> {
 
     protected onChoice(data: Option) {
         this.controllableState.state.value = data.value;
-        this.state.displayValue = data.label;
         this.state.isOpen = false;
     }
 
     public setup(): void {
         const target = { el: window };
         useEventListener(target, 'mousedown', this.onClickOutsideHandler);
+
+        useEffect(() => {
+            this.state.displayValue = this.colsState.displayCols.find(
+                (c) => c.value === this.controllableState.state.value)?.label || '';
+        }, () => [this.controllableState.state.value, this.colsState.displayCols]);
 
         useEffect(() => {
             console.log(this.colsState.displayCols);
