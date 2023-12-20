@@ -119,7 +119,7 @@ class List extends Component<Props> {
     public setup(): void {
         useImperativeHandle(() => ({
             scrollTo: (index: number) => this.virRef.current?.scrollTo(index)
-        }), () => [this.props]);
+        }), () => []);
     }
 }
 

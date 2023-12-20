@@ -85,7 +85,7 @@ class Trigger extends Component<Props> {
     public setup(): void {
         useImperativeHandle(() => ({
             wrapperRef: this.wrapperRef
-        }), () => [this.props]);
+        }), () => []);
 
         useEventListener(this.wrapperRef, 'animationend', (event) => {
             // 动画完成后添加hiddenclass，使不占据dom空间

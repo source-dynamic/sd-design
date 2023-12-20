@@ -241,7 +241,7 @@ export default class Input<T extends InputProps> extends Component<T> {
         useImperativeHandle(() => ({
             focus: this.focus.bind(this),
             blur: this.blur.bind(this)
-        }), () => [this.props]);
+        }), () => []);
 
         useEffect(() => {
             this.state.restProps = this.getRestProps();
