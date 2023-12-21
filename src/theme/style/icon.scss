@@ -1,6 +1,8 @@
 @import "default";
 
-.#{$ui-prefix}-icon {
+$sd-icon: #{$ui-prefix}-icon;
+
+.#{$sd-icon}-icon {
   display: inline-flex;
   align-items: center;
   font-style: normal;

@@ -7,10 +7,30 @@ $select-dropdown-class: #{$select-class}-dropdown;
 $select-search-span-class: #{$select-class}-search-span;
 $select-display-span-class: #{$select-class}-display-span;
 
+@mixin paddingTB0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .#{$select-class} {
+  $tagGap: 4px;
+
   @include input();
   @include hover;
   @include responsive;
+  @include paddingTB0;
+
+  &-sm {
+    @include paddingTB0;
+  }
+
+  &-lg {
+    @include paddingTB0;
+  }
+
+  &-multiple {
+    padding-left: $tagGap;
+  }
 
   display: inline-flex;
 
@@ -35,12 +55,47 @@ $select-display-span-class: #{$select-class}-display-span;
     width: 100%;
     transition: all 0.2s;
 
+    .#{$select-display-span-class} {
+      display: flex;
+      height: 100%;
+      padding: $tagGap 0;
+      align-items: center;
+      justify-content: start;
+      max-width: 100%;
+      flex-wrap: wrap;
+      gap: $tagGap;
+      color: $font-color;
+
+      &-tag {
+        flex: none;
+        padding: 0 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $tag-color;
+        gap: $tagGap;
+        border-radius: $small-border-radius;
+
+        .#{$sd-icon} {
+          font-size: 10px;
+          color: $gray-icon;
+        }
+      }
+    }
+
     .#{$select-search-span-class} {
       position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
       right: 0;
+      display: flex;
+      align-items: center;
+
+      &-multiple {
+        position: relative;
+        flex: 1;
+      }
 
       input {
         border: none;

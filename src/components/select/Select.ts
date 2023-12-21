@@ -4,6 +4,7 @@ import { getPrefixCls, getSDSVG, stylesToString } from '@/components/_util/utils
 import _downSVG from '@/assets/down.svg';
 import _searchSVG from '@/assets/search.svg';
 import _emptySVG from '@/assets/empty.svg';
+import _closeSVG from '@/assets/close.svg';
 import _loadingSVG from '@/assets/loading-line.svg';
 import classNames from 'classnames';
 import List from '@/components/list/List';
@@ -32,8 +33,13 @@ const emptySVG = getSDSVG(_emptySVG, {
 });
 
 const loadingSVG = getSDSVG(_loadingSVG, {
-    width: '1rem',
-    height: '1rem'
+    width: '1em',
+    height: '1em'
+});
+
+const closeSVG = getSDSVG(_closeSVG, {
+    width: '1em',
+    height: '1em'
 });
 
 type Value<T> = T | T[];
@@ -55,7 +61,8 @@ type Props = {
     onSearch?: (value: string) => boolean;
     options: Option[];
     loading?: boolean;
-    open?: boolean
+    open?: boolean;
+    maxTagCount?: number | 'responsive'
 } & BaseProps;
 
 const selectClass = getPrefixCls('select');
@@ -69,6 +76,7 @@ const selectDropdownItemWrapperClass = getPrefixCls('select-dropdown-item-wrappe
 const selectDropdownItemClass = getPrefixCls('select-dropdown-item');
 const searchSpanClass = getPrefixCls('select-search-span');
 const displaySpanClass = getPrefixCls('select-display-span');
+const displayTagClass = getPrefixCls('select-display-span-tag');
 
 export type Option = {
     label: string;
@@ -79,7 +87,6 @@ type State = {
     searchValue: string;
     triggerNode?: HTMLElement;
     focus: boolean;
-    displayValue: Value<string>,
 };
 
 class Select extends Component<Props> {
@@ -103,20 +110,22 @@ class Select extends Component<Props> {
         options: { type: Array },
         loading: { type: Boolean, optional: true },
         open: { type: Boolean, optional: true },
+        maxTagCount: { type: [Number, String], optional: true},
         ...baseProps
     };
 
     static defaultProps = {
         listHeight: 256,
         popupMatchSelectWidth: true,
-        defaultValue: 'value1', // todo: 删除
+        multiple: true,
+        maxTagCount: 3,
+        defaultValue: Array.from({ length: 20 }, (_, index) => `value${index}`) // todo: 删除
     };
 
     state = useState<State>({
         searchValue: '',
         focus: this.props.autoFocus || false,
         triggerNode: undefined,
-        displayValue: '',
     });
 
     controllableState = useControllableState<{ value?: Value<string> | Value<number>, open?: boolean }>(this.props, {
@@ -133,15 +142,26 @@ class Select extends Component<Props> {
     triggerRef = useCompRef();
 
     static template = xml`
- <span t-ref="container" t-att-class="getClass()" t-on-click="onClickContainer">
+<span t-ref="container" t-att-class="getClass()" t-on-click="onClickContainer">
     <span class="${selectSelectorClass}">
         <t t-set="searchClass" t-value="getSearchClass()"/>
-        <t t-if="props.showSearch">
-            <span t-att-class="searchClass.search"><input t-on-input="onInput" t-att-value="state.searchValue" type="text"/></span>
-            <span t-att-class="searchClass.display"><t t-esc="state.displayValue"/></span>
+        <t t-if="props.multiple">
+            <span t-att-class="searchClass.display">
+                <t t-foreach="controllableState.state.value" t-as="value" t-key="value">
+                    <span class="${displayTagClass}"><t t-esc="display(value)"/>${closeSVG}</span>
+                </t>
+                <t t-if="props.showSearch">
+                    <span t-att-class="searchClass.search"><input t-on-input="onInput" t-att-value="state.searchValue" type="text"/></span>
+                </t>
+            </span>
         </t>
         <t t-else="">
-            <span t-att-class="searchClass.display"><t t-esc="state.displayValue"/></span>
+            <t t-if="props.showSearch">
+                <span t-att-class="searchClass.search"><input t-on-input="onInput" t-att-value="state.searchValue" type="text"/></span>
+            </t>
+            <span t-att-class="searchClass.display">
+                <t t-esc="display(controllableState.state.value)"/>
+            </span>
         </t>
     </span>
     <Trigger ref="triggerRef" className="getPopupClass()" isOpen="controllableState.state.open" triggerNode="state.triggerNode" 
@@ -208,7 +228,7 @@ class Select extends Component<Props> {
             this.state.focus = true;
             this.controllableState.setState({
                 open: force ?? !this.controllableState.state.open
-            })
+            });
             if (this.controllableState.state.open) {
                 this.clear();
                 this.cancelableTimer.cancel();
@@ -227,6 +247,7 @@ class Select extends Component<Props> {
         return classNames(selectClass, {
             [`${selectClass}-borderless`]: !bordered,
             [`${selectClass}-focus`]: this.state.focus,
+            [`${selectClass}-multiple`]: !!this.props.multiple,
             [`${selectClass}-isOpen`]: this.controllableState.state.open,
             [`${selectClass}-disabled`]: !!disabled,
             [`${selectClass}-sm`]: size === 'small',
@@ -237,9 +258,11 @@ class Select extends Component<Props> {
 
     protected getSearchClass() {
         return {
-            search: searchSpanClass,
+            search: classNames(searchSpanClass, {
+                [`${searchSpanClass}-multiple`]: !!this.props.multiple
+            }),
             display: classNames(displaySpanClass, {
-                [`${selectClass}-v-hidden`]: !!this.state.searchValue
+                [`${selectClass}-v-hidden`]: !this.props.multiple && !!this.state.searchValue  // 多选模式下不隐藏
             })
         };
     }
@@ -287,7 +310,7 @@ class Select extends Component<Props> {
             if (this.controllableState.state.open) {
                 this.controllableState.setState({
                     open: false
-                })
+                });
             }
             this.state.focus = false;
             // 先清空searchValue使展示正常
@@ -298,13 +321,22 @@ class Select extends Component<Props> {
     protected onChoice(data: Option) {
         this.controllableState.setState({
             value: data.value
-        })
+        });
         if (!this.props.multiple) {
             this.timerClear();
             this.controllableState.setState({
                 open: false
-            })
+            });
         }
+    }
+
+    /**
+     * 回显逻辑
+     * @param value
+     * @protected
+     */
+    protected display(value: string | number) {
+        return this.props.options.find((c) => c.value === value)?.label || '';
     }
 
     public setup(): void {
@@ -315,12 +347,6 @@ class Select extends Component<Props> {
         useEffect(() => {
             this.colsState.state.columns = this.props.options;
         }, () => [this.props.options]);
-
-        // 回显逻辑
-        useEffect(() => {
-            this.state.displayValue = this.props.options.find(
-                (c) => c.value === this.controllableState.state.value)?.label || '';
-        }, () => [this.controllableState.state.value, this.props.options]);
 
         // 是否默认展开逻辑
         useEffect(() => {
