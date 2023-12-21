@@ -19,7 +19,8 @@ export const Select: Story = {
     args: {
         disabled: false,
         size: 'middle',
-        bordered: true
+        bordered: true,
+        showSearch: false
     },
     argTypes: {
         disabled: {
@@ -33,6 +34,9 @@ export const Select: Story = {
             control: 'select',
             options: ['small', 'middle', 'large']
         },
+        showSearch: {
+            description: '是否可对选项进行搜索'
+        }
     },
     parameters: {
         docs: {

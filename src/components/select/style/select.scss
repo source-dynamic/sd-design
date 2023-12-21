@@ -1,9 +1,11 @@
 @import "src/components/input/style/input";
 
 $select-class: #{$ui-prefix}-select;
-$select-icon-class: #{$ui-prefix}-select-icon;
-$select-selector-class: #{$ui-prefix}-select-selector;
-$select-dropdown-class: #{$ui-prefix}-select-dropdown;
+$select-icon-class: #{$select-class}-icon;
+$select-selector-class: #{$select-class}-selector;
+$select-dropdown-class: #{$select-class}-dropdown;
+$select-search-span-class: #{$select-class}-search-span;
+$select-display-span-class: #{$select-class}-display-span;
 
 .#{$select-class} {
   @include input();
@@ -29,8 +31,26 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
   }
 
   .#{$select-selector-class} {
+    position: relative;
     width: 100%;
     transition: all 0.2s;
+
+    .#{$select-search-span-class} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+
+      input {
+        border: none;
+        outline: none;
+        background-color: transparent;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    }
   }
 
   .#{$select-icon-class} {
@@ -41,8 +61,13 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
   }
 }
 
+// 搜索样式
+.#{$select-class}-v-hidden {
+  visibility: hidden;
+}
+
 // 展开时的样式
-&.#{$select-class}-isOpen .#{$select-selector-class} {
+.#{$select-class}-isOpen .#{$select-selector-class} {
   color: $gray;
 }
 
@@ -53,6 +78,16 @@ $select-dropdown-class: #{$ui-prefix}-select-dropdown;
   box-shadow: $box-shadow;
   overflow: auto;
   padding: 4px;
+
+  &-empty {
+    color: $gray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $padding / 2;
+    padding: $padding 0;
+  }
 
   .#{$select-dropdown-class}-item-wrapper {
     padding: 0;

@@ -2,11 +2,17 @@ import { Component, useState, xml } from '@odoo/owl';
 import Item from '@/components/list/Item';
 import VirtualList, { ItemHeight, OnRender, Position } from '@/components/list/VirtualList';
 import classNames from 'classnames';
-import { getPrefixCls } from '@/components/_util/utils';
+import _emptySVG from '@/assets/empty.svg';
+import { getPrefixCls, getSDSVG } from '@/components/_util/utils';
 import { baseProps, BaseProps } from '@/common/baseProps';
 import './style/list.scss';
 import { SizeType } from '@/components/_util/type';
 import { useCompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
+
+const emptySVG = getSDSVG(_emptySVG, {
+    width: '64',
+    height: '41'
+});
 
 type Props = {
     size?: SizeType,

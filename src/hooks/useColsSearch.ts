@@ -6,6 +6,7 @@ export type Column = {
 };
 
 export type State = {
+    columns: Column[];
     displayCols: Column[];
     selectedValue: string[];
     searchValue: string;
@@ -23,15 +24,16 @@ const filterColumns = (columns: Column[], searchValue: string): Column[] => {
 
 /**
  * 带搜索的指定列表项使用的state，根据搜索项过滤返回过滤后的列表项，提供全选和反选功能
- * @param columns 列表项
+ * @param columns 初始列表项
  */
-export const useColsSearch = (columns: Column[]): State => {
+export const useColsSearch = (columns?: Column[]) => {
     const state = useState<State>({
+        columns: columns ?? [],
         displayCols: [],
         selectedValue: [],
         searchValue: '',
-        allSelected: false,
-    })
+        allSelected: false
+    });
 
     /**
      * 根据当前已选中值进行全选或取消全选，都是针对当前搜索结果进行的操作
@@ -53,8 +55,8 @@ export const useColsSearch = (columns: Column[]): State => {
     };
 
     useEffect(() => {
-        state.displayCols = filterColumns(columns, state.searchValue);
-    }, () => [columns, state.searchValue]);
+        state.displayCols = filterColumns(state.columns, state.searchValue);
+    }, () => [state.columns, state.searchValue]);
 
     // 根据选中值和待选项判断是否全选
     useEffect(() => {
@@ -64,5 +66,8 @@ export const useColsSearch = (columns: Column[]): State => {
         state.allSelected = intersection.length >= state.displayCols.length;
     }, () => [state.selectedValue, state.displayCols]);
 
-    return state;
-}
+    return {
+        state,
+        selectAll
+    };
+};
