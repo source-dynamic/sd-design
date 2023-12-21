@@ -283,7 +283,7 @@ class Select extends Component<Props> {
     protected onClickOutsideHandler(event: MouseEvent) {
         const target = event.target as HTMLElement;
         // 在点击非选择框区域和非选项区域时，关闭下拉框
-        if (!this.containerRef.el!.contains(target) && !this.triggerRef.current?.wrapperRef.el?.contains(target)) {
+        if (!this.containerRef.el?.contains(target) && !this.triggerRef.current?.wrapperRef.el?.contains(target)) {
             if (this.controllableState.state.open) {
                 this.controllableState.setState({
                     open: false
