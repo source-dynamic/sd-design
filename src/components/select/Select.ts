@@ -54,7 +54,8 @@ type Props = {
     showSearch?: boolean;
     onSearch?: (value: string) => boolean;
     options: Option[];
-    loading?: boolean
+    loading?: boolean;
+    open?: boolean
 } & BaseProps;
 
 const selectClass = getPrefixCls('select');
@@ -76,7 +77,6 @@ export type Option = {
 
 type State = {
     searchValue: string;
-    isOpen: boolean;
     triggerNode?: HTMLElement;
     focus: boolean;
     displayValue: Value<string>,
@@ -102,6 +102,7 @@ class Select extends Component<Props> {
         onSearch: { type: Function, optional: true },
         options: { type: Array },
         loading: { type: Boolean, optional: true },
+        open: { type: Boolean, optional: true },
         ...baseProps
     };
 
@@ -113,15 +114,15 @@ class Select extends Component<Props> {
 
     state = useState<State>({
         searchValue: '',
-        isOpen: false,
         focus: this.props.autoFocus || false,
         triggerNode: undefined,
         displayValue: '',
     });
 
-    controllableState = useControllableState<{ value?: Value<string> | Value<number> }>(this.props, {
-        value: this.props.defaultValue
-    }, (val) => `${val}`);
+    controllableState = useControllableState<{ value?: Value<string> | Value<number>, open?: boolean }>(this.props, {
+        value: this.props.defaultValue,
+        open: false
+    });
 
     colsState = useColsSearch(this.props.options);
 
@@ -143,7 +144,7 @@ class Select extends Component<Props> {
             <span t-att-class="searchClass.display"><t t-esc="state.displayValue"/></span>
         </t>
     </span>
-    <Trigger ref="triggerRef" className="getPopupClass()" isOpen="state.isOpen" triggerNode="state.triggerNode" 
+    <Trigger ref="triggerRef" className="getPopupClass()" isOpen="controllableState.state.open" triggerNode="state.triggerNode" 
         getPopupContainer="props.getPopupContainer" getStyle.bind="getDropdownStyle">
         <t t-if="colsState.state.displayCols.length === 0">
             <t t-slot="empty">
@@ -190,27 +191,28 @@ class Select extends Component<Props> {
     }
 
     protected onClickContainer(event: MouseEvent) {
-        // 如果已经isOpen并且允许search，则不进行关闭
-        if (this.state.isOpen && this.props.showSearch) {
+        // 如果已经open并且允许search，则不进行关闭
+        if (this.controllableState.state.open && this.props.showSearch) {
             return;
         }
-        this.toggleOpen(event.currentTarget as HTMLElement);
+        this.toggleOpen();
     }
 
     /**
      * 切换下拉框的显示状态
-     * @param triggerNode 触发（对齐节点）
      * @param force 切换状态
      * @protected
      */
-    protected toggleOpen(triggerNode: HTMLElement, force?: boolean) {
+    protected toggleOpen(force?: boolean) {
         if (!this.props.disabled) {
             this.state.focus = true;
-            this.state.isOpen = force ?? !this.state.isOpen;
-            if (this.state.isOpen) {
+            this.controllableState.setState({
+                open: force ?? !this.controllableState.state.open
+            })
+            if (this.controllableState.state.open) {
                 this.clear();
                 this.cancelableTimer.cancel();
-                this.state.triggerNode = triggerNode;
+                this.state.triggerNode = this.containerRef.el!;
             }
         }
     }
@@ -225,7 +227,7 @@ class Select extends Component<Props> {
         return classNames(selectClass, {
             [`${selectClass}-borderless`]: !bordered,
             [`${selectClass}-focus`]: this.state.focus,
-            [`${selectClass}-isOpen`]: this.state.isOpen,
+            [`${selectClass}-isOpen`]: this.controllableState.state.open,
             [`${selectClass}-disabled`]: !!disabled,
             [`${selectClass}-sm`]: size === 'small',
             [`${selectClass}-lg`]: size === 'large',
@@ -282,8 +284,10 @@ class Select extends Component<Props> {
         const target = event.target as HTMLElement;
         // 在点击非选择框区域和非选项区域时，关闭下拉框
         if (!this.containerRef.el!.contains(target) && !this.triggerRef.current?.wrapperRef.el?.contains(target)) {
-            if (this.state.isOpen) {
-                this.state.isOpen = false;
+            if (this.controllableState.state.open) {
+                this.controllableState.setState({
+                    open: false
+                })
             }
             this.state.focus = false;
             // 先清空searchValue使展示正常
@@ -292,10 +296,14 @@ class Select extends Component<Props> {
     }
 
     protected onChoice(data: Option) {
-        this.controllableState.state.value = data.value;
+        this.controllableState.setState({
+            value: data.value
+        })
         if (!this.props.multiple) {
             this.timerClear();
-            this.state.isOpen = false;
+            this.controllableState.setState({
+                open: false
+            })
         }
     }
 
@@ -317,8 +325,10 @@ class Select extends Component<Props> {
         // 是否默认展开逻辑
         useEffect(() => {
             if (this.props.defaultOpen && !this.props.disabled) {
-                this.state.triggerNode = component.__owl__.bdom?.el as HTMLElement;
-                this.state.isOpen = true;
+                this.state.triggerNode = this.containerRef.el!;
+                this.controllableState.setState({
+                    open: true
+                });
             }
         }, () => []);
     }

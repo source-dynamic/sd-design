@@ -64,7 +64,7 @@ class Trigger extends Component<Props> {
     });
 
     protected getClass() {
-        const { className, isOpen, triggerNode } = this.props;
+        const { className, isOpen } = this.props;
         return classNames(triggerClass, className, `${triggerClass}-${isOpen ? 'fadein' : 'fadeout'}`);
     }
 
@@ -82,9 +82,31 @@ class Trigger extends Component<Props> {
         return this.props.getStyle?.(this.props.triggerNode) || undefined;
     }
 
+    /**
+     * 对齐
+     * @protected
+     */
+    protected align() {
+        const { isOpen, triggerNode } = this.props;
+        if (isOpen) {
+            // 打开时先移除hidden的class，否则display: none不能触发动画
+            this.wrapperRef.el?.classList.remove(triggerHiddenClass);
+        }
+        if (this.wrapperRef.el && triggerNode) {
+            const alignConfig = {
+                points: ['tl', 'bl'],  // 用第二个参数的位置去对齐第一个参数的位置
+                offset: [0, 4], // 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量
+                targetOffset: ['0', '0'], // 同offset，不过是针对targetNode的
+                overflow: { adjustX: true, adjustY: true } // if adjustX field is true, then will adjust source node in x direction if source node is invisible. if adjustY field is true, then will adjust source node in y direction if source node is invisible. if alwaysByViewport is true, the it will adjust if node is not inside viewport
+            };
+            domAlign(this.wrapperRef.el, triggerNode, alignConfig);
+        }
+    }
+
     public setup(): void {
         useImperativeHandle(() => ({
-            wrapperRef: this.wrapperRef
+            wrapperRef: this.wrapperRef,
+            align: this.align.bind(this)
         }), () => []);
 
         useEventListener(this.wrapperRef, 'animationend', (event) => {
@@ -106,21 +128,8 @@ class Trigger extends Component<Props> {
         }, () => [this.props.isOpen]);
 
         useEffect(() => {
-            const { isOpen, triggerNode } = this.props;
-            if (isOpen) {
-                // 打开时先移除hidden的class，否则display: none不能触发动画
-                this.wrapperRef.el?.classList.remove(triggerHiddenClass);
-            }
-            if (this.wrapperRef.el && triggerNode) {
-                const alignConfig = {
-                    points: ['tl', 'bl'],  // 用第二个参数的位置去对齐第一个参数的位置
-                    offset: [0, 4], // 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量
-                    targetOffset: ['0', '0'], // 同offset，不过是针对targetNode的
-                    overflow: { adjustX: true, adjustY: true } // if adjustX field is true, then will adjust source node in x direction if source node is invisible. if adjustY field is true, then will adjust source node in y direction if source node is invisible. if alwaysByViewport is true, the it will adjust if node is not inside viewport
-                };
-                domAlign(this.wrapperRef.el, triggerNode, alignConfig);
-            }
-        }, () => [this.wrapperRef.el, this.props.isOpen]);
+            this.align();
+        }, () => [this.wrapperRef.el, this.props.isOpen, this.props.triggerNode]);
     }
 }
 
