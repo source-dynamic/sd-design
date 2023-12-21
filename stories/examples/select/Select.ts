@@ -9,7 +9,8 @@ export default class SelectRoot extends Component {
         disabled: false,
         size: undefined,
         bordered: undefined,
-        showSearch: undefined
+        showSearch: undefined,
+        loading: undefined
     });
 
     customState = useState({
@@ -21,7 +22,7 @@ export default class SelectRoot extends Component {
 
     static template = xml`
 <div class="select-container">
-    <Select disabled="state.disabled" size="state.size" showSearch="state.showSearch" bordered="state.bordered" options="customState.options"/>
+    <Select disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" bordered="state.bordered" options="customState.options"/>
 </div>
     `
 }

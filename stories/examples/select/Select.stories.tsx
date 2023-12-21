@@ -20,7 +20,8 @@ export const Select: Story = {
         disabled: false,
         size: 'middle',
         bordered: true,
-        showSearch: false
+        showSearch: false,
+        loading: false
     },
     argTypes: {
         disabled: {
@@ -36,6 +37,9 @@ export const Select: Story = {
         },
         showSearch: {
             description: '是否可对选项进行搜索'
+        },
+        loading: {
+            description: '是否展示加载中状态'
         }
     },
     parameters: {

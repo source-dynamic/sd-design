@@ -4,6 +4,7 @@ import { getPrefixCls, getSDSVG, stylesToString } from '@/components/_util/utils
 import _downSVG from '@/assets/down.svg';
 import _searchSVG from '@/assets/search.svg';
 import _emptySVG from '@/assets/empty.svg';
+import _loadingSVG from '@/assets/loading-line.svg';
 import classNames from 'classnames';
 import List from '@/components/list/List';
 import Trigger from '@/components/trigger/trigger';
@@ -30,6 +31,11 @@ const emptySVG = getSDSVG(_emptySVG, {
     height: '41'
 });
 
+const loadingSVG = getSDSVG(_loadingSVG, {
+    width: '1rem',
+    height: '1rem'
+});
+
 type Value<T> = T | T[];
 
 type Props = {
@@ -48,10 +54,12 @@ type Props = {
     showSearch?: boolean;
     onSearch?: (value: string) => boolean;
     options: Option[];
+    loading?: boolean
 } & BaseProps;
 
 const selectClass = getPrefixCls('select');
 const selectIconClass = getPrefixCls('select-icon');
+const selectRotateIconClass = getPrefixCls('select-rotate-icon');
 const selectSelectorClass = getPrefixCls('select-selector');
 const selectDropdownClass = getPrefixCls('select-dropdown');
 const dropdownEmptyClass = getPrefixCls('select-dropdown-empty');
@@ -93,13 +101,14 @@ class Select extends Component<Props> {
         showSearch: { type: Boolean, optional: true },
         onSearch: { type: Function, optional: true },
         options: { type: Array },
+        loading: { type: Boolean, optional: true },
         ...baseProps
     };
 
     static defaultProps = {
         listHeight: 256,
         popupMatchSelectWidth: true,
-        defaultValue: 'value1',
+        defaultValue: 'value1', // todo: 删除
     };
 
     state = useState<State>({
@@ -155,7 +164,8 @@ class Select extends Component<Props> {
         </t>
     </Trigger>
     <span class="${selectIconClass}">
-        <t t-if="state.searchValue">${searchSVG}</t>
+        <t t-if="props.loading"><span class="${selectRotateIconClass}">${loadingSVG}</span></t>
+        <t t-elif="state.searchValue">${searchSVG}</t>
         <t t-else="">${downSVG}</t>
     </span>
  </span>   
