@@ -63,9 +63,15 @@ class Trigger extends Component<Props> {
         isShow: false // 用于控制隐藏时销毁
     });
 
+    needFadeIn = true;  // 用来控制是否需要展示fade动画
+
     protected getClass() {
         const { className, isOpen } = this.props;
-        return classNames(triggerClass, className, `${triggerClass}-${isOpen ? 'fadein' : 'fadeout'}`);
+        const notShowFade = isOpen && !this.needFadeIn;
+        this.needFadeIn = true;
+        return classNames(triggerClass, className, {
+            [`${triggerClass}-${isOpen ? 'fadein' : 'fadeout'}`]: !notShowFade
+        });
     }
 
     protected getPopupContainer(): string {
@@ -86,18 +92,14 @@ class Trigger extends Component<Props> {
      * 对齐
      * @protected
      */
-    protected align() {
-        const { isOpen, triggerNode } = this.props;
-        if (isOpen) {
-            // 打开时先移除hidden的class，否则display: none不能触发动画
-            this.wrapperRef.el?.classList.remove(triggerHiddenClass);
-        }
+    protected align(forceFade: boolean = true) {
+        this.needFadeIn = forceFade;
+        const { triggerNode } = this.props;
         if (this.wrapperRef.el && triggerNode) {
             const alignConfig = {
                 points: ['tl', 'bl'],  // 用第二个参数的位置去对齐第一个参数的位置
                 offset: [0, 4], // 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量
-                targetOffset: ['0', '0'], // 同offset，不过是针对targetNode的
-                overflow: { adjustX: true, adjustY: true } // if adjustX field is true, then will adjust source node in x direction if source node is invisible. if adjustY field is true, then will adjust source node in y direction if source node is invisible. if alwaysByViewport is true, the it will adjust if node is not inside viewport
+                targetOffset: ['0', '0'] // 同offset，不过是针对targetNode的
             };
             domAlign(this.wrapperRef.el, triggerNode, alignConfig);
         }
@@ -128,6 +130,11 @@ class Trigger extends Component<Props> {
         }, () => [this.props.isOpen]);
 
         useEffect(() => {
+            const { isOpen } = this.props;
+            if (isOpen) {
+                // 打开时先移除hidden的class，否则display: none不能触发动画
+                this.wrapperRef.el?.classList.remove(triggerHiddenClass);
+            }
             this.align();
         }, () => [this.wrapperRef.el, this.props.isOpen, this.props.triggerNode]);
     }

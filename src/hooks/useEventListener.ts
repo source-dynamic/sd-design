@@ -1,6 +1,10 @@
 import { useComponent, useEffect } from '@odoo/owl';
 
-export const useEventListener = (targetRef: any, eventName: string, handler: (event: any) => void,
+type TargetRef = {
+    el: any
+}
+
+export const useEventListener = (targetRef: TargetRef, eventName: string, handler: (event: any) => void,
     eventParams?: Record<string, any>
 ) => {
     const comp = useComponent();

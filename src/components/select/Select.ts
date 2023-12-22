@@ -16,6 +16,7 @@ import useControllableState from '@/hooks/useControllableState';
 import { useColsSearch } from '@/hooks/useColsSearch';
 import { SizeType } from '@/components/_util/type';
 import { useCancellableTimer } from '@/hooks/useCancellableTimer';
+import { useResizeObserver } from '@/hooks/useSizeObserver';
 
 const downSVG = getSDSVG(_downSVG, {
     width: '1em',
@@ -87,6 +88,7 @@ type State = {
     searchValue: string;
     triggerNode?: HTMLElement;
     focus: boolean;
+    multipleInputStyle?: string
 };
 
 class Select extends Component<Props> {
@@ -110,7 +112,7 @@ class Select extends Component<Props> {
         options: { type: Array },
         loading: { type: Boolean, optional: true },
         open: { type: Boolean, optional: true },
-        maxTagCount: { type: [Number, String], optional: true},
+        maxTagCount: { type: [Number, String], optional: true },
         ...baseProps
     };
 
@@ -119,13 +121,14 @@ class Select extends Component<Props> {
         popupMatchSelectWidth: true,
         multiple: true,
         maxTagCount: 3,
-        defaultValue: Array.from({ length: 20 }, (_, index) => `value${index}`) // todo: 删除
+        defaultValue: Array.from({ length: 19 }, (_, index) => `value${index}`) // todo: 删除
     };
 
     state = useState<State>({
         searchValue: '',
         focus: this.props.autoFocus || false,
         triggerNode: undefined,
+        multipleInputStyle: undefined
     });
 
     controllableState = useControllableState<{ value?: Value<string> | Value<number>, open?: boolean }>(this.props, {
@@ -139,19 +142,33 @@ class Select extends Component<Props> {
 
     containerRef = useRef('container');
 
+    searchTempRef = useRef('searchTemp');
+
+    searchSpanRef = useRef('searchSpan');
+
+    searchRef = useRef('search');
+
     triggerRef = useCompRef();
 
     static template = xml`
 <span t-ref="container" t-att-class="getClass()" t-on-click="onClickContainer">
     <span class="${selectSelectorClass}">
+        <div class="${selectSelectorClass}-temp" t-ref="searchTemp"><t t-esc="state.searchValue"/></div>
         <t t-set="searchClass" t-value="getSearchClass()"/>
         <t t-if="props.multiple">
             <span t-att-class="searchClass.display">
                 <t t-foreach="controllableState.state.value" t-as="value" t-key="value">
-                    <span class="${displayTagClass}"><t t-esc="display(value)"/>${closeSVG}</span>
+                    <span class="${displayTagClass}">
+                        <t t-esc="display(value)"/>
+                        <span t-on-click.stop="(event) => this.handleDeleteChoice(value)">${closeSVG}</span>
+                    </span>
                 </t>
                 <t t-if="props.showSearch">
-                    <span t-att-class="searchClass.search"><input t-on-input="onInput" t-att-value="state.searchValue" type="text"/></span>
+                    <span t-att-class="searchClass.search">
+                        <span t-ref="searchSpan">
+                            <input t-ref="search" t-on-input="onInput" t-att-value="state.searchValue" type="text"/>
+                        </span>
+                    </span>
                 </t>
             </span>
         </t>
@@ -177,7 +194,7 @@ class Select extends Component<Props> {
         <t t-else="">
             <List dataSource="colsState.state.displayCols" itemClassName.bind="getItemClass">
                 <t t-set-slot="item" t-slot-scope="scope">
-                    <div class="${selectDropdownItemClass}" t-on-click.synthetic="() => this.onChoice(scope.data)">
+                    <div class="${selectDropdownItemClass}" t-on-click.synthetic="() => this.handleChoice(scope.data)">
                         <t t-esc="scope.data.label"/>
                     </div>
                 </t>
@@ -211,6 +228,8 @@ class Select extends Component<Props> {
     }
 
     protected onClickContainer(event: MouseEvent) {
+        // 打开时如果有searchRef，则进行聚焦，仅multiple有用
+        this.searchRef.el?.focus();
         // 如果已经open并且允许search，则不进行关闭
         if (this.controllableState.state.open && this.props.showSearch) {
             return;
@@ -249,6 +268,7 @@ class Select extends Component<Props> {
             [`${selectClass}-focus`]: this.state.focus,
             [`${selectClass}-multiple`]: !!this.props.multiple,
             [`${selectClass}-isOpen`]: this.controllableState.state.open,
+            [`${selectClass}-searchable`]: this.props.showSearch,
             [`${selectClass}-disabled`]: !!disabled,
             [`${selectClass}-sm`]: size === 'small',
             [`${selectClass}-lg`]: size === 'large',
@@ -318,7 +338,7 @@ class Select extends Component<Props> {
         }
     }
 
-    protected onChoice(data: Option) {
+    protected handleChoice(data: Option) {
         this.controllableState.setState({
             value: data.value
         });
@@ -328,6 +348,13 @@ class Select extends Component<Props> {
                 open: false
             });
         }
+    }
+
+    protected handleDeleteChoice(value: string | number) {
+        const filterValues = (this.controllableState.state.value as any[]).filter((v) => v !== value);
+        this.controllableState.setState({
+            value: filterValues
+        });
     }
 
     /**
@@ -344,6 +371,13 @@ class Select extends Component<Props> {
         const target = { el: window };
         useEventListener(target, 'mousedown', this.onClickOutsideHandler);
 
+        // 监听尺寸变化，如果是打开状态并且尺寸发生了变化，则进行对齐，使用ResizeObserver节约性能开销
+        useResizeObserver(this.containerRef, (entry) => {
+            if (this.controllableState.state.open) {
+                this.triggerRef.current?.align(false);
+            }
+        });
+
         useEffect(() => {
             this.colsState.state.columns = this.props.options;
         }, () => [this.props.options]);
@@ -357,6 +391,19 @@ class Select extends Component<Props> {
                 });
             }
         }, () => []);
+
+        // 在输入框宽度不足时进行适配换行处理
+        useEffect(() => {
+            if (!this.searchSpanRef.el) {
+                return;
+            }
+
+            let width = '4px';
+            if (this.state.searchValue) {
+                width = getComputedStyle(this.searchTempRef.el!).width;
+            }
+            this.searchSpanRef.el.style.width = width;
+        }, () => [this.state.searchValue, this.searchSpanRef.el]);
     }
 }
 

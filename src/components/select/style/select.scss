@@ -14,11 +14,11 @@ $select-display-span-class: #{$select-class}-display-span;
 
 .#{$select-class} {
   $tagGap: 4px;
-
   @include input();
   @include hover;
   @include responsive;
   @include paddingTB0;
+  transition: none;
 
   &-sm {
     @include paddingTB0;
@@ -28,14 +28,20 @@ $select-display-span-class: #{$select-class}-display-span;
     @include paddingTB0;
   }
 
-  &-multiple {
-    padding-left: $tagGap;
-  }
-
   display: inline-flex;
 
   &:hover {
     cursor: pointer;
+  }
+
+  &-searchable {
+    &:hover {
+      cursor: text;
+    }
+  }
+
+  &-multiple {
+    padding-left: $tagGap;
   }
 
   &-disabled {
@@ -54,6 +60,12 @@ $select-display-span-class: #{$select-class}-display-span;
     position: relative;
     width: 100%;
     transition: all 0.2s;
+    overflow: hidden;
+
+    &-temp {
+      position: absolute;
+      opacity: 0;
+    }
 
     .#{$select-display-span-class} {
       display: flex;
@@ -68,17 +80,26 @@ $select-display-span-class: #{$select-class}-display-span;
 
       &-tag {
         flex: none;
-        padding: 0 8px;
+        padding: 0 8px 0 4px;
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: $tag-color;
-        gap: $tagGap;
+        gap: $tagGap / 2;
         border-radius: $small-border-radius;
+
+        &:hover {
+          cursor: default;
+        }
 
         .#{$sd-icon} {
           font-size: 10px;
           color: $gray-icon;
+
+          &:hover {
+            cursor: pointer;
+            color: $font-color;
+          }
         }
       }
     }
@@ -95,6 +116,11 @@ $select-display-span-class: #{$select-class}-display-span;
       &-multiple {
         position: relative;
         flex: 1;
+        max-width: 100%;
+      }
+
+      span {
+        //display: contents;
       }
 
       input {
