@@ -10,7 +10,8 @@ export default class SelectRoot extends Component {
         size: undefined,
         bordered: undefined,
         showSearch: undefined,
-        loading: undefined
+        loading: undefined,
+        placement: undefined
     });
 
     customState = useState({
@@ -22,7 +23,7 @@ export default class SelectRoot extends Component {
 
     static template = xml`
 <div class="select-container">
-    <Select disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" bordered="state.bordered" options="customState.options"/>
+    <Select popupMatchSelectWidth="false" placement="state.placement" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" bordered="state.bordered" options="customState.options"/>
 </div>
     `
 }

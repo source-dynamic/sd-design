@@ -22,10 +22,26 @@ type Props = {
 const triggerClass = getPrefixCls('trigger');
 const triggerHiddenClass = getPrefixCls('trigger-hidden');
 
+// 用第二个参数的位置去对齐第一个参数的位置
+const placementMap: Record<Placement, [string, string]> = {
+    topLeft: ['bl', 'tl'],
+    topRight: ['br', 'tr'],
+    bottomLeft: ['tl', 'bl'],
+    bottomRight: ['tr', 'br']
+};
+
+// 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量
+const placementOffsetMap: Record<Placement, [number, number]> = {
+    topLeft: [0, -4],
+    topRight: [0, -4],
+    bottomLeft: [0, 4],
+    bottomRight: [0, 4]
+};
+
 class Trigger extends Component<Props> {
     static props = {
         className: { type: String, optional: true },
-        placement: { type: String, optional: true },
+        placement: { type: String },
         isOpen: { type: Boolean },
         destroyOnHide: { type: Boolean, optional: true },
         triggerNode: { type: Object, optional: true },
@@ -94,11 +110,11 @@ class Trigger extends Component<Props> {
      */
     protected align(forceFade: boolean = true) {
         this.needFadeIn = forceFade;
-        const { triggerNode } = this.props;
+        const { triggerNode, placement } = this.props;
         if (this.wrapperRef.el && triggerNode) {
             const alignConfig = {
-                points: ['tl', 'bl'],  // 用第二个参数的位置去对齐第一个参数的位置
-                offset: [0, 4], // 第一个参数是sourceNode的x轴偏移量，第二个参数是sourceNode的y轴偏移量
+                points: placementMap[placement],
+                offset: placementOffsetMap[placement],
                 targetOffset: ['0', '0'] // 同offset，不过是针对targetNode的
             };
             domAlign(this.wrapperRef.el, triggerNode, alignConfig);

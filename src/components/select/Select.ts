@@ -8,7 +8,7 @@ import _closeSVG from '@/assets/close.svg';
 import _loadingSVG from '@/assets/loading-line.svg';
 import classNames from 'classnames';
 import List from '@/components/list/List';
-import Trigger from '@/components/trigger/trigger';
+import Trigger, { Placement } from '@/components/trigger/trigger';
 import './style/select.scss';
 import { useEventListener } from '@/hooks/useEventListener';
 import { useCompRef } from '@/hooks/useImperativeHandle';
@@ -47,6 +47,7 @@ type Value<T> = T | T[];
 
 type Props = {
     getPopupContainer?: (triggerNode?: HTMLElement) => string; // 返回一个选择器字符串
+    placement?: Placement;
     listHeight?: number;
     disabled?: boolean;
     multiple?: boolean;
@@ -96,6 +97,7 @@ class Select extends Component<Props> {
 
     static props = {
         getPopupContainer: { type: Function, optional: true },
+        placement: { type: String, optional: true },
         listHeight: { type: Number, optional: true },
         disabled: { type: Boolean, optional: true },
         value: { type: [String, Array, Number], optional: true },
@@ -120,6 +122,7 @@ class Select extends Component<Props> {
         listHeight: 256,
         popupMatchSelectWidth: true,
         multiple: true,
+        placement: 'bottomLeft',
         maxTagCount: 3,
         defaultValue: Array.from({ length: 19 }, (_, index) => `value${index}`) // todo: 删除
     };
@@ -182,7 +185,7 @@ class Select extends Component<Props> {
         </t>
     </span>
     <Trigger ref="triggerRef" className="getPopupClass()" isOpen="controllableState.state.open" triggerNode="state.triggerNode" 
-        getPopupContainer="props.getPopupContainer" getStyle.bind="getDropdownStyle">
+        getPopupContainer="props.getPopupContainer" getStyle.bind="getDropdownStyle" placement="props.placement">
         <t t-if="colsState.state.displayCols.length === 0">
             <t t-slot="empty">
                 <div class="${dropdownEmptyClass}">

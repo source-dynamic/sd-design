@@ -21,7 +21,8 @@ export const Select: Story = {
         size: 'middle',
         bordered: true,
         showSearch: false,
-        loading: false
+        loading: false,
+        placement: 'bottomLeft'
     },
     argTypes: {
         disabled: {
@@ -40,7 +41,12 @@ export const Select: Story = {
         },
         loading: {
             description: '是否展示加载中状态'
-        }
+        },
+        placement: {
+            description: '尺寸',
+            control: 'select',
+            options: ['topLeft' , 'topRight' , 'bottomLeft' , 'bottomRight']
+        },
     },
     parameters: {
         docs: {
