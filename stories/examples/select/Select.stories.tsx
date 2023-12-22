@@ -43,7 +43,7 @@ export const Select: Story = {
             description: '是否展示加载中状态'
         },
         placement: {
-            description: '尺寸',
+            description: '选择框弹出的位置',
             control: 'select',
             options: ['topLeft' , 'topRight' , 'bottomLeft' , 'bottomRight']
         },
