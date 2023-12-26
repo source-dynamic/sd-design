@@ -108,8 +108,7 @@ class Trigger extends Component<Props> {
      * 对齐
      * @protected
      */
-    protected align(forceFade: boolean = true) {
-        this.needFadeIn = forceFade;
+    protected align() {
         const { triggerNode, placement } = this.props;
         if (this.wrapperRef.el && triggerNode) {
             const alignConfig = {
@@ -124,6 +123,7 @@ class Trigger extends Component<Props> {
     public setup(): void {
         useImperativeHandle(() => ({
             wrapperRef: this.wrapperRef,
+            setFadeIn: (isNeed: boolean) => this.needFadeIn = isNeed,
             align: this.align.bind(this)
         }), () => []);
 

@@ -182,21 +182,29 @@ $select-display-span-class: #{$select-class}-display-span;
     padding: $padding 0;
   }
 
+  &-item {
+    padding: 8px 16px; // 尺寸
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-icon {
+      color: $primary-color-6;
+    }
+  }
+
   .#{$select-dropdown-class}-item-wrapper {
     padding: 0;
     border-radius: $base-border-radius;
     border-block-end: none;
 
     &:hover {
+      cursor: pointer;
       background-color: rgba($black, 0.04);
     }
 
     &.#{$select-dropdown-class}-item-selected {
       background-color: $primary-color-1;
     }
-  }
-
-  &-item {
-    padding: 8px 16px; // 尺寸
   }
 }

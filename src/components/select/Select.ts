@@ -1,4 +1,4 @@
-import { Component, useComponent, useEffect, useRef, useState, xml } from '@odoo/owl';
+import { Component, useEffect, useRef, useState, xml } from '@odoo/owl';
 import { baseProps, BaseProps } from '@/common/baseProps';
 import { getPrefixCls, getSDSVG, stylesToString } from '@/components/_util/utils';
 import _downSVG from '@/assets/down.svg';
@@ -6,6 +6,7 @@ import _searchSVG from '@/assets/search.svg';
 import _emptySVG from '@/assets/empty.svg';
 import _closeSVG from '@/assets/close.svg';
 import _loadingSVG from '@/assets/loading-line.svg';
+import _checkSVG from '@/assets/check.svg';
 import classNames from 'classnames';
 import List from '@/components/list/List';
 import Trigger, { Placement } from '@/components/trigger/trigger';
@@ -39,6 +40,11 @@ const loadingSVG = getSDSVG(_loadingSVG, {
 });
 
 const closeSVG = getSDSVG(_closeSVG, {
+    width: '1em',
+    height: '1em'
+});
+
+const checkSVG = getSDSVG(_checkSVG, {
     width: '1em',
     height: '1em'
 });
@@ -198,7 +204,8 @@ class Select extends Component<Props> {
             <List dataSource="colsState.state.displayCols" itemClassName.bind="getItemClass">
                 <t t-set-slot="item" t-slot-scope="scope">
                     <div class="${selectDropdownItemClass}" t-on-click.synthetic="() => this.handleChoice(scope.data)">
-                        <t t-esc="scope.data.label"/>
+                        <span><t t-esc="scope.data.label"/></span>
+                        <span class="${selectDropdownItemClass}-icon" t-if="this.showSelectedSuffix(scope.data)">${checkSVG}</span>
                     </div>
                 </t>
             </List>        
@@ -294,9 +301,21 @@ class Select extends Component<Props> {
         return classNames(selectDropdownClass, this.props.popupClassName);
     }
 
+    /**
+     * 选项的样式类
+     * @param item
+     * @param index
+     * @protected
+     */
     protected getItemClass(item: Option, index: number) {
+        if (!this.props.multiple) {
+            return classNames(selectDropdownItemWrapperClass, {
+                [`${selectDropdownItemClass}-selected`]: item.value === this.controllableState.state.value
+            });
+        }
+
         return classNames(selectDropdownItemWrapperClass, {
-            [`${selectDropdownItemClass}-selected`]: item.value === this.controllableState.state.value
+            [`${selectDropdownItemClass}-selected`]: (this.controllableState.state.value as (string | number)[]).indexOf(item.value) !== -1
         });
     }
 
@@ -321,6 +340,10 @@ class Select extends Component<Props> {
         return stylesToString(style);
     }
 
+    protected showSelectedSuffix(item: Option){
+        return this.props.multiple && (this.controllableState.state.value as (string | number)[]).indexOf(item.value) !== -1
+    }
+
     /**
      * 点击外部区域时，关闭下拉框
      * @param event
@@ -338,18 +361,35 @@ class Select extends Component<Props> {
             this.state.focus = false;
             // 先清空searchValue使展示正常
             this.timerClear();
+            this.triggerRef.current?.setFadeIn(true);
         }
     }
 
     protected handleChoice(data: Option) {
+        let newValue: any = data.value;
+        if (this.props.multiple) {
+            const stateValue = this.controllableState.state.value as (string | number)[];
+            const index = stateValue.indexOf(newValue);
+            if (index === -1) {
+                stateValue.push(newValue);
+            } else {
+                stateValue.splice(index, 1);
+            }
+            newValue = stateValue;
+        }
+
         this.controllableState.setState({
-            value: data.value
+            value: newValue
         });
+
         if (!this.props.multiple) {
             this.timerClear();
             this.controllableState.setState({
                 open: false
             });
+        }else {
+            // 复选模式下去掉强制fadein
+            this.triggerRef.current?.setFadeIn(false);
         }
     }
 
@@ -370,14 +410,14 @@ class Select extends Component<Props> {
     }
 
     public setup(): void {
-        const component = useComponent();
         const target = { el: window };
         useEventListener(target, 'mousedown', this.onClickOutsideHandler);
 
         // 监听尺寸变化，如果是打开状态并且尺寸发生了变化，则进行对齐，使用ResizeObserver节约性能开销
         useResizeObserver(this.containerRef, (entry) => {
             if (this.controllableState.state.open) {
-                this.triggerRef.current?.align(false);
+                this.triggerRef.current?.setFadeIn(false);
+                this.triggerRef.current?.align();
             }
         });
 
