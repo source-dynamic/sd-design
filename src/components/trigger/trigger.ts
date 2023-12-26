@@ -79,12 +79,11 @@ class Trigger extends Component<Props> {
         isShow: false // 用于控制隐藏时销毁
     });
 
-    needFadeIn = true;  // 用来控制是否需要展示fade动画
+    lastIsOpen = false;  // 最后一次是打开还是关闭，用来控制是否需要展示fade动画，因为第一次打开始终需要展示动画
 
     protected getClass() {
         const { className, isOpen } = this.props;
-        const notShowFade = isOpen && !this.needFadeIn;
-        this.needFadeIn = true;
+        const notShowFade = isOpen && this.lastIsOpen;
         return classNames(triggerClass, className, {
             [`${triggerClass}-${isOpen ? 'fadein' : 'fadeout'}`]: !notShowFade
         });
@@ -123,7 +122,6 @@ class Trigger extends Component<Props> {
     public setup(): void {
         useImperativeHandle(() => ({
             wrapperRef: this.wrapperRef,
-            setFadeIn: (isNeed: boolean) => this.needFadeIn = isNeed,
             align: this.align.bind(this)
         }), () => []);
 
@@ -147,6 +145,7 @@ class Trigger extends Component<Props> {
 
         useEffect(() => {
             const { isOpen } = this.props;
+            this.lastIsOpen = isOpen;
             if (isOpen) {
                 // 打开时先移除hidden的class，否则display: none不能触发动画
                 this.wrapperRef.el?.classList.remove(triggerHiddenClass);

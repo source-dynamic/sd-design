@@ -245,6 +245,7 @@ class Select extends Component<Props> {
             return;
         }
         this.toggleOpen();
+        this.state.focus = true;
     }
 
     /**
@@ -254,7 +255,6 @@ class Select extends Component<Props> {
      */
     protected toggleOpen(force?: boolean) {
         if (!this.props.disabled) {
-            this.state.focus = true;
             this.controllableState.setState({
                 open: force ?? !this.controllableState.state.open
             });
@@ -354,14 +354,10 @@ class Select extends Component<Props> {
         // 在点击非选择框区域和非选项区域时，关闭下拉框
         if (!this.containerRef.el?.contains(target) && !this.triggerRef.current?.wrapperRef.el?.contains(target)) {
             if (this.controllableState.state.open) {
-                this.controllableState.setState({
-                    open: false
-                });
+                this.toggleOpen(false);
             }
             this.state.focus = false;
-            // 先清空searchValue使展示正常
             this.timerClear();
-            this.triggerRef.current?.setFadeIn(true);
         }
     }
 
@@ -387,9 +383,6 @@ class Select extends Component<Props> {
             this.controllableState.setState({
                 open: false
             });
-        }else {
-            // 复选模式下去掉强制fadein
-            this.triggerRef.current?.setFadeIn(false);
         }
     }
 
@@ -416,7 +409,6 @@ class Select extends Component<Props> {
         // 监听尺寸变化，如果是打开状态并且尺寸发生了变化，则进行对齐，使用ResizeObserver节约性能开销
         useResizeObserver(this.containerRef, (entry) => {
             if (this.controllableState.state.open) {
-                this.triggerRef.current?.setFadeIn(false);
                 this.triggerRef.current?.align();
             }
         });
