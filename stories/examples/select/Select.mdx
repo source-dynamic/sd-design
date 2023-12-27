@@ -1,0 +1,164 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks';
+
+import * as SelectStories from './Select.stories';
+
+<Meta of={SelectStories}/>
+
+# Select选择器
+下拉选择器
+
+## 基本使用
+<Canvas of={SelectStories.Select}/>
+<Controls of={SelectStories.Select}/>
+
+## API
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>className</td>
+        <td>类名class</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>popupClassName</td>
+        <td>下拉菜单的类名class</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>options</td>
+        <td>选项内容</td>
+        <td>`{ label, value }[]`</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>multiple</td>
+        <td>多选模式</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>allowClear</td>
+        <td>展示清除按钮</td>
+        <td>boolean</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>autoClearSearchValue</td>
+        <td>是否在选中项后清空搜索框，只在多选模式时有效</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>autoFocus</td>
+        <td>默认获取焦点</td>
+        <td>boolean</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>bordered</td>
+        <td>是否有边框</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>defaultOpen</td>
+        <td>是否默认展开下拉菜单</td>
+        <td>boolean</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>defaultValue</td>
+        <td>默认选中值</td>
+        <td>string | string[] | number | number[]</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>value</td>
+        <td>指定当前选中的条目，多选时为一个数组。（value 数组引用未变化时，Select 不会更新）</td>
+        <td>string | string[] | number | number[]</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>disabled</td>
+        <td>是否禁用状态</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>popupMatchSelectWidth</td>
+        <td>下拉菜单和选择器同宽。</td>
+        <td>boolean</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>getPopupContainer</td>
+        <td>菜单渲染父节点。默认渲染到 body 上</td>
+        <td>(triggerNode?: HTMLElement) => string;</td>
+        <td>() => 'body'</td>
+    </tr>
+    <tr>
+        <td>loading</td>
+        <td>加载中状态</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>maxTagCount</td>
+        <td>多选模式下最多显示多少个tag，响应式模式会对性能产生损耗</td>
+        <td>number | 'responsive'</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>showSearch</td>
+        <td>配置是否可搜索</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>placement</td>
+        <td>选择框弹出的位置</td>
+        <td>'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'</td>
+        <td>bottomLeft</td>
+    </tr>
+    <tr>
+        <td>size</td>
+        <td>控件大小</td>
+        <td>`large` | `middle` | `small`</td>
+        <td>`middle`</td>
+    </tr>
+    </tbody>
+</table>
+
+### Methods
+> 以上所有组件都支持
+<table className="api-table">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>说明</th>
+        <th>参数</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>blur</td>
+        <td>取消焦点</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>focus</td>
+        <td>获取焦点</td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>

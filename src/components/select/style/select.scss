@@ -2,9 +2,11 @@
 
 $select-class: #{$ui-prefix}-select;
 $select-icon-class: #{$select-class}-icon;
+$select-icon-clear-class: #{$select-class}-icon-clear;
 $select-selector-class: #{$select-class}-selector;
 $select-dropdown-class: #{$select-class}-dropdown;
 $select-search-span-class: #{$select-class}-search-span;
+$select-display-span-class: #{$select-class}-display-span;
 
 @mixin paddingTB0 {
   padding-top: 0;
@@ -32,6 +34,10 @@ $select-search-span-class: #{$select-class}-search-span;
     cursor: pointer;
   }
 
+  &:hover .#{$select-icon-clear-class} {
+    opacity: 1;
+  }
+
   &-searchable {
     &:hover {
       cursor: text;
@@ -44,6 +50,10 @@ $select-search-span-class: #{$select-class}-search-span;
 
   &-disabled {
     @include disabled;
+
+    &:hover {
+      cursor: not-allowed;
+    }
   }
 
   &-focus {
@@ -63,6 +73,16 @@ $select-search-span-class: #{$select-class}-search-span;
     &-temp {
       position: absolute;
       opacity: 0;
+    }
+
+    .#{$select-display-span-class} {
+      display: flex;
+      height: 100%;
+      padding: 4px 0;
+      align-items: center;
+      justify-content: start;
+      max-width: 100%;
+      flex-wrap: wrap;
     }
 
     .#{$select-search-span-class} {
@@ -96,6 +116,25 @@ $select-search-span-class: #{$select-class}-search-span;
     display: flex;
     align-items: center;
     color: $gray-icon;
+    position: relative;
+  }
+
+  .#{$select-icon-clear-class} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    background-color: $white;
+    opacity: 0;
+    transition: color 0.2s ease, opacity 0.3s ease;
+
+    &:hover {
+      cursor: pointer;
+      color: $font-color-tertiary;
+    }
   }
 }
 

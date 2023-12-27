@@ -7,7 +7,7 @@ import SelectComp from './Select';
 const meta: Meta = {
     title: '数据录入/Select 选择器',
     parameters: {
-        layout: 'auto'
+        layout: 'centered'
     }
 };
 
@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Select: Story = {
     args: {
+        allowClear: false,
         disabled: false,
         size: 'middle',
         bordered: true,
@@ -25,6 +26,9 @@ export const Select: Story = {
         placement: 'bottomLeft'
     },
     argTypes: {
+        allowClear: {
+            description: '是否展示清除按钮'
+        },
         disabled: {
             description: '是否禁用'
         },

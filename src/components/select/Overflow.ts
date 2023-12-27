@@ -16,7 +16,8 @@ type Props = {
     className: string;
     values: (string | number)[];
     maxTagCount?: number | 'responsive';
-    formatter: (value: string | number) => string;
+    formatter?: (value: string | number) => string;
+    handleDelete?: (value: string | number) => void;
 } & BaseProps;
 
 const overflowClass = getPrefixCls('overflow');
@@ -34,6 +35,7 @@ class Overflow extends Component<Props> {
         values: { type: Array, optional: true },
         maxTagCount: { type: [Number, String], optional: true },
         formatter: { type: Function, optional: true },
+        handleDelete: { type: Function, optional: true },
         ...baseProps
     };
 
@@ -41,12 +43,12 @@ class Overflow extends Component<Props> {
         formatter: (value: string | number) => value
     };
 
-    static tagTemplate = (inner: string, icon: string) => `
+    static tagTemplate = (inner: string, icon?: string) => `
 <span class="${displayTagClass}-container">
     <span class="${displayTagClass}-label">
         ${inner}
     </span>
-    ${icon}
+    ${icon || ''}
 </span>
 `;
 
@@ -56,7 +58,7 @@ class Overflow extends Component<Props> {
         ${Overflow.tagTemplate(
         `<t t-esc="props.formatter(${dataName})"/>`,
         `<span class="${displayTagClass}-icon" 
-                ${hasEvent ? `t-on-click.stop="(event) => this.handleDeleteChoice(${dataName})"` :
+                ${hasEvent ? `t-on-click.stop="(event) => this.handleDelete(${dataName})"` :
             ''}>${closeSVG}</span>`
     )}
     </span>
@@ -72,10 +74,7 @@ class Overflow extends Component<Props> {
         </t> 
         <t t-if="state.rest" >
             <span t-att-class="classes.rest">
-                ${Overflow.tagTemplate(
-        `<t t-esc="'+' + state.rest + '...'"/>`,
-        `<span class="${displayTagClass}-icon">${closeSVG}</span>`
-    )}
+                ${Overflow.tagTemplate(`<t t-esc="'+' + state.rest + '...'"/>`)}
             </span>
         </t>
         <span t-att-class="classes.suffix" t-ref="suffix">
@@ -91,10 +90,7 @@ class Overflow extends Component<Props> {
             <span t-ref="overFlowTemp" t-att-class="classes.temp">
                 <t t-foreach="props.values" t-as="value" t-key="value_index">
                     <span t-att-class="classes.rest">
-                        ${Overflow.tagTemplate(
-            `<t t-esc="'+' + (value_index + 1) + '...'"/>`,
-            `<span class="${displayTagClass}-icon">${closeSVG}</span>`
-        )}
+                        ${Overflow.tagTemplate(`<t t-esc="'+' + (value_index + 1) + '...'"/>`)}
                     </span>
                 </t> 
             </span>
@@ -136,8 +132,8 @@ class Overflow extends Component<Props> {
         return targetWidth + overFlowSpamWidth + searchWidth >= this.containerSize.width!;
     }
 
-    protected handleDeleteChoice(value) {
-        console.log(value);
+    protected handleDelete(value: string | number) {
+        this.props.handleDelete?.(value);
     }
 
     public setup(): void {

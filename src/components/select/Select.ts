@@ -18,6 +18,7 @@ import { SizeType } from '@/components/_util/type';
 import { useCancellableTimer } from '@/hooks/useCancellableTimer';
 import { useResizeObserver } from '@/hooks/useSizeObserver';
 import Overflow from '@/components/select/Overflow';
+import _closeSVG from '@/assets/close_fill.svg';
 
 const downSVG = getSDSVG(_downSVG, {
     width: '1em',
@@ -44,9 +45,17 @@ const checkSVG = getSDSVG(_checkSVG, {
     height: '1em'
 });
 
+const closeSVG = getSDSVG(_closeSVG, {
+    width: '1em',
+    height: '1em'
+});
+
 type Value<T> = T | T[];
 
 type Props = {
+    className?: string;
+    allowClear?: boolean;
+    autoClearSearchValue?: boolean;
     getPopupContainer?: (triggerNode?: HTMLElement) => string; // 返回一个选择器字符串
     placement?: Placement;
     listHeight?: number;
@@ -96,6 +105,9 @@ class Select extends Component<Props> {
     static components = { List, Trigger, Overflow };
 
     static props = {
+        className: { type: String, optional: true },
+        allowClear: { type: Boolean, optional: true },
+        autoClearSearchValue: { type: Boolean, optional: true },
         getPopupContainer: { type: Function, optional: true },
         placement: { type: String, optional: true },
         listHeight: { type: Number, optional: true },
@@ -119,11 +131,11 @@ class Select extends Component<Props> {
     };
 
     static defaultProps = {
+        autoClearSearchValue: true,
         listHeight: 256,
         popupMatchSelectWidth: true,
-        multiple: true,
+        multiple: false,
         placement: 'bottomLeft',
-        defaultValue: Array.from({ length: 7 }, (_, index) => `value${index}`) // todo: 删除
     };
 
     state = useState<State>({
@@ -158,7 +170,7 @@ class Select extends Component<Props> {
         <div class="${selectSelectorClass}-temp" t-ref="searchTemp"><t t-esc="state.searchValue"/></div>
         <t t-set="searchClass" t-value="getSearchClass()"/>
         <t t-if="props.multiple">
-            <Overflow className="searchClass.display" values="controllableState.state.value" maxTagCount="props.maxTagCount" formatter.bind="display">
+            <Overflow values="controllableState.state.value" maxTagCount="props.maxTagCount" formatter.bind="display" handleDelete.bind="handleDeleteChoice">
                 <t t-set-slot="suffix">
                     <t t-if="props.showSearch">
                         <span t-att-class="searchClass.search">
@@ -204,6 +216,10 @@ class Select extends Component<Props> {
         <t t-if="props.loading"><span class="${selectRotateIconClass}">${loadingSVG}</span></t>
         <t t-elif="state.searchValue">${searchSVG}</t>
         <t t-else="">${downSVG}</t>
+        
+        <span t-if="!props.disabled &amp;&amp; props.allowClear" class="${selectIconClass}-clear" t-on-click="handleClear">
+            ${closeSVG}
+        </span>
     </span>
  </span>   
     `;
@@ -227,14 +243,16 @@ class Select extends Component<Props> {
     }
 
     protected onClickContainer(event: MouseEvent) {
-        // 打开时如果有searchRef，则进行聚焦，仅multiple有用
-        this.searchRef.el?.focus();
-        // 如果已经open并且允许search，则不进行关闭
-        if (this.controllableState.state.open && this.props.showSearch) {
-            return;
+        if (!this.props.disabled) {
+            // 打开时如果有searchRef，则进行聚焦，仅multiple有用
+            this.searchRef.el?.focus();
+            // 如果已经open并且允许search，则不进行关闭
+            if (this.controllableState.state.open && this.props.showSearch) {
+                return;
+            }
+            this.toggleOpen();
+            this.state.focus = true;
         }
-        this.toggleOpen();
-        this.state.focus = true;
     }
 
     /**
@@ -260,9 +278,9 @@ class Select extends Component<Props> {
      * @protected
      */
     protected getClass() {
-        const { size, disabled, bordered } = this.props;
+        const { size, className, disabled, bordered } = this.props;
 
-        return classNames(selectClass, {
+        return classNames(className, selectClass, {
             [`${selectClass}-borderless`]: !bordered,
             [`${selectClass}-focus`]: this.state.focus,
             [`${selectClass}-multiple`]: !!this.props.multiple,
@@ -304,7 +322,8 @@ class Select extends Component<Props> {
         }
 
         return classNames(selectDropdownItemWrapperClass, {
-            [`${selectDropdownItemClass}-selected`]: (this.controllableState.state.value as (string | number)[]).indexOf(item.value) !== -1
+            [`${selectDropdownItemClass}-selected`]: (this.controllableState.state.value as (string | number)[]).indexOf(
+                item.value) !== -1
         });
     }
 
@@ -329,8 +348,9 @@ class Select extends Component<Props> {
         return stylesToString(style);
     }
 
-    protected showSelectedSuffix(item: Option){
-        return this.props.multiple && (this.controllableState.state.value as (string | number)[]).indexOf(item.value) !== -1
+    protected showSelectedSuffix(item: Option) {
+        return this.props.multiple && (this.controllableState.state.value as (string | number)[]).indexOf(
+            item.value) !== -1;
     }
 
     /**
@@ -348,6 +368,14 @@ class Select extends Component<Props> {
             this.state.focus = false;
             this.timerClear();
         }
+    }
+
+    protected handleClear(event: MouseEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.controllableState.setState({
+            value: this.props.multiple ? [] : undefined
+        });
     }
 
     protected handleChoice(data: Option) {
@@ -372,6 +400,8 @@ class Select extends Component<Props> {
             this.controllableState.setState({
                 open: false
             });
+        } else if (this.props.autoClearSearchValue) {
+            this.clear();
         }
     }
 
