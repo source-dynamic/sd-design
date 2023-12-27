@@ -4,7 +4,6 @@ import { getPrefixCls, getSDSVG, stylesToString } from '@/components/_util/utils
 import _downSVG from '@/assets/down.svg';
 import _searchSVG from '@/assets/search.svg';
 import _emptySVG from '@/assets/empty.svg';
-import _closeSVG from '@/assets/close.svg';
 import _loadingSVG from '@/assets/loading-line.svg';
 import _checkSVG from '@/assets/check.svg';
 import classNames from 'classnames';
@@ -18,6 +17,7 @@ import { useColsSearch } from '@/hooks/useColsSearch';
 import { SizeType } from '@/components/_util/type';
 import { useCancellableTimer } from '@/hooks/useCancellableTimer';
 import { useResizeObserver } from '@/hooks/useSizeObserver';
+import Overflow from '@/components/select/Overflow';
 
 const downSVG = getSDSVG(_downSVG, {
     width: '1em',
@@ -35,11 +35,6 @@ const emptySVG = getSDSVG(_emptySVG, {
 });
 
 const loadingSVG = getSDSVG(_loadingSVG, {
-    width: '1em',
-    height: '1em'
-});
-
-const closeSVG = getSDSVG(_closeSVG, {
     width: '1em',
     height: '1em'
 });
@@ -84,7 +79,6 @@ const selectDropdownItemWrapperClass = getPrefixCls('select-dropdown-item-wrappe
 const selectDropdownItemClass = getPrefixCls('select-dropdown-item');
 const searchSpanClass = getPrefixCls('select-search-span');
 const displaySpanClass = getPrefixCls('select-display-span');
-const displayTagClass = getPrefixCls('select-display-span-tag');
 
 export type Option = {
     label: string;
@@ -99,7 +93,7 @@ type State = {
 };
 
 class Select extends Component<Props> {
-    static components = { List, Trigger };
+    static components = { List, Trigger, Overflow };
 
     static props = {
         getPopupContainer: { type: Function, optional: true },
@@ -128,9 +122,9 @@ class Select extends Component<Props> {
         listHeight: 256,
         popupMatchSelectWidth: true,
         multiple: true,
+        maxTagCount: 'responsive',
         placement: 'bottomLeft',
-        maxTagCount: 3,
-        defaultValue: Array.from({ length: 19 }, (_, index) => `value${index}`) // todo: 删除
+        defaultValue: Array.from({ length: 7 }, (_, index) => `value${index}`) // todo: 删除
     };
 
     state = useState<State>({
@@ -165,21 +159,17 @@ class Select extends Component<Props> {
         <div class="${selectSelectorClass}-temp" t-ref="searchTemp"><t t-esc="state.searchValue"/></div>
         <t t-set="searchClass" t-value="getSearchClass()"/>
         <t t-if="props.multiple">
-            <span t-att-class="searchClass.display">
-                <t t-foreach="controllableState.state.value" t-as="value" t-key="value">
-                    <span class="${displayTagClass}">
-                        <t t-esc="display(value)"/>
-                        <span t-on-click.stop="(event) => this.handleDeleteChoice(value)">${closeSVG}</span>
-                    </span>
-                </t>
-                <t t-if="props.showSearch">
-                    <span t-att-class="searchClass.search">
-                        <span t-ref="searchSpan">
-                            <input t-ref="search" t-on-input="onInput" t-att-value="state.searchValue" type="text"/>
+            <Overflow className="searchClass.display" values="controllableState.state.value" maxTagCount="props.maxTagCount" formatter.bind="display">
+                <t t-set-slot="suffix">
+                    <t t-if="props.showSearch">
+                        <span t-att-class="searchClass.search">
+                            <span t-ref="searchSpan">
+                                <input t-ref="search" t-on-input="onInput" t-att-value="state.searchValue" type="text"/>
+                            </span>
                         </span>
-                    </span>
+                    </t>
                 </t>
-            </span>
+            </Overflow>
         </t>
         <t t-else="">
             <t t-if="props.showSearch">
@@ -371,7 +361,7 @@ class Select extends Component<Props> {
             } else {
                 stateValue.splice(index, 1);
             }
-            newValue = stateValue;
+            newValue = [...stateValue];
         }
 
         this.controllableState.setState({

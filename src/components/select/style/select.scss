@@ -5,7 +5,6 @@ $select-icon-class: #{$select-class}-icon;
 $select-selector-class: #{$select-class}-selector;
 $select-dropdown-class: #{$select-class}-dropdown;
 $select-search-span-class: #{$select-class}-search-span;
-$select-display-span-class: #{$select-class}-display-span;
 
 @mixin paddingTB0 {
   padding-top: 0;
@@ -13,7 +12,6 @@ $select-display-span-class: #{$select-class}-display-span;
 }
 
 .#{$select-class} {
-  $tagGap: 4px;
   @include input();
   @include hover;
   @include responsive;
@@ -41,7 +39,7 @@ $select-display-span-class: #{$select-class}-display-span;
   }
 
   &-multiple {
-    padding-left: $tagGap;
+    padding-left: 4px;
   }
 
   &-disabled {
@@ -67,43 +65,6 @@ $select-display-span-class: #{$select-class}-display-span;
       opacity: 0;
     }
 
-    .#{$select-display-span-class} {
-      display: flex;
-      height: 100%;
-      padding: $tagGap 0;
-      align-items: center;
-      justify-content: start;
-      max-width: 100%;
-      flex-wrap: wrap;
-      gap: $tagGap;
-      color: $font-color;
-
-      &-tag {
-        flex: none;
-        padding: 0 8px 0 4px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: $tag-color;
-        gap: $tagGap / 2;
-        border-radius: $small-border-radius;
-
-        &:hover {
-          cursor: default;
-        }
-
-        .#{$sd-icon} {
-          font-size: 10px;
-          color: $gray-icon;
-
-          &:hover {
-            cursor: pointer;
-            color: $font-color;
-          }
-        }
-      }
-    }
-
     .#{$select-search-span-class} {
       position: absolute;
       top: 0;
@@ -117,10 +78,6 @@ $select-display-span-class: #{$select-class}-display-span;
         position: relative;
         flex: 1;
         max-width: 100%;
-      }
-
-      span {
-        //display: contents;
       }
 
       input {
@@ -189,6 +146,7 @@ $select-display-span-class: #{$select-class}-display-span;
     align-items: center;
 
     &-icon {
+      line-height: 0;
       color: $primary-color-6;
     }
   }

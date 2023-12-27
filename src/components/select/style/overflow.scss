@@ -1,0 +1,80 @@
+@import "src/theme/style/style";
+
+$tag-class: #{$ui-prefix}-overflow-display-span-tag;
+
+.#{$ui-prefix}-overflow {
+  position: relative;
+  display: flex;
+  height: 100%;
+  padding: 4px 0;
+  align-items: center;
+  justify-content: start;
+  max-width: 100%;
+  flex-wrap: wrap;
+  color: $font-color;
+
+  &-responsive {
+    overflow: hidden;
+    flex-wrap: nowrap;
+  }
+
+  &-temp {
+    bottom: 100%;
+    position: absolute;
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    height: fit-content;
+    opacity: 0;
+  }
+
+  &-rest {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  &-suffix {
+    max-width: 100%;
+  }
+
+  .#{$tag-class} {
+    max-width: 100%;
+    flex: none;
+
+    &-container {
+      margin-right: 3px;
+      padding: 0 8px 0 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: $small-border-radius;
+      background-color: $tag-color;
+      gap: 2px;
+    }
+
+    &-label {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &-icon {
+      font-size: 10px;
+      flex-shrink: 0;
+      color: $gray-icon;
+
+      &:hover {
+        cursor: pointer;
+        color: $font-color;
+      }
+    }
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
