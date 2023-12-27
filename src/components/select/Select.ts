@@ -70,6 +70,8 @@ type Props = {
     popupClassName?: string;
     popupMatchSelectWidth?: boolean;
     showSearch?: boolean;
+    filterOption?: (searchValue: string, option: Option) => boolean;
+    filterSort?: (optionA: Option, optionB: Option) => number;
     onSearch?: (value: string) => boolean;
     options: Option[];
     loading?: boolean;
@@ -122,6 +124,8 @@ class Select extends Component<Props> {
         popupClassName: { type: String, optional: true },
         popupMatchSelectWidth: { type: Boolean, optional: true },
         showSearch: { type: Boolean, optional: true },
+        filterOption: { type: Function, optional: true },
+        filterSort: { type: Function, optional: true },
         onSearch: { type: Function, optional: true },
         options: { type: Array },
         loading: { type: Boolean, optional: true },
@@ -150,7 +154,7 @@ class Select extends Component<Props> {
         open: false
     });
 
-    colsState = useColsSearch(this.props.options);
+    colsState = useColsSearch(this.props.options, this.props.filterOption, this.props.filterSort);
 
     cancelableTimer = useCancellableTimer();
 

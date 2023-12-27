@@ -125,6 +125,18 @@ import * as SelectStories from './Select.stories';
         <td>false</td>
     </tr>
     <tr>
+        <td>filterOption</td>
+        <td>根据输入项进行筛选，当 option项 符合筛选条件时，应返回 true，反之则返回 false</td>
+        <td>(inputValue, option) => boolean</td>
+        <td>option.label.indexOf(inputValue) !== -1</td>
+    </tr>
+    <tr>
+        <td>filterSort</td>
+        <td>搜索时对筛选结果项的排序函数, 类似Array.sort里的 compareFunction</td>
+        <td>(optionA: Option, optionB: Option) => number</td>
+        <td>-</td>
+    </tr>
+    <tr>
         <td>placement</td>
         <td>选择框弹出的位置</td>
         <td>'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'</td>

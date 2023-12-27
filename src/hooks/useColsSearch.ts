@@ -14,19 +14,27 @@ export type State = {
 };
 
 /**
- * 根据搜索值过滤列，匹配label，模糊匹配
- * @param columns
- * @param searchValue
- */
-const filterColumns = (columns: Column[], searchValue: string): Column[] => {
-    return columns.filter((c) => c.label.indexOf(searchValue) !== -1);
-};
-
-/**
  * 带搜索的指定列表项使用的state，根据搜索项过滤返回过滤后的列表项，提供全选和反选功能
  * @param columns 初始列表项
+ * @param filter  筛选函数
+ * @param filterSort 排序对比函数
  */
-export const useColsSearch = (columns?: Column[]) => {
+export const useColsSearch = (columns?: Column[], filter?: (sValue: string, col: Column) => boolean, filterSort?: (colA: Column, colB: Column) => number, ) => {
+    /**
+     * 根据搜索值过滤列，匹配label，模糊匹配
+     * @param columns
+     * @param searchValue
+     */
+    const filterColumns = (columns: Column[], searchValue: string): Column[] => {
+        return columns.filter((c) => {
+            if (filter) {
+                return filter(searchValue, c)
+            }
+
+            return c.label.indexOf(searchValue) !== -1
+        });
+    };
+
     const state = useState<State>({
         columns: columns ?? [],
         displayCols: [],
@@ -55,7 +63,11 @@ export const useColsSearch = (columns?: Column[]) => {
     };
 
     useEffect(() => {
-        state.displayCols = filterColumns(state.columns, state.searchValue);
+        let filterCols = filterColumns(state.columns, state.searchValue);
+        if (filterSort) {
+            filterCols = filterCols.sort(filterSort)
+        }
+        state.displayCols = filterCols;
     }, () => [state.columns, state.searchValue]);
 
     // 根据选中值和待选项判断是否全选
