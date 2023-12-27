@@ -5,6 +5,7 @@ import { getPrefixCls, getSDSVG } from '@/components/_util/utils';
 import './style/overflow.scss';
 import { useSize } from '@/hooks/useSize';
 import _closeSVG from '@/assets/close.svg';
+import { isNumber } from '@/components/_util';
 
 const closeSVG = getSDSVG(_closeSVG, {
     width: '1em',
@@ -37,7 +38,7 @@ class Overflow extends Component<Props> {
     };
 
     static defaultProps = {
-        formatter: (value: string | number) => value,
+        formatter: (value: string | number) => value
     };
 
     static tagTemplate = (inner: string, icon: string) => `
@@ -47,15 +48,16 @@ class Overflow extends Component<Props> {
     </span>
     ${icon}
 </span>
-`
+`;
 
     static displayTemplate = (dataName: string, hasEvent: boolean) => `
 <t t-slot="tag" data="${dataName}">
     <span class="${displayTagClass}">
         ${Overflow.tagTemplate(
-            `<t t-esc="props.formatter(${dataName})"/>`, 
+        `<t t-esc="props.formatter(${dataName})"/>`,
         `<span class="${displayTagClass}-icon" 
-                ${hasEvent ? `t-on-click.stop="(event) => this.handleDeleteChoice(${dataName})"` : ''}>${closeSVG}</span>`
+                ${hasEvent ? `t-on-click.stop="(event) => this.handleDeleteChoice(${dataName})"` :
+            ''}>${closeSVG}</span>`
     )}
     </span>
 </t>
@@ -71,30 +73,32 @@ class Overflow extends Component<Props> {
         <t t-if="state.rest" >
             <span t-att-class="classes.rest">
                 ${Overflow.tagTemplate(
-                    `<t t-esc="'+' + state.rest + '...'"/>`,
-                    `<span class="${displayTagClass}-icon">${closeSVG}</span>`
-                )}
+        `<t t-esc="'+' + state.rest + '...'"/>`,
+        `<span class="${displayTagClass}-icon">${closeSVG}</span>`
+    )}
             </span>
         </t>
         <span t-att-class="classes.suffix" t-ref="suffix">
             <t t-slot="suffix"/>
         </span>
         
-        <span t-ref="temp" t-att-class="classes.temp">
-            <t t-foreach="props.values" t-as="value" t-key="value">
-                ${Overflow.displayTemplate('value', false)}
-            </t> 
-        </span>
-        <span t-ref="overFlowTemp" t-att-class="classes.temp">
-            <t t-foreach="props.values" t-as="value" t-key="value_index">
-                <span t-att-class="classes.rest">
-                    ${Overflow.tagTemplate(
-                        `<t t-esc="'+' + (value_index + 1) + '...'"/>`,
-                        `<span class="${displayTagClass}-icon">${closeSVG}</span>`
-                    )}
-                </span>
-            </t> 
-        </span>
+        <t t-if="props.maxTagCount !== undefined">
+            <span t-ref="temp" t-att-class="classes.temp">
+                <t t-foreach="props.values" t-as="value" t-key="value">
+                    ${Overflow.displayTemplate('value', false)}
+                </t> 
+            </span>
+            <span t-ref="overFlowTemp" t-att-class="classes.temp">
+                <t t-foreach="props.values" t-as="value" t-key="value_index">
+                    <span t-att-class="classes.rest">
+                        ${Overflow.tagTemplate(
+            `<t t-esc="'+' + (value_index + 1) + '...'"/>`,
+            `<span class="${displayTagClass}-icon">${closeSVG}</span>`
+        )}
+                    </span>
+                </t> 
+            </span>
+        </t>
     </span>
 </t>
 `;
@@ -144,7 +148,12 @@ class Overflow extends Component<Props> {
         }, () => [this.state.displayMaxIndex, this.props.values]);
 
         useEffect(() => {
-            if (this.tempRef.el && this.containerSize.width) {
+            const { maxTagCount } = this.props;
+            if (isNumber(maxTagCount)) {
+                this.state.displayMaxIndex = maxTagCount;
+            } else if (maxTagCount === undefined) {
+                this.state.displayMaxIndex = Math.max(0, this.props.values.length);
+            } else if (this.tempRef.el && this.containerSize.width) {
                 // 获取所有子元素
                 const children = this.tempRef.el.children;
                 // 初始化总宽度
@@ -155,7 +164,7 @@ class Overflow extends Component<Props> {
                     totalWidth += childWidth;
                     let searchWidth = this.suffixSize.width || 0;
                     // 如果超出或等于maxTagCount，跳出循环
-                    if (i === this.props.maxTagCount || this.isOverflow(i, totalWidth, searchWidth)) {
+                    if (this.isOverflow(i, totalWidth, searchWidth)) {
                         this.state.displayMaxIndex = i;
                         break;
                     }

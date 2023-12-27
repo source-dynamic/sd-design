@@ -6,7 +6,6 @@ $tag-class: #{$ui-prefix}-overflow-display-span-tag;
   position: relative;
   display: flex;
   height: 100%;
-  padding: 4px 0;
   align-items: center;
   justify-content: start;
   max-width: 100%;
@@ -45,7 +44,9 @@ $tag-class: #{$ui-prefix}-overflow-display-span-tag;
     flex: none;
 
     &-container {
-      margin-right: 3px;
+      margin-right: 4px;
+      margin-top: 2px;
+      margin-bottom: 2px;
       padding: 0 8px 0 4px;
       display: flex;
       justify-content: center;

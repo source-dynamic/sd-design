@@ -122,7 +122,6 @@ class Select extends Component<Props> {
         listHeight: 256,
         popupMatchSelectWidth: true,
         multiple: true,
-        maxTagCount: 'responsive',
         placement: 'bottomLeft',
         defaultValue: Array.from({ length: 7 }, (_, index) => `value${index}`) // todo: 删除
     };
