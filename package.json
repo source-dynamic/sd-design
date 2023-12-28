@@ -1,6 +1,6 @@
 {
   "name": "sd-design",
-  "version": "beta-1.0.0",
+  "version": "beta-1.1.0",
   "description": "A UI library with @odoo/owl and typescript",
   "main": "./es/index.js",
   "module": "./es/index.js",
@@ -31,7 +31,8 @@
     "@ant-design/colors": "^7.0.0",
     "@odoo/owl": "^2.2.6",
     "bignumber.js": "^9.1.2",
-    "classnames": "^2.3.2"
+    "classnames": "^2.3.2",
+    "dom-align": "^1.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",

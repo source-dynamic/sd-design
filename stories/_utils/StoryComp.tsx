@@ -5,6 +5,7 @@ type ComponentType = any;
 
 export type Props = Record<string, any> & { owl: ComponentType };
 
+// todo i18n国际化
 /**
  * 提供给storybook渲染的react组件，使owl组件能够在storybook中渲染，同时能保留owl组件的状态，避免每次都是渲染新组件，无法测试到组件状态的变化
  * @param props

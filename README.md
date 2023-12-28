@@ -49,11 +49,6 @@ yarn install
 yarn run storybook
 ```
 
-## 说明文档
-
-- 文档采用storybook编写，可在本地运行查看。
-- 线上storybook：待补充
-
 ## 贡献
 
 欢迎对 sd-design 提出宝贵意见或贡献代码。请遵循以下步骤进行贡献：

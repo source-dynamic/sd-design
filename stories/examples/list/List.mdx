@@ -29,6 +29,18 @@ import * as ListStories from './List.stories';
     </thead>
     <tbody>
     <tr>
+        <td>className</td>
+        <td>类名class</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>itemClassName</td>
+        <td>渲染项的类名class</td>
+        <td>(item, index) => string</td>
+        <td>-</td>
+    </tr>
+    <tr>
         <td>header</td>
         <td>列表头部（开启虚拟滚动时会固定在首行，中间滑动）</td>
         <td>slot</td>
@@ -90,9 +102,15 @@ import * as ListStories from './List.stories';
     </tr>
     <tr>
         <td>onScroll</td>
-        <td>是否显示增减按钮</td>
-        <td>(event: MouseEvent, position: 'start' | 'end' | 'mid') => void</td>
         <td>virtual为true时设置，滚动时触发</td>
+        <td>(event: MouseEvent, position: 'start' | 'end' | 'mid') => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onRendered</td>
+        <td>virtual为true时设置，渲染完成时触发，滚动造成的渲染不会触发此函数</td>
+        <td>() => void</td>
+        <td>-</td>
     </tr>
     </tbody>
 </table>

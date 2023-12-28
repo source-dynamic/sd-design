@@ -39,7 +39,7 @@ export default class Password extends Input<PasswordProps> {
     }
 
     static template = xml`
- <ClearableLabeledWrapper inputType="'input'" bordered="props.bordered" size="props.size"
+ <ClearableLabeledWrapper className="props.className" inputType="'input'" bordered="props.bordered" size="props.size"
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="state.value"
     handleReset.alike="(e) => this.handleReset(e)" slots="props.slots">
     <t t-set-slot="suffix">

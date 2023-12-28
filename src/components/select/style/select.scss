@@ -1,0 +1,235 @@
+@import "src/components/input/style/input";
+@import "overflow";
+
+$select-class: #{$ui-prefix}-select;
+$select-icon-class: #{$select-class}-icon;
+$select-icon-clear-class: #{$select-class}-icon-clear;
+$select-selector-class: #{$select-class}-selector;
+$select-dropdown-class: #{$select-class}-dropdown;
+$select-search-span-class: #{$select-class}-search-span;
+$select-display-span-class: #{$select-class}-display-span;
+
+@mixin paddingTB0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.#{$select-class} {
+  @include input();
+  @include hover;
+  @include responsive;
+  @include paddingTB0;
+  transition: none;
+  display: inline-flex;
+
+  &-sm {
+    @include paddingTB0;
+  }
+
+  &-lg {
+    @include paddingTB0;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:hover .#{$select-icon-clear-class} {
+    opacity: 1;
+  }
+
+  &-searchable {
+    &:hover {
+      cursor: text;
+    }
+  }
+
+  &-multiple {
+    padding-left: 4px;
+
+    .#{$select-selector-class}-placeholder {
+      padding: 7px;
+    }
+
+    .#{$select-search-span-class} {
+      margin-inline-start: 7px;
+    }
+
+    .#{$tag-class}+.#{$overflow-class}-suffix .#{$select-search-span-class} {
+      margin-inline-start: 0;
+    }
+  }
+
+  &-disabled {
+    @include disabled;
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+
+  &-focus {
+    @include primary-color-border();
+  }
+
+  &-borderless {
+    @include borderless;
+  }
+
+  .#{$select-selector-class} {
+    position: relative;
+    width: 100%;
+    transition: all 0.2s;
+    overflow: hidden;
+
+    &-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: $font-color-quaternary;
+      transition: none;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+
+    &-temp {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .#{$select-display-span-class} {
+      display: flex;
+      height: 100%;
+      padding: 4px 0;
+      align-items: center;
+      justify-content: start;
+      max-width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .#{$select-search-span-class} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+
+      &-multiple {
+        position: relative;
+        flex: 1;
+        max-width: 100%;
+      }
+
+      input {
+        border: none;
+        outline: none;
+        background-color: transparent;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+
+  .#{$select-icon-class} {
+    flex: none;
+    display: flex;
+    align-items: center;
+    color: $gray-icon;
+    position: relative;
+  }
+
+  .#{$select-icon-clear-class} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    background-color: $white;
+    opacity: 0;
+    transition: color 0.2s ease, opacity 0.3s ease;
+
+    &:hover {
+      cursor: pointer;
+      color: $font-color-tertiary;
+    }
+  }
+}
+
+.#{$select-class}-rotate-icon {
+  line-height: 0;
+  animation: loadingCircle 1s infinite linear;
+}
+
+@keyframes loadingCircle {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+// 搜索样式
+.#{$select-class}-v-hidden {
+  visibility: hidden;
+}
+
+// 展开时的样式
+.#{$select-class}-isOpen .#{$select-selector-class} {
+  color: $gray;
+}
+
+// 下拉菜单样式
+.#{$select-dropdown-class} {
+  border-radius: $base-border-radius;
+  background-color: $white;
+  box-shadow: $box-shadow;
+  overflow: auto;
+  padding: 4px;
+
+  &-empty {
+    color: $gray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $padding / 2;
+    padding: $padding 0;
+  }
+
+  &-item {
+    padding: 8px 16px; // 尺寸
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-icon {
+      line-height: 0;
+      color: $primary-color-6;
+    }
+  }
+
+  .#{$select-dropdown-class}-item-wrapper {
+    padding: 0;
+    border-radius: $base-border-radius;
+    border-block-end: none;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba($black, 0.04);
+    }
+
+    &.#{$select-dropdown-class}-item-selected {
+      background-color: $primary-color-1;
+    }
+  }
+}
