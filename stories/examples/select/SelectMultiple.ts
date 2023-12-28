@@ -1,7 +1,7 @@
 import { Component, useState, xml } from '@odoo/owl';
 import { Select } from '../../../src';
 
-export default class SelectRoot extends Component {
+export default class SelectMultipleRoot extends Component {
     static components = { Select };
 
     state = useState({
@@ -23,7 +23,7 @@ export default class SelectRoot extends Component {
 
     static template = xml`
 <div class="select-container">
-    <Select placement="state.placement" allowClear="state.allowClear" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" 
+    <Select multiple="true" placement="state.placement" allowClear="state.allowClear" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" 
     bordered="state.bordered" options="customState.options"/>
 </div>
     `

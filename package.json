@@ -1,6 +1,6 @@
 {
   "name": "sd-design",
-  "version": "beta-1.1.0",
+  "version": "beta-1.1.1",
   "description": "A UI library with @odoo/owl and typescript",
   "main": "./es/index.js",
   "module": "./es/index.js",
