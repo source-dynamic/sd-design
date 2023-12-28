@@ -411,10 +411,10 @@ class InputNumber extends Component<Props, State> {
     }
 
     setup(): void {
-        useImperativeHandle({
+        useImperativeHandle(() => ({
             focus: this.focus.bind(this),
             blur: this.blur.bind(this)
-        });
+        }), () => []);
 
         useEffect(() => {
             if (this.props.autoFocus) {

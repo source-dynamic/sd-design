@@ -1,15 +1,19 @@
 import { useComponent, useEffect } from '@odoo/owl';
 
-export const useEventListener = (target: any, eventName: string, handler: (event: any) => void,
+type TargetRef = {
+    el: any
+}
+
+export const useEventListener = (targetRef: TargetRef, eventName: string, handler: (event: any) => void,
     eventParams?: Record<string, any>
 ) => {
     const comp = useComponent();
 
     useEffect(() => {
-        if (target.el) {
+        if (targetRef.el) {
             const listener = (event: any) => handler.call(comp, event);
-            target.el?.addEventListener(eventName, listener, eventParams);
-            return () => target.el?.removeEventListener(eventName, listener, eventParams);
+            targetRef.el?.addEventListener(eventName, listener, eventParams);
+            return () => targetRef.el?.removeEventListener(eventName, listener, eventParams);
         }
-    }, () => [target.el]);
+    }, () => [targetRef.el]);
 };

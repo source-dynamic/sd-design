@@ -101,7 +101,7 @@ export const Password: Story = {
 
 const textareaOmit = ['prefix', 'suffix', 'addonBefore', 'addonAfter'];
 
-export const TextArea: Story = {
+export const Textarea: Story = {
     args: {
         ...omit(Input.args as Record<string, any>, textareaOmit),
         rows: 2,

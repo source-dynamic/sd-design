@@ -4,7 +4,6 @@ $list-cls: #{$ui-prefix}-list;
 $head-cls: #{$ui-prefix}-list-head;
 $container-cls: #{$ui-prefix}-list-container;
 $footer-cls: #{$ui-prefix}-list-footer;
-$items-cls: #{$ui-prefix}-list-items;
 $item-cls: #{$ui-prefix}-list-item;
 $vr-item-cls: #{$ui-prefix}-vr-list-item;
 
@@ -30,9 +29,10 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
   line-height: $base-font-size;
   list-style: none;
   position: relative;
+  overflow: auto;
 
   // 虚拟列表情况
-  &.#{$list-cls}-vt {
+  &-vt {
     display: flex;
     flex-direction: column;
     overflow: hidden !important;
@@ -52,19 +52,13 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
     }
   }
 
-  &.#{$list-cls}-borderless {
+  &-borderless {
     border: none;
     border-radius: unset;
   }
 
   .#{$head-cls} {
     @include item;
-  }
-
-  .#{$items-cls} {
-    margin: 0;
-    padding: 0;
-    list-style: none;
   }
 
   .#{$item-cls}, {
