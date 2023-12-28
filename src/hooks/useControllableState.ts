@@ -1,5 +1,12 @@
 import { onMounted, onWillUpdateProps, useState } from '@odoo/owl';
 
+const formatValue = (value?: any, format?: (value: any) => any) => {
+    if (value !== undefined) {
+        value = format ? format(value) : value;
+    }
+    return value;
+}
+
 /**
  * 管理受控组件的值，比如props中未传入某个值时，由组件内部管理一个state，传入了则交由外部管理
  * @param props 组件的props
@@ -15,8 +22,8 @@ const useControllableState = <S extends object>(
 
     const updateState = (props: Record<string, any>) => {
         for (const key in props) {
-            if (key in defaultState && props[key] !== undefined) {
-                (state as Record<string, any>)[key] = format ? format(props[key]) : props[key];
+            if (key in defaultState) {
+                (state as Record<string, any>)[key] = formatValue(props[key], format)
             }
         }
     };
@@ -29,8 +36,8 @@ const useControllableState = <S extends object>(
     const setState = (values: Partial<S>) => {
         for (const key in values) {
             // 如果props中未传入该值，说明是非受控组件，则交由组件内部管理
-            if (!(key in props) && values[key] !== undefined) {
-                (state as Record<string, any>)[key] = format ? format(values[key]) : values[key];
+            if (!(key in props)) {
+                (state as Record<string, any>)[key] = formatValue(values[key], format);
             }
         }
     };

@@ -154,6 +154,7 @@ class Select extends Component<Props> {
         virtual: false,
         popupMatchSelectWidth: true,
         multiple: false,
+        bordered: true,
         placement: 'bottomLeft'
     };
 
@@ -385,7 +386,9 @@ class Select extends Component<Props> {
      * @protected
      */
     protected getPopupClass() {
-        return classNames(selectDropdownClass, this.props.popupClassName);
+        return classNames(selectDropdownClass, this.props.popupClassName, {
+            [`${selectDropdownClass}-virtual`]: !!this.props.virtual
+        });
     }
 
     /**

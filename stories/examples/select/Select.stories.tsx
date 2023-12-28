@@ -2,7 +2,14 @@ import { Meta, StoryObj } from '@storybook/react';
 import { renderStoryComp } from '../../_utils/StoryComp';
 // @ts-ignore
 import SelectCompRaw from '!!raw-loader!./Select';
+// @ts-ignore
+import SelectMultipleCompRaw from '!!raw-loader!./SelectMultiple';
+// @ts-ignore
+import SelectVirtualCompRaw from '!!raw-loader!./SelectVirtual';
 import SelectComp from './Select';
+import SelectMultipleComp from './SelectMultiple';
+import SelectVirtualComp from './SelectVirtual';
+import './select.scss';
 
 const meta: Meta = {
     title: '数据录入/Select 选择器',
@@ -60,4 +67,28 @@ export const Select: Story = {
         }
     },
     render: renderStoryComp(SelectComp)
+};
+
+export const SelectMultiple: Story = {
+    args: Select.args,
+    argTypes: Select.argTypes,
+    parameters: {
+        docs: {
+            source: {
+                code: SelectMultipleCompRaw
+            }
+        }
+    },
+    render: renderStoryComp(SelectMultipleComp)
+};
+
+export const SelectVirtual: Story = {
+    parameters: {
+        docs: {
+            source: {
+                code: SelectVirtualCompRaw
+            }
+        }
+    },
+    render: renderStoryComp(SelectVirtualComp)
 };
