@@ -24,6 +24,7 @@ $select-display-span-class: #{$select-class}-display-span;
 
   &-sm {
     @include paddingTB0;
+    min-height: 28px;
   }
 
   &-lg {
@@ -195,6 +196,10 @@ $select-display-span-class: #{$select-class}-display-span;
   box-shadow: $box-shadow;
   overflow: auto;
   padding: 4px;
+
+  &-virtual {
+    overflow: hidden;
+  }
 
   &-empty {
     color: $gray;
