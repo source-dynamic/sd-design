@@ -1,8 +1,9 @@
 @import "src/theme/style/style";
 
-$tag-class: #{$ui-prefix}-overflow-display-span-tag;
+$overflow-class: #{$ui-prefix}-overflow;
+$tag-class: #{$overflow-class}-display-span-tag;
 
-.#{$ui-prefix}-overflow {
+.#{$overflow-class} {
   position: relative;
   display: flex;
   height: 100%;

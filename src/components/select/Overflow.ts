@@ -13,54 +13,57 @@ const closeSVG = getSDSVG(_closeSVG, {
 });
 
 type Props = {
-    className: string;
+    className?: string;
     values: (string | number)[];
+    options: Option[];
     maxTagCount?: number | 'responsive';
-    formatter?: (value: string | number) => string;
-    handleDelete?: (value: string | number) => void;
+    handleDelete?: (option: Option) => void;
 } & BaseProps;
 
 const overflowClass = getPrefixCls('overflow');
 const displayTagClass = `${overflowClass}-display-span-tag`;
 
+export type Option = {
+    value: string | number;
+    label: string
+}
+
 type State = {
     displayMaxIndex: number;
-    displayValues: (string | number)[];
+    displayOptions: Option[];  // 用于显示的option，不会包含overflow部分
     rest?: number;
 };
 
 class Overflow extends Component<Props> {
     static props = {
         className: { type: String, optional: true },
-        values: { type: Array, optional: true },
+        values: { type: Array },
+        options: { type: Array },
         maxTagCount: { type: [Number, String], optional: true },
-        formatter: { type: Function, optional: true },
         handleDelete: { type: Function, optional: true },
         ...baseProps
     };
 
-    static defaultProps = {
-        formatter: (value: string | number) => value
-    };
-
-    static tagTemplate = (inner: string, icon?: string) => `
-<span class="${displayTagClass}-container">
-    <span class="${displayTagClass}-label">
-        ${inner}
+    static tagTemplate = (inner: string) => `
+<span t-att-class="classes.rest">
+    <span class="${displayTagClass}-container">
+        <span class="${displayTagClass}-label">
+            ${inner}
+        </span>
     </span>
-    ${icon || ''}
 </span>
 `;
 
-    static displayTemplate = (dataName: string, hasEvent: boolean) => `
-<t t-slot="tag" data="${dataName}">
+    static displayTemplate = (hasEvent: boolean) => `
+<t t-slot="tag" data="option">
     <span class="${displayTagClass}">
-        ${Overflow.tagTemplate(
-        `<t t-esc="props.formatter(${dataName})"/>`,
-        `<span class="${displayTagClass}-icon" 
-                ${hasEvent ? `t-on-click.stop="(event) => this.handleDelete(${dataName})"` :
-            ''}>${closeSVG}</span>`
-    )}
+        <span class="${displayTagClass}-container">
+            <span class="${displayTagClass}-label">
+                <t t-esc="option.label"/>
+            </span>
+            <span class="${displayTagClass}-icon" ${hasEvent ?
+        't-on-click.stop="(event) => this.handleDelete(option)"' : ''} >${closeSVG}</span>
+        </span>
     </span>
 </t>
 `;
@@ -69,13 +72,11 @@ class Overflow extends Component<Props> {
 <t>
     <t t-set="classes" t-value="getClass()"/>
     <span t-ref="container" t-att-class="classes.container">
-        <t t-foreach="state.displayValues" t-as="value" t-key="value">
-            ${Overflow.displayTemplate('value', true)}
+        <t t-foreach="state.displayOptions" t-as="option" t-key="option.value">
+            ${Overflow.displayTemplate(true)}
         </t> 
         <t t-if="state.rest" >
-            <span t-att-class="classes.rest">
-                ${Overflow.tagTemplate(`<t t-esc="'+' + state.rest + '...'"/>`)}
-            </span>
+            ${Overflow.tagTemplate(`<t t-esc="'+' + state.rest + '...'"/>`)}
         </t>
         <span t-att-class="classes.suffix" t-ref="suffix">
             <t t-slot="suffix"/>
@@ -83,15 +84,13 @@ class Overflow extends Component<Props> {
         
         <t t-if="props.maxTagCount !== undefined">
             <span t-ref="temp" t-att-class="classes.temp">
-                <t t-foreach="props.values" t-as="value" t-key="value">
-                    ${Overflow.displayTemplate('value', false)}
+                <t t-foreach="getWholeOptions()" t-as="option" t-key="option.value">
+                    ${Overflow.displayTemplate(false)}
                 </t> 
             </span>
             <span t-ref="overFlowTemp" t-att-class="classes.temp">
                 <t t-foreach="props.values" t-as="value" t-key="value_index">
-                    <span t-att-class="classes.rest">
-                        ${Overflow.tagTemplate(`<t t-esc="'+' + (value_index + 1) + '...'"/>`)}
-                    </span>
+                    ${Overflow.tagTemplate(`<t t-esc="'+' + (value_index + 1) + '...'"/>`)}
                 </t> 
             </span>
         </t>
@@ -111,7 +110,7 @@ class Overflow extends Component<Props> {
 
     state = useState<State>({
         displayMaxIndex: 0,  // 超出显示时用于显示的索引
-        displayValues: [],  // 超出显示时用于显示的值
+        displayOptions: [],  // 超出显示时用于显示的值
         rest: undefined
     });
 
@@ -132,19 +131,22 @@ class Overflow extends Component<Props> {
         return targetWidth + overFlowSpamWidth + searchWidth >= this.containerSize.width!;
     }
 
-    protected handleDelete(value: string | number) {
-        this.props.handleDelete?.(value);
+    protected handleDelete(option: Option) {
+        this.props.handleDelete?.(option);
+    }
+
+    /**
+     * 所有应该显示的option，包含overflow部分
+     * @protected
+     */
+    protected getWholeOptions() {
+        const { values, options } = this.props;
+        return options.filter((c) => values.indexOf(c.value) !== -1);
     }
 
     public setup(): void {
         useEffect(() => {
-            this.state.displayValues = this.props.values.slice(0, this.state.displayMaxIndex);
-            const restIndex = Math.max(0, this.props.values.length - this.state.displayMaxIndex);
-            this.state.rest = restIndex > 0 ? restIndex : undefined;
-        }, () => [this.state.displayMaxIndex, this.props.values]);
-
-        useEffect(() => {
-            const { maxTagCount } = this.props;
+            const { maxTagCount, values, options } = this.props;
             if (isNumber(maxTagCount)) {
                 this.state.displayMaxIndex = maxTagCount;
             } else if (maxTagCount === undefined) {
@@ -154,7 +156,8 @@ class Overflow extends Component<Props> {
                 const children = this.tempRef.el.children;
                 // 初始化总宽度
                 let totalWidth = 0;
-                for (let i = 0; i < this.props.values.length; i++) {
+                this.state.displayMaxIndex = values.length;
+                for (let i = 0; i < values.length; i++) {
                     // 获取子元素的宽度，不包括间隔和margin
                     const childWidth = children[i].getBoundingClientRect().width;
                     totalWidth += childWidth;
@@ -166,7 +169,15 @@ class Overflow extends Component<Props> {
                     }
                 }
             }
-        }, () => [this.tempRef.el, this.containerSize.width, this.suffixSize.width, this.props.values]);
+
+            const displayValues = values.slice(0, this.state.displayMaxIndex);
+            this.state.displayOptions = options.filter((c) => displayValues.indexOf(c.value) !== -1);
+            // 计算剩余显示部分
+            const restIndex = Math.max(0, this.props.values.length - this.state.displayMaxIndex);
+            this.state.rest = restIndex > 0 ? restIndex : undefined;
+        }, () => [
+            this.tempRef.el, this.containerSize.width, this.suffixSize.width, this.props.values, this.props.options
+        ]);
     }
 }
 

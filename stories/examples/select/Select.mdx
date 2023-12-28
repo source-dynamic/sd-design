@@ -35,6 +35,24 @@ import * as SelectStories from './Select.stories';
         <td>-</td>
     </tr>
     <tr>
+        <td>empty</td>
+        <td>没有选项时展示内容</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>label</td>
+        <td>选中的选项展示内容，仅在单选模式时生效(scope.data为对应的option项)</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>tag</td>
+        <td>选中的选项展示内容，仅在多选模式时生效(scope.data为对应的option项)</td>
+        <td>slot</td>
+        <td>-</td>
+    </tr>
+    <tr>
         <td>options</td>
         <td>选项内容</td>
         <td>`{ label, value }[]`</td>
@@ -45,6 +63,24 @@ import * as SelectStories from './Select.stories';
         <td>多选模式</td>
         <td>boolean</td>
         <td>false</td>
+    </tr>
+    <tr>
+        <td>listHeight</td>
+        <td>下拉列表的总高度</td>
+        <td>number</td>
+        <td>256</td>
+    </tr>
+    <tr>
+        <td>virtual</td>
+        <td>开启虚拟滚动</td>
+        <td>boolean</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td>itemHeight</td>
+        <td>virtual为true时必需设置，每一项的高度</td>
+        <td>number | (index: number, data: any) => number</td>
+        <td>-</td>
     </tr>
     <tr>
         <td>allowClear</td>
@@ -71,6 +107,12 @@ import * as SelectStories from './Select.stories';
         <td>true</td>
     </tr>
     <tr>
+        <td>placeholder</td>
+        <td>选择框提示文本</td>
+        <td>string</td>
+        <td>-</td>
+    </tr>
+    <tr>
         <td>defaultOpen</td>
         <td>是否默认展开下拉菜单</td>
         <td>boolean</td>
@@ -93,6 +135,12 @@ import * as SelectStories from './Select.stories';
         <td>是否禁用状态</td>
         <td>boolean</td>
         <td>false</td>
+    </tr>
+    <tr>
+        <td>open</td>
+        <td>是否展开下拉菜单，推荐配合useState使用</td>
+        <td>boolean</td>
+        <td>-</td>
     </tr>
     <tr>
         <td>popupMatchSelectWidth</td>
@@ -147,6 +195,48 @@ import * as SelectStories from './Select.stories';
         <td>控件大小</td>
         <td>`large` | `middle` | `small`</td>
         <td>`middle`</td>
+    </tr>
+    <tr>
+        <td>onSearch</td>
+        <td>搜索时文本框值变化时回调</td>
+        <td>(value: string) => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onSelect</td>
+        <td>选中option时调用此函数</td>
+        <td>(option: Option) => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onDeselect</td>
+        <td>取消选中option时调用此函数</td>
+        <td>(option: Option) => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onClear</td>
+        <td>清除内容时回调</td>
+        <td>() => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onDropdownVisibleChange</td>
+        <td>展开下拉菜单的回调</td>
+        <td>(open: boolean) => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onFocus</td>
+        <td>获得焦点时的回调</td>
+        <td>() => void</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>onPopupScroll</td>
+        <td>下拉列表滚动时的回调(position参数在虚拟滚动时才有值)</td>
+        <td>(event: MouseEvent, position?: Position) => void</td>
+        <td>-</td>
     </tr>
     </tbody>
 </table>

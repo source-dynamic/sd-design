@@ -69,7 +69,7 @@ class List extends Component<Props> {
             <t t-if="props.virtual">
                 <VirtualList ref="virRef" onScroll="props.onScroll" onRendered="props.onRendered" list="props.dataSource" itemHeight="props.itemHeight" height="props.height">
                     <t t-set-slot="item" t-slot-scope="scope">
-                        <div t-att-class="getItemClasses()" t-att-style="scope.style">
+                        <div t-att-class="getItemClasses(scope.data, scope.index)" t-att-style="scope.style">
                             <t t-slot="item" t-props="scope"/>
                         </div>
                     </t>

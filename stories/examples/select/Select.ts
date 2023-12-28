@@ -24,7 +24,8 @@ export default class SelectRoot extends Component {
 
     static template = xml`
 <div class="select-container">
-    <Select placement="state.placement" allowClear="state.allowClear" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" bordered="state.bordered" options="customState.options"/>
+    <Select multiple="true" placement="state.placement" allowClear="state.allowClear" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" 
+    bordered="state.bordered" options="customState.options"/>
 </div>
     `
 }

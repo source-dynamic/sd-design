@@ -17,6 +17,7 @@ type Props = {
     triggerNode?: HTMLElement;  // 触发节点
     getPopupContainer?: (triggerNode?: HTMLElement) => string; // 返回一个选择器字符串
     getStyle?: (triggerNode?: HTMLElement) => string; // 返回一个样式字符串
+    onScroll?: (event: MouseEvent) => void;
 } & BaseProps;
 
 const triggerClass = getPrefixCls('trigger');
@@ -47,6 +48,7 @@ class Trigger extends Component<Props> {
         triggerNode: { type: Object, optional: true },
         getPopupContainer: { type: Function, optional: true },
         getStyle: { type: Function, optional: true },
+        onScroll: { type: Function, optional: true },
         ...baseProps
     };
 
@@ -134,6 +136,10 @@ class Trigger extends Component<Props> {
                     this.state.isShow = false;
                 }
             }
+        });
+
+        useEventListener(this.wrapperRef, 'scroll', (event) => {
+            this.props.onScroll?.(event);
         });
 
         useEffect(() => {

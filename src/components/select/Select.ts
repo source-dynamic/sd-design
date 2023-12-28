@@ -17,8 +17,9 @@ import { useColsSearch } from '@/hooks/useColsSearch';
 import { SizeType } from '@/components/_util/type';
 import { useCancellableTimer } from '@/hooks/useCancellableTimer';
 import { useResizeObserver } from '@/hooks/useSizeObserver';
-import Overflow from '@/components/select/Overflow';
+import Overflow, { Option } from '@/components/select/Overflow';
 import _closeSVG from '@/assets/close_fill.svg';
+import { ItemHeight, Position } from '@/components/list/VirtualList';
 
 const downSVG = getSDSVG(_downSVG, {
     width: '1em',
@@ -64,6 +65,7 @@ type Props = {
     value?: Value<string> | Value<number>;
     defaultValue?: Value<string> | Value<number>;
     size: SizeType,
+    placeholder?: string;
     bordered?: boolean;
     defaultOpen?: boolean;
     autoFocus?: boolean;
@@ -72,11 +74,19 @@ type Props = {
     showSearch?: boolean;
     filterOption?: (searchValue: string, option: Option) => boolean;
     filterSort?: (optionA: Option, optionB: Option) => number;
-    onSearch?: (value: string) => boolean;
     options: Option[];
     loading?: boolean;
     open?: boolean;
-    maxTagCount?: number | 'responsive'
+    maxTagCount?: number | 'responsive';
+    virtual?: boolean;
+    itemHeight?: number | ItemHeight;
+    onSearch?: (value: string) => boolean;
+    onSelect?: (option: Option) => void;
+    onDeselect?: (option: Option) => void;
+    onClear?: () => void;
+    onDropdownVisibleChange?: (open: boolean) => void;
+    onFocus?: () => void;
+    onPopupScroll?: (event: MouseEvent, position?: Position) => void;
 } & BaseProps;
 
 const selectClass = getPrefixCls('select');
@@ -90,11 +100,6 @@ const selectDropdownItemWrapperClass = getPrefixCls('select-dropdown-item-wrappe
 const selectDropdownItemClass = getPrefixCls('select-dropdown-item');
 const searchSpanClass = getPrefixCls('select-search-span');
 const displaySpanClass = getPrefixCls('select-display-span');
-
-export type Option = {
-    label: string;
-    value: number | string;
-};
 
 type State = {
     searchValue: string;
@@ -118,6 +123,7 @@ class Select extends Component<Props> {
         defaultValue: { type: [String, Array, Number], optional: true },
         multiple: { type: Boolean, optional: true },
         size: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
         bordered: { type: Boolean, optional: true },
         defaultOpen: { type: Boolean, optional: true },
         autoFocus: { type: Boolean, optional: true },
@@ -126,20 +132,29 @@ class Select extends Component<Props> {
         showSearch: { type: Boolean, optional: true },
         filterOption: { type: Function, optional: true },
         filterSort: { type: Function, optional: true },
-        onSearch: { type: Function, optional: true },
         options: { type: Array },
         loading: { type: Boolean, optional: true },
         open: { type: Boolean, optional: true },
         maxTagCount: { type: [Number, String], optional: true },
+        virtual: { type: Boolean, optional: true },
+        itemHeight: { type: [Number, Function], optional: true },
+        onSearch: { type: Function, optional: true },
+        onSelect: { type: Function, optional: true },
+        onDeselect: { type: Function, optional: true },
+        onClear: { type: Function, optional: true },
+        onDropdownVisibleChange: { type: Function, optional: true },
+        onFocus: { type: Function, optional: true },
+        onPopupScroll: { type: Function, optional: true },
         ...baseProps
     };
 
     static defaultProps = {
         autoClearSearchValue: true,
         listHeight: 256,
+        virtual: false,
         popupMatchSelectWidth: true,
         multiple: false,
-        placement: 'bottomLeft',
+        placement: 'bottomLeft'
     };
 
     state = useState<State>({
@@ -150,7 +165,7 @@ class Select extends Component<Props> {
     });
 
     controllableState = useControllableState<{ value?: Value<string> | Value<number>, open?: boolean }>(this.props, {
-        value: this.props.defaultValue,
+        value: this.props.defaultValue ?? this.props.multiple ? [] : undefined,
         open: false
     });
 
@@ -171,10 +186,11 @@ class Select extends Component<Props> {
     static template = xml`
 <span t-ref="container" t-att-class="getClass()" t-on-click="onClickContainer">
     <span class="${selectSelectorClass}">
+        <span t-if="showPlaceholder()" class="${selectSelectorClass}-placeholder"><t t-esc="props.placeholder"/></span>
         <div class="${selectSelectorClass}-temp" t-ref="searchTemp"><t t-esc="state.searchValue"/></div>
         <t t-set="searchClass" t-value="getSearchClass()"/>
         <t t-if="props.multiple">
-            <Overflow values="controllableState.state.value" maxTagCount="props.maxTagCount" formatter.bind="display" handleDelete.bind="handleDeleteChoice">
+            <Overflow slots="props.slots" className="'${selectSelectorClass}-tags'" values="controllableState.state.value" maxTagCount="props.maxTagCount" options="props.options" handleDelete.bind="handleDeleteChoice">
                 <t t-set-slot="suffix">
                     <t t-if="props.showSearch">
                         <span t-att-class="searchClass.search">
@@ -190,12 +206,15 @@ class Select extends Component<Props> {
             <t t-if="props.showSearch">
                 <span t-att-class="searchClass.search"><input t-on-input="onInput" t-att-value="state.searchValue" type="text"/></span>
             </t>
-            <span t-att-class="searchClass.display">
-                <t t-esc="display(controllableState.state.value)"/>
+            <t t-set="displayOption" t-value="getOption(controllableState.state.value)"/>
+            <span t-if="displayOption" t-att-class="searchClass.display">
+                <t t-slot="label" data="displayOption">
+                    <t t-esc="displayOption.label"/>
+                </t>
             </span>
         </t>
     </span>
-    <Trigger ref="triggerRef" className="getPopupClass()" isOpen="controllableState.state.open" triggerNode="state.triggerNode" 
+    <Trigger ref="triggerRef" onScroll.bind="onScroll" className="getPopupClass()" isOpen="controllableState.state.open" triggerNode="state.triggerNode" 
         getPopupContainer="props.getPopupContainer" getStyle.bind="getDropdownStyle" placement="props.placement">
         <t t-if="colsState.state.displayCols.length === 0">
             <t t-slot="empty">
@@ -206,10 +225,14 @@ class Select extends Component<Props> {
             </t>
         </t>
         <t t-else="">
-            <List dataSource="colsState.state.displayCols" itemClassName.bind="getItemClass">
+            <List dataSource="colsState.state.displayCols" itemClassName.bind="getItemClass" virtual="props.virtual" itemHeight="props.itemHeight" height="props.listHeight" onScroll.bind="onScroll">
                 <t t-set-slot="item" t-slot-scope="scope">
                     <div class="${selectDropdownItemClass}" t-on-click.synthetic="() => this.handleChoice(scope.data)">
-                        <span><t t-esc="scope.data.label"/></span>
+                        <span>
+                            <t t-slot="label" data="scope.data">
+                                <t t-esc="scope.data.label"/>
+                            </t>
+                        </span>
                         <span class="${selectDropdownItemClass}-icon" t-if="this.showSelectedSuffix(scope.data)">${checkSVG}</span>
                     </div>
                 </t>
@@ -228,6 +251,27 @@ class Select extends Component<Props> {
  </span>   
     `;
 
+    /**
+     * 判断是否显示placeholder的逻辑
+     * @protected
+     */
+    protected showPlaceholder() {
+        const { multiple } = this.props;
+        if (!!this.state.searchValue) {
+            return false;
+        }
+
+        if (!multiple) {
+            return !this.controllableState.state.value;
+        }
+        return (this.controllableState.state.value as (string | number)[]).length === 0;
+    }
+
+    /**
+     * 搜索值变化时触发回调
+     * @param event
+     * @protected
+     */
     protected onInput(event: Event) {
         const value = (event.currentTarget as HTMLInputElement).value;
         this.state.searchValue = value;
@@ -235,17 +279,30 @@ class Select extends Component<Props> {
         this.props.onSearch?.(value);
     }
 
+    /**
+     * 清空搜索值
+     * @protected
+     */
     protected clear() {
         this.state.searchValue = '';
         this.colsState.state.searchValue = '';
     }
 
+    /**
+     * 延时清空搜索值，但是会马上清空显示的值
+     * @protected
+     */
     protected timerClear() {
         // 先清空searchValue使展示正常
         this.state.searchValue = '';
         this.cancelableTimer.run(this.clear.bind(this), 1000);
     }
 
+    /**
+     * 点击最外层容器时触发的回调
+     * @param event
+     * @protected
+     */
     protected onClickContainer(event: MouseEvent) {
         if (!this.props.disabled) {
             // 打开时如果有searchRef，则进行聚焦，仅multiple有用
@@ -256,7 +313,20 @@ class Select extends Component<Props> {
             }
             this.toggleOpen();
             this.state.focus = true;
+            this.props.onFocus?.();
         }
+    }
+
+    /**
+     * 下拉框的显示状态改变时触发
+     * @param open 是否显示
+     * @protected
+     */
+    protected onDropdownVisibleChange(open: boolean) {
+        this.controllableState.setState({
+            open
+        });
+        this.props.onDropdownVisibleChange?.(open);
     }
 
     /**
@@ -266,9 +336,7 @@ class Select extends Component<Props> {
      */
     protected toggleOpen(force?: boolean) {
         if (!this.props.disabled) {
-            this.controllableState.setState({
-                open: force ?? !this.controllableState.state.open
-            });
+            this.onDropdownVisibleChange(force ?? !this.controllableState.state.open);
             if (this.controllableState.state.open) {
                 this.clear();
                 this.cancelableTimer.cancel();
@@ -297,6 +365,10 @@ class Select extends Component<Props> {
         });
     }
 
+    /**
+     * 搜索相关部分的样式
+     * @protected
+     */
     protected getSearchClass() {
         return {
             search: classNames(searchSpanClass, {
@@ -308,6 +380,10 @@ class Select extends Component<Props> {
         };
     }
 
+    /**
+     * 下拉框的class
+     * @protected
+     */
     protected getPopupClass() {
         return classNames(selectDropdownClass, this.props.popupClassName);
     }
@@ -332,7 +408,7 @@ class Select extends Component<Props> {
     }
 
     /**
-     * 下拉框的样式
+     * 下拉框的样式style
      * @param triggerNode
      * @protected
      */
@@ -352,9 +428,14 @@ class Select extends Component<Props> {
         return stylesToString(style);
     }
 
-    protected showSelectedSuffix(item: Option) {
+    /**
+     * 判断下拉框中是否显示已选的后缀标识
+     * @param option 选项
+     * @protected
+     */
+    protected showSelectedSuffix(option: Option) {
         return this.props.multiple && (this.controllableState.state.value as (string | number)[]).indexOf(
-            item.value) !== -1;
+            option.value) !== -1;
     }
 
     /**
@@ -374,55 +455,81 @@ class Select extends Component<Props> {
         }
     }
 
+    protected onScroll(event: MouseEvent, position?: Position) {
+        this.props.onPopupScroll?.(event, position);
+    }
+
+    /**
+     * 清空选项的回调
+     * @param event
+     * @protected
+     */
     protected handleClear(event: MouseEvent) {
         event.preventDefault();
         event.stopPropagation();
         this.controllableState.setState({
             value: this.props.multiple ? [] : undefined
         });
+        this.props.onClear?.();
     }
 
-    protected handleChoice(data: Option) {
-        let newValue: any = data.value;
+    /**
+     * 选中下拉选项的回调
+     * @param option
+     * @protected
+     */
+    protected handleChoice(option: Option) {
         if (this.props.multiple) {
-            const stateValue = this.controllableState.state.value as (string | number)[];
-            const index = stateValue.indexOf(newValue);
+            const { value } = option;
+            const stateValue = [...this.controllableState.state.value as any[]];
+            const index = stateValue.indexOf(value);
             if (index === -1) {
-                stateValue.push(newValue);
+                // 新选中
+                stateValue.push(value);
+                this.controllableState.setState({
+                    value: stateValue
+                });
+                this.props.onSelect?.(option);
             } else {
-                stateValue.splice(index, 1);
+                // 取消选中
+                this.handleDeleteChoice(option)
             }
-            newValue = [...stateValue];
-        }
 
-        this.controllableState.setState({
-            value: newValue
-        });
+        }else {
+            this.controllableState.setState({
+                value: option.value
+            });
+            this.props.onSelect?.(option);
+        }
 
         if (!this.props.multiple) {
             this.timerClear();
-            this.controllableState.setState({
-                open: false
-            });
+            this.onDropdownVisibleChange(false);
         } else if (this.props.autoClearSearchValue) {
             this.clear();
         }
     }
 
-    protected handleDeleteChoice(value: string | number) {
-        const filterValues = (this.controllableState.state.value as any[]).filter((v) => v !== value);
+    /**
+     * 取消选中值的回调
+     * @param option
+     * @protected
+     */
+    protected handleDeleteChoice(option: Option) {
+        const filterValues = (this.controllableState.state.value as any[]).filter((v) => v !== option.value);
         this.controllableState.setState({
             value: filterValues
         });
+        this.props.onDeselect?.(option);
     }
 
     /**
-     * 回显逻辑
+     * 根据value值获取对应的option
      * @param value
      * @protected
      */
-    protected display(value: string | number) {
-        return this.props.options.find((c) => c.value === value)?.label || '';
+    protected getOption(value: string | number) {
+        return this.props.options.find((c) => c.value === value);
     }
 
     public setup(): void {
@@ -444,9 +551,11 @@ class Select extends Component<Props> {
         useEffect(() => {
             if (this.props.defaultOpen && !this.props.disabled) {
                 this.state.triggerNode = this.containerRef.el!;
-                this.controllableState.setState({
-                    open: true
-                });
+                this.onDropdownVisibleChange(true);
+            }
+            // 初始有焦点时触发一次onFocus事件
+            if (this.props.autoFocus) {
+                this.props.onFocus?.();
             }
         }, () => []);
 

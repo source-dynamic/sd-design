@@ -1,4 +1,5 @@
 @import "src/components/input/style/input";
+@import "overflow";
 
 $select-class: #{$ui-prefix}-select;
 $select-icon-class: #{$select-class}-icon;
@@ -19,6 +20,7 @@ $select-display-span-class: #{$select-class}-display-span;
   @include responsive;
   @include paddingTB0;
   transition: none;
+  display: inline-flex;
 
   &-sm {
     @include paddingTB0;
@@ -27,8 +29,6 @@ $select-display-span-class: #{$select-class}-display-span;
   &-lg {
     @include paddingTB0;
   }
-
-  display: inline-flex;
 
   &:hover {
     cursor: pointer;
@@ -46,6 +46,18 @@ $select-display-span-class: #{$select-class}-display-span;
 
   &-multiple {
     padding-left: 4px;
+
+    .#{$select-selector-class}-placeholder {
+      padding: 7px;
+    }
+
+    .#{$select-search-span-class} {
+      margin-inline-start: 7px;
+    }
+
+    .#{$tag-class}+.#{$overflow-class}-suffix .#{$select-search-span-class} {
+      margin-inline-start: 0;
+    }
   }
 
   &-disabled {
@@ -69,6 +81,22 @@ $select-display-span-class: #{$select-class}-display-span;
     width: 100%;
     transition: all 0.2s;
     overflow: hidden;
+
+    &-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: $font-color-quaternary;
+      transition: none;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
 
     &-temp {
       position: absolute;
