@@ -11,7 +11,7 @@ import List from '@/components/list/List';
 import Trigger, { Placement } from '@/components/trigger/trigger';
 import './style/select.scss';
 import { useEventListener } from '@/hooks/useEventListener';
-import { useCompRef } from '@/hooks/useImperativeHandle';
+import { useCompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
 import useControllableState from '@/hooks/useControllableState';
 import { useColsSearch } from '@/hooks/useColsSearch';
 import { SizeType } from '@/components/_util/type';
@@ -534,6 +534,16 @@ class Select extends Component<Props> {
 
     public setup(): void {
         const target = { el: window };
+        useImperativeHandle(() => ({
+            focus: () => {
+                this.state.focus = true;
+                this.props.onFocus?.();
+            },
+            blur: () => {
+                this.state.focus = false;
+            }
+        }), () => [])
+
         useEventListener(target, 'mousedown', this.onClickOutsideHandler);
 
         // 监听尺寸变化，如果是打开状态并且尺寸发生了变化，则进行对齐，使用ResizeObserver节约性能开销
