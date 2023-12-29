@@ -53,7 +53,7 @@ class Trigger extends Component<Props> {
     };
 
     static defaultProps = {
-        destroyOnHide: false
+        destroyOnHide: true
     };
 
     static contentTemplate = `
