@@ -8,7 +8,7 @@ import _loadingSVG from '@/assets/loading-line.svg';
 import _checkSVG from '@/assets/check.svg';
 import classNames from 'classnames';
 import List from '@/components/list/List';
-import Trigger, { Placement } from '@/components/trigger/trigger';
+import Trigger, { Placement } from '@/components/trigger/Trigger';
 import './style/select.scss';
 import { useEventListener } from '@/hooks/useEventListener';
 import { useCompRef, useImperativeHandle } from '@/hooks/useImperativeHandle';
