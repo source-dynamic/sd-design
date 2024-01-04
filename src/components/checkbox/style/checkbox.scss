@@ -1,0 +1,131 @@
+@import "src/theme/style/style";
+@import "src/components/input/style/input";
+
+$checkbox-class: #{$ui-prefix}-checkbox;
+
+@mixin color-border() {
+  @include primary-color-border();
+  box-shadow: unset;
+}
+
+.#{$checkbox-class}-wrapper {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: $font-color;
+  font-size: $base-font-size;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:not(.#{$checkbox-class}-wrapper-disabled):hover .#{$checkbox-class}-inner {
+    @include color-border;
+  }
+
+  .#{$checkbox-class} {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: $font-color;
+    font-size: $base-font-size;
+    line-height: 1;
+    list-style: none;
+    position: relative;
+    white-space: nowrap;
+    border-radius: $small-border-radius;
+    align-self: center;
+
+    & + span {
+      padding-inline-start: $padding-xs;
+      padding-inline-end: $padding-xs;
+    }
+
+    &-input {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      cursor: pointer;
+      opacity: 0;
+      margin: 0;
+    }
+
+    &-inner {
+      box-sizing: border-box;
+      display: block;
+      width: $control-interactive-size;
+      height: $control-interactive-size;
+      direction: ltr;
+      border: 1px solid $border-color;
+      border-radius: $small-border-radius;
+      border-collapse: separate;
+      transition: all 0.3s;
+
+      &::after {
+        color: white;
+        border: 2px solid white;
+        border-top: 0;
+        border-inline-start: 0;
+        width: $control-interactive-size / 14 * 5;
+        height: $control-interactive-size / 14 * 8;
+        content: "";
+        opacity: 0;
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 25%;
+        transform: rotate(45deg) scale(1) translate(-50%, -50%);
+        transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+      }
+
+      &-checked {
+        background-color: $primary-color-6;
+        border-color: $primary-color-6;
+
+        &::after {
+          opacity: 1;
+          transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+        }
+      }
+
+      &-indeterminate {
+        &::after {
+          top: 50%;
+          inset-inline-start: 50%;
+          width: $control-interactive-size / 2;
+          height: $control-interactive-size / 2;
+          background-color: $primary-color-6;
+          border: 0;
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+          content: "";
+        }
+      }
+    }
+  }
+
+  &-disabled {
+    color: $disabled-color;
+    cursor: not-allowed;
+
+    .#{$checkbox-class}-input {
+      cursor: not-allowed;
+    }
+
+    .#{$checkbox-class}-inner {
+      border-color: $border-color;
+      background: $disabled-background-color;
+
+      &:after {
+        border-color: $disabled-color;
+      }
+
+
+      &-indeterminate {
+        &::after {
+          background-color: $disabled-color;
+        }
+      }
+    }
+  }
+}
