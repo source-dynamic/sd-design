@@ -71,6 +71,7 @@ type Props = {
     autoFocus?: boolean;
     popupClassName?: string;
     popupMatchSelectWidth?: boolean;
+    destroyOnHide?: boolean;
     showSearch?: boolean;
     filterOption?: (searchValue: string, option: Option) => boolean;
     filterSort?: (optionA: Option, optionB: Option) => number;
@@ -129,6 +130,7 @@ class Select extends Component<Props> {
         autoFocus: { type: Boolean, optional: true },
         popupClassName: { type: String, optional: true },
         popupMatchSelectWidth: { type: Boolean, optional: true },
+        destroyOnHide: { type: Boolean, optional: true },
         showSearch: { type: Boolean, optional: true },
         filterOption: { type: Function, optional: true },
         filterSort: { type: Function, optional: true },
@@ -153,6 +155,7 @@ class Select extends Component<Props> {
         listHeight: 256,
         virtual: false,
         popupMatchSelectWidth: true,
+        destroyOnHide: true,
         multiple: false,
         bordered: true,
         placement: 'bottomLeft'
@@ -216,7 +219,7 @@ class Select extends Component<Props> {
         </t>
     </span>
     <Trigger ref="triggerRef" onScroll.bind="onScroll" className="getPopupClass()" isOpen="controllableState.state.open" triggerNode="state.triggerNode" 
-        getPopupContainer="props.getPopupContainer" getStyle.bind="getDropdownStyle" placement="props.placement">
+        getPopupContainer="props.getPopupContainer" destroyOnHide="props.destroyOnHide" getStyle.bind="getDropdownStyle" placement="props.placement">
         <t t-if="colsState.state.displayCols.length === 0">
             <t t-slot="empty">
                 <div class="${dropdownEmptyClass}">
