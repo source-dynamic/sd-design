@@ -1,5 +1,4 @@
 import { Component, useState, xml } from '@odoo/owl';
-import Item from '@/components/list/Item';
 import VirtualList, { ItemHeight, OnRender, Position } from '@/components/list/VirtualList';
 import classNames from 'classnames';
 import _emptySVG from '@/assets/empty.svg';
@@ -35,7 +34,7 @@ const listItemClass = getPrefixCls('list-item');
 const vrListItemClass = getPrefixCls('vr-list-item');
 
 class List extends Component<Props> {
-    static components = { Item, VirtualList };
+    static components = { VirtualList };
 
     static props = {
         className: { type: String, optional: true },
