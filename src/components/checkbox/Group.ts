@@ -11,6 +11,7 @@ type Option = {
 }
 
 type Props = {
+    disabled?: boolean;
     options?: (string | Option)[];
     onChange?: (checkedValues: (string)[]) => void;
     defaultValue?: string[];
@@ -19,6 +20,7 @@ type Props = {
 
 export default class Group extends Component<Props> {
     static props = {
+        disabled: { type: Boolean, optional: true },
         options: { type: Array, optional: true },
         onChange: { type: Function, optional: true },
         defaultValue: { type: Array, optional: true },

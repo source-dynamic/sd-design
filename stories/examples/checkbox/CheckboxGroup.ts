@@ -4,6 +4,10 @@ import { Checkbox } from '../../../src';
 export default class CheckboxGroupRoot extends Component {
     static components = { CheckboxGroup: Checkbox.Group, Checkbox };
 
+    state = useState({
+        disabled: undefined
+    })
+
     customState = useState<any>({
         options: [
             { label: '选项1', name: '选项1', disabled: true },
@@ -27,7 +31,7 @@ export default class CheckboxGroupRoot extends Component {
     </div>
     
     <div class="checkbox-group">
-        <CheckboxGroup value="customState.value" onChange.bind="onchange">
+        <CheckboxGroup value="customState.value" onChange.bind="onchange" disabled="state.disabled">
             <span>当前选中：<t t-esc="checkedValue"/></span>
             <div>-------</div>
             <Checkbox name="'选项3'">选项3</Checkbox>

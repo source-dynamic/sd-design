@@ -34,11 +34,11 @@ export default class Checkbox extends Component<Props> {
     };
 
     get checkboxGroup(): Group | undefined {
-        return this.env.checkboxGroup
+        return this.env.checkboxGroup;
     }
 
     get checkboxGroupValue(): string[] | undefined {
-        return this.checkboxGroup?.controllableState.state.value
+        return this.checkboxGroup?.controllableState.state.value;
     }
 
     get mergedValue() {
@@ -47,6 +47,10 @@ export default class Checkbox extends Component<Props> {
             return this.checkboxGroupValue.indexOf(this.props.name) > -1;
         }
         return this.controllableState.state.value;
+    }
+
+    get disabled() {
+        return this.env.checkboxGroup?.props.disabled ?? this.props.disabled;
     }
 
     controllableState = useControllableState(this.props, {
@@ -75,7 +79,7 @@ export default class Checkbox extends Component<Props> {
     protected getClasses() {
         return {
             wrapper: classNames(this.props.className, checkboxWrapperClass, {
-                [`${checkboxWrapperClass}-disabled`]: this.props.disabled,
+                [`${checkboxWrapperClass}-disabled`]: this.disabled,
                 [`${checkboxWrapperClass}-checked`]: this.mergedValue,
                 [`${checkboxWrapperClass}-indeterminate`]: this.props.indeterminate
             }),
@@ -88,8 +92,8 @@ export default class Checkbox extends Component<Props> {
     }
 
     protected onClick() {
-        const { disabled, indeterminate } = this.props;
-        if (disabled || indeterminate) {
+        const { indeterminate } = this.props;
+        if (this.disabled || indeterminate) {
             return;
         }
         this.toggleChecked();
@@ -128,7 +132,7 @@ export default class Checkbox extends Component<Props> {
     protected toggleChecked(force?: boolean) {
         if (this.checkboxGroup && this.props.name) {
             this.toggleCheckedInGroup(force);
-        }else {
+        } else {
             this.toggleCheckedWithoutGroup(force);
         }
     }

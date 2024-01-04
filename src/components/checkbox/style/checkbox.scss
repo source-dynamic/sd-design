@@ -113,7 +113,13 @@ $checkbox-class: #{$ui-prefix}-checkbox;
     }
 
     .#{$checkbox-class}-inner {
+      border-color: $border-color;
       background: $disabled-background-color;
+
+      &:after {
+        border-color: $disabled-color;
+      }
+
 
       &-indeterminate {
         &::after {

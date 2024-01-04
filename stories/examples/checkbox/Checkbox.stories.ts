@@ -43,6 +43,14 @@ export const Checkbox: Story = {
 };
 
 export const Group: Story = {
+    args: {
+        disabled: false
+    },
+    argTypes: {
+        disabled: {
+            description: '禁用状态'
+        }
+    },
     parameters: {
         docs: {
             source: {
