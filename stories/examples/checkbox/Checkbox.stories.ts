@@ -2,12 +2,16 @@ import { Meta, StoryObj } from '@storybook/react';
 import { renderStoryComp } from '../../_utils/StoryComp';
 // @ts-ignore
 import CheckboxCompRaw from '!!raw-loader!./Checkbox';
+// @ts-ignore
+import CheckboxGroupCompRaw from '!!raw-loader!./CheckboxGroup';
 import CheckboxComp from './Checkbox';
+import CheckboxGroupComp from './CheckboxGroup';
+import './checkbox.scss';
 
 const meta: Meta = {
     title: '数据录入/Checkbox 多选框',
     parameters: {
-        layout: 'auto'
+        layout: 'centered'
     }
 };
 
@@ -36,4 +40,15 @@ export const Checkbox: Story = {
         }
     },
     render: renderStoryComp(CheckboxComp)
+};
+
+export const Group: Story = {
+    parameters: {
+        docs: {
+            source: {
+                code: CheckboxGroupCompRaw
+            }
+        }
+    },
+    render: renderStoryComp(CheckboxGroupComp)
 };
