@@ -8,7 +8,7 @@ import './switch.scss';
 const meta: Meta = {
     title: '数据录入/Switch 开关',
     parameters: {
-        layout: 'auto'
+        layout: 'center'
     }
 };
 
