@@ -23,7 +23,7 @@ export default class SelectMultipleRoot extends Component {
 
     static template = xml`
 <div class="select-container">
-    <Select multiple="true" placement="state.placement" allowClear="state.allowClear" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" 
+    <Select multiple="true" maxTagCount="'responsive'" placement="state.placement" allowClear="state.allowClear" disabled="state.disabled" size="state.size" showSearch="state.showSearch" loading="state.loading" 
     bordered="state.bordered" options="customState.options"/>
 </div>
     `
