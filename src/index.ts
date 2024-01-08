@@ -5,6 +5,7 @@ import { List, VirtualList } from '@/components/list';
 import Select from '@/components/select/Select';
 import { setThemes } from '@/theme/theme';
 import Checkbox from '@/components/checkbox';
+import Switch from '@/components/switch/Switch';
 
 setThemes('#71639e');
 
@@ -25,5 +26,6 @@ export {
     VirtualList,
     Select,
     InputNumber,
-    Checkbox
+    Checkbox,
+    Switch
 };

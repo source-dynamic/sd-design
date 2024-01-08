@@ -12,3 +12,10 @@ $sd-icon: #{$ui-prefix}-icon;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+
+@keyframes loadingCircle {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
