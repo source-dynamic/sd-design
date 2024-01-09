@@ -172,13 +172,6 @@ $select-display-span-class: #{$select-class}-display-span;
   animation: loadingCircle 1s infinite linear;
 }
 
-@keyframes loadingCircle {
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
 // 搜索样式
 .#{$select-class}-v-hidden {
   visibility: hidden;

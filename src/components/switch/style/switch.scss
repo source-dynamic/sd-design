@@ -1,0 +1,196 @@
+@import "src/theme/style/style";
+
+$switch-class: #{$ui-prefix}-switch;
+$handle-class: #{$switch-class}-handle;
+$inner-class: #{$switch-class}-inner;
+
+$handle-size: 18px;
+$handle-padding: 2px;
+$border-radius: 100px;
+
+$inner-min-margin: 9px;
+$inner-max-margin: 24px;
+
+$inner-min-margin-sm: 8px;
+$inner-max-margin-sm: 18px;
+
+@mixin hoverBackground($bg) {
+  &:hover:not(.#{$switch-class}-disabled) {
+    background-color: $bg;
+  }
+}
+
+@mixin marginInline($clear: 0, $handleSize: $handle-size, $margin: $inner-max-margin) {
+  @if $clear == 0 {
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+  } @else if $clear == 'checked' {
+    margin-inline-start: calc(-100% + #{$handleSize} - 2 * #{$margin});
+    margin-inline-end: calc(100% - #{$handleSize} + 2 * #{$margin});
+  } @else {
+    margin-inline-start: calc(100% - #{$handleSize} + 2 * #{$margin});
+    margin-inline-end: calc(-100% + #{$handleSize} - 2 * #{$margin});
+  }
+}
+
+
+.#{$switch-class} {
+  display: inline-block;
+  position: relative;
+  font-size: $small-font-size;
+  min-width: 44px;
+  line-height: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: $white;
+  background-color: $font-color-quaternary;
+  border-radius: 100px;
+  user-select: none;
+  transition: all 0.2s;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @include hoverBackground($font-color-tertiary);
+
+  .#{$handle-class} {
+    position: absolute;
+    top: 2px;
+    inset-inline-start: $handle-padding;
+    width: $handle-size;
+    height: $handle-size;
+    transition: all 0.2s ease-in-out;
+
+    &:before {
+      position: absolute;
+      top: 0;
+      inset-inline-end: 0;
+      bottom: 0;
+      inset-inline-start: 0;
+      background-color: $white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+      transition: all 0.2s ease-in-out;
+      content: "";
+    }
+
+    .#{$switch-class}-loading {
+      color: $primary-color-6;
+      position: absolute;
+      inset: 0;
+      padding: 2px;
+      animation: loadingCircle 1s infinite linear;
+    }
+  }
+
+  .#{$inner-class} {
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: $border-radius;
+    padding-inline-start: $inner-max-margin;
+    padding-inline-end: $inner-min-margin;
+    transition: padding-inline-start 0.2s ease-in-out, padding-inline-end 0.2s ease-in-out;
+
+    & > span {
+      display: block;
+      text-align: center;
+    }
+
+    &-checked {
+      @include marginInline('checked', 22px, $inner-max-margin);
+      transition: margin-inline-start 0.2s ease-in-out, margin-inline-end 0.2s ease-in-out;
+      pointer-events: none;
+    }
+
+    &-unchecked {
+      margin-top: -22px;
+      @include marginInline(0);
+      transition: margin-inline-start 0.2s ease-in-out, margin-inline-end 0.2s ease-in-out;;
+      pointer-events: none;
+    }
+  }
+}
+
+// 选择状态
+.#{$switch-class}-checked {
+  background-color: $primary-color-6;
+
+  @include hoverBackground($primary-color-5);
+
+  .#{$handle-class} {
+    inset-inline-start: calc(100% - (#{$handle-size} + #{$handle-padding}))
+  }
+
+  .#{$inner-class} {
+    padding-inline-start: $inner-min-margin;
+    padding-inline-end: $inner-max-margin;
+
+    &-checked {
+      @include marginInline(0);
+    }
+
+    &-unchecked {
+      @include marginInline('unchecked', 22px, $inner-max-margin);
+    }
+  }
+}
+
+// 禁用状态
+.#{$switch-class}-disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+
+// small尺寸
+.#{$switch-class}-sm {
+  font-size: $small-font-size;
+  height: 16px;
+  line-height: 16px;
+  min-width: 28px;
+
+  .#{$handle-class} {
+    height: 12px;
+    width: 12px;
+  }
+
+  .#{$inner-class} {
+    padding-inline-start: $inner-max-margin-sm;
+    padding-inline-end: $inner-min-margin-sm;
+
+    &-checked {
+      @include marginInline('checked', 16px, $inner-max-margin-sm);
+    }
+
+    &-unchecked {
+      margin-top: -16px;
+      @include marginInline(0);
+    }
+  }
+
+  &.#{$switch-class}-checked {
+    .#{$handle-class} {
+      inset-inline-start: calc(100% - (12px + #{$handle-padding}));
+    }
+
+    .#{$inner-class} {
+      padding-inline-start: $inner-min-margin-sm;
+      padding-inline-end: $inner-max-margin-sm;
+
+      &-checked {
+        @include marginInline(0);
+      }
+
+      &-unchecked {
+        @include marginInline('unchecked', 16px, $inner-max-margin-sm);
+      }
+    }
+  }
+}
