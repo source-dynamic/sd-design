@@ -3,8 +3,8 @@
     "target": "es2022",
     "allowJs": true,
     "declaration": true,// 是否生成声明文件
-    "outDir": "./lib",
-    "declarationDir": "./lib",
+    "outDir": "./dist/es",
+    "declarationDir": "./dist/es",
     "experimentalDecorators": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
