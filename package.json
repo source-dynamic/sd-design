@@ -2,16 +2,16 @@
   "name": "sd-design",
   "version": "1.2.0-beta",
   "description": "A UI library with @odoo/owl and typescript",
-  "main": "./es/index.js",
-  "module": "./es/index.js",
-  "types": "./es/index.d.ts",
+  "main": "dist/es/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/es/index.d.ts",
   "author": "source-dynamic",
   "license": "GPL-2.0",
   "homepage": ".",
   "keywords": [],
   "files": [
-    "es/**/*.js",
-    "es/**/*.d.ts"
+    "dist/es/**/*.js",
+    "dist/es/**/*.d.ts"
   ],
   "repository": {
     "type": "git",
