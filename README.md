@@ -43,8 +43,7 @@ ui库我们选择跟随owl版本而不是跟随odoo版本，是因为owl是odoo�
 | Select         | 下拉选择框   | √      |
 | Checkbox       | 多选框       | √      |
 | Checkbox.Group | 多选组       | √      |
-| Switch         | 开关         | ×      |
-| Radio          | 单选框       | ×      |
+| Switch         | 开关         | √      |
 | Slider         | 滑动输入条   | ×      |
 
 
