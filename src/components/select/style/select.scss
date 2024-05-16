@@ -1,3 +1,4 @@
+@use "sass:math";
 @import "src/components/input/style/input";
 @import "overflow";
 
@@ -200,7 +201,7 @@ $select-display-span-class: #{$select-class}-display-span;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: $padding / 2;
+    gap: math.div($padding, 2);
     padding: $padding 0;
   }
 

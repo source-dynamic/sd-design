@@ -1,3 +1,4 @@
+@use "sass:math";
 @import "src/theme/style/style";
 @import "src/components/input/style/input";
 
@@ -66,8 +67,8 @@ $checkbox-class: #{$ui-prefix}-checkbox;
         border: 2px solid white;
         border-top: 0;
         border-inline-start: 0;
-        width: $control-interactive-size / 14 * 5;
-        height: $control-interactive-size / 14 * 8;
+        width: math.div($control-interactive-size, 14) * 5;
+        height: math.div($control-interactive-size, 14) * 8;
         content: "";
         opacity: 0;
         box-sizing: border-box;
@@ -92,8 +93,8 @@ $checkbox-class: #{$ui-prefix}-checkbox;
         &::after {
           top: 50%;
           inset-inline-start: 50%;
-          width: $control-interactive-size / 2;
-          height: $control-interactive-size / 2;
+          width: math.div($control-interactive-size, 2);
+          height: math.div($control-interactive-size, 2);
           background-color: $primary-color-6;
           border: 0;
           transform: translate(-50%, -50%) scale(1);

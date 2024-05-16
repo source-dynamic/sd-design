@@ -1,3 +1,4 @@
+@use "sass:math";
 @import "src/theme/style/style";
 
 $list-cls: #{$ui-prefix}-list;
@@ -13,7 +14,7 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
 
 @mixin item {
   display: block;
-  padding: $padding-lg/2 0;
+  padding: math.div($padding-lg, 2) 0;
   padding-inline: $padding-lg;
   border-block-end: 1px solid $color-split;
 }
@@ -78,7 +79,7 @@ $vr-item-cls: #{$ui-prefix}-vr-list-item;
 
 .#{$list-cls}-sm {
   .#{$head-cls}, .#{$footer-cls}, .#{$item-cls} {
-    padding: $padding/2 $padding;
+    padding: math.div($padding, 2) $padding;
   }
 }
 

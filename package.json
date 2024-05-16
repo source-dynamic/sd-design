@@ -1,6 +1,6 @@
 {
   "name": "sd-design",
-  "version": "beta-1.2.0",
+  "version": "1.2.3-beta",
   "description": "A UI library with @odoo/owl and typescript",
   "main": "./es/index.js",
   "module": "./es/index.js",
@@ -10,8 +10,9 @@
   "homepage": ".",
   "keywords": [],
   "files": [
-    "es/**/*.js",
-    "es/**/*.d.ts"
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.css"
   ],
   "repository": {
     "type": "git",
@@ -21,7 +22,8 @@
     "email": "305111632@qq.com"
   },
   "scripts": {
-    "build-es": "rimraf dist && rollup -c",
+    "build-iife": "rimraf dist && rollup -c rollup.config.mjs",
+    "build-es": "rimraf dist && rollup -c rollup-es.config.mjs",
     "eslint": "eslint ./src/.  --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
@@ -62,7 +64,6 @@
     "eslint-plugin-storybook": "^0.6.15",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.7",
-    "node-sass": "^9.0.0",
     "raw-loader": "^4.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -70,6 +71,7 @@
     "rollup": "^4.6.1",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-svgo": "^2.0.0",
+    "sass": "^1.77.1",
     "sass-loader": "^13.3.2",
     "storybook": "^7.5.1",
     "style-loader": "^3.3.1",
