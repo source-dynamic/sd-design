@@ -1,6 +1,6 @@
 {
   "name": "sd-design",
-  "version": "1.2.4-beta",
+  "version": "1.2.5-beta",
   "description": "A UI library with @odoo/owl and typescript",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build-iife": "rimraf dist && rollup -c rollup.config.mjs",
-    "build-es": "rimraf dist && rollup -c rollup-es.config.mjs",
+    "build-es": "rimraf dist && rollup -c rollup-es.config.mjs && tsc-alias",
     "eslint": "eslint ./src/.  --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
@@ -77,6 +77,7 @@
     "style-loader": "^3.3.1",
     "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.2.8",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.2.2"
   },
   "resolutions": {
