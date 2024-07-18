@@ -6,6 +6,7 @@ import Select from '@/components/select/Select';
 import { setThemes } from '@/theme/theme';
 import Checkbox from '@/components/checkbox';
 import Switch from '@/components/switch/Switch';
+import Panel from '@/components/panel/Panel';
 
 setThemes('#71639e');
 
@@ -27,5 +28,6 @@ export {
     Select,
     InputNumber,
     Checkbox,
+    Panel,
     Switch
 };

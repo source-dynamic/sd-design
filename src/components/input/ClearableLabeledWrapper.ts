@@ -75,7 +75,7 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
      */
     static innerTemplate: string = `
         <t t-if="!hasPrefixSuffix()">
-            <t t-slot="default"/>
+            <t t-slot="default" className="props.className"/>
         </t>
         <t t-else="">
             <t t-set="labeledIconClass" t-value="renderLabeledIconClass()"/>
@@ -221,7 +221,6 @@ export default class ClearableLabeledWrapper extends Component<IClearableWrapper
             direction,
             readOnly,
             bordered,
-            slots
         } = this.props;
 
         const prefixCls = getPrefixCls('input');
