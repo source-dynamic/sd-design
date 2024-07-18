@@ -99,22 +99,24 @@ export default class Input<T extends InputProps> extends Component<T> {
     disabled="props.disabled" focused="state.focused" allowClear="props.allowClear" value="controllableState.state.value"
     handleReset.alike="(e) => this.handleReset(e)" slots="props.slots" count="state.count"
 >
-    <input 
-        t-att="state.restProps"
-        t-att-disabled="props.disabled"
-        t-att-maxlength="props.maxLength"
-        t-att-type="props.type"
-        t-att-placeholder="props.placeholder"
-        t-att-class="getClasses()"
-        t-on-focus="onFocus"
-        t-on-blur="onBlur"
-        t-ref="input"
-        t-on-keydown.stop="handleKeyDown"
-        t-on-compositionstart="onCompositionstart"
-        t-on-compositionend="onCompositionend"
-        t-on-input="onInput"
-        t-on-change="onChange"
-    />
+    <t t-set-slot="default" t-slot-scope="scope">
+        <input 
+            t-att="state.restProps"
+            t-att-disabled="props.disabled"
+            t-att-maxlength="props.maxLength"
+            t-att-type="props.type"
+            t-att-placeholder="props.placeholder"
+            t-att-class="getClasses(scope.className)"
+            t-on-focus="onFocus"
+            t-on-blur="onBlur"
+            t-ref="input"
+            t-on-keydown.stop="handleKeyDown"
+            t-on-compositionstart="onCompositionstart"
+            t-on-compositionend="onCompositionend"
+            t-on-input="onInput"
+            t-on-change="onChange"
+        />
+    </t>
 </ClearableLabeledWrapper>
 `;
 
@@ -138,10 +140,10 @@ export default class Input<T extends InputProps> extends Component<T> {
         value: this.props.defaultValue ?? ''
     });
 
-    protected getClasses(): string {
+    protected getClasses(className?: string): string {
         const { size, disabled, bordered } = this.props;
         const prefixCls = getPrefixCls('input');
-        return classNames(getInputClassName(prefixCls, bordered, size, disabled));
+        return classNames(className, getInputClassName(prefixCls, bordered, size, disabled));
     }
 
     protected focus(): void {
