@@ -22,6 +22,7 @@ $select-display-span-class: #{$select-class}-display-span;
   @include paddingTB0;
   transition: none;
   display: inline-flex;
+  vertical-align: top;
 
   &-sm {
     @include paddingTB0;
